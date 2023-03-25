@@ -64,3 +64,7 @@ class MyStyles {
     letterSpacing: 0.25,
   );
 }
+
+double kSearchBarHeight = 60.0;
+double kCardHeight = 230;
+double kEmptyImageHeight = 500;

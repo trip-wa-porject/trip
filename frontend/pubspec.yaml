@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.5
   firebase_core: ^2.8.0
   google_fonts: ^4.0.3
+  material_floating_search_bar: ^0.3.7
 
 dev_dependencies:
   flutter_test:
