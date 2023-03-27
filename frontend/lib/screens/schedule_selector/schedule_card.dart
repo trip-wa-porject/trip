@@ -55,51 +55,93 @@ class ScheduleCard extends StatelessWidget {
         // mainAxisAlignment:
         //     MainAxisAlignment.center,
         children: [
-          Row(children: [
-            Container(
-                height: 50,
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 8.0),
-                  child: Text('活動名稱',
-                      style:
-                          MyStyles.kTextStyleH3),
-                )),
-            Container(
-                height: 50,
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                    padding:
-                        const EdgeInsets.only(
-                            right: 8.0),
-                    child: Text('3/20 - 3/23',
-                        style: MyStyles
-                            .kTextStyleBody1))),
-            Container(
-                height: 50,
-                alignment: Alignment.bottomCenter,
-                child: Text('新竹市',
-                    style: MyStyles
-                        .kTextStyleSubtitle1)),
-            // Container(
-            //   height: 50,
-            //   alignment: Alignment.bottomCenter,
-            //   child: Flex(children: [
-            //     Expanded(
-            //       flex: 1,
-            //       children: Container(
-            //         alignment: Alignment.topLeft,
-            //         height: 180,
-            //         color: Colors.lightGreen[50],
-            //         child: Text('即將額滿',
-            //             style: MyStyles
-            //                 .kTextStyleH1),
-            //       ),
-            //     )
-            //   ]),
-            // )
-          ])
+          _tripInfoTitle(),
+          _tripInfoLevel()
         ]);
+  }
+
+  Widget _tripInfoTitle() {
+    return new Container(
+        height: 48,
+        alignment: Alignment.bottomCenter,
+        child: Row(children: [
+          Padding(
+              padding: const EdgeInsets.only(
+                  right: 8.0),
+              child: Text('活動名稱',
+                  style: MyStyles.kTextStyleNormal)),
+          Padding(
+              padding: const EdgeInsets.only(
+                  right: 8.0),
+              child: Text('3/20 - 3/23',
+                  style:
+                      MyStyles.kTextStyleBody1)),
+          Text('新竹市',
+              style:
+                  MyStyles.kTextStyleSubtitle1),
+          Expanded(
+              child: Container(
+                  alignment:
+                      Alignment.centerRight,
+                  height: 50,
+                  child: Padding(
+                      padding:
+                          const EdgeInsets.only(
+                              right: 8.0),
+                      child: Text('即將額滿',
+                          style: MyStyles
+                              .kTextStyleH1))))
+        ]));
+  }
+
+  Widget _tripInfoLevel() {
+    return new Container(
+        height: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          Container(
+              height: 25,
+              child: Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                        padding:
+                            const EdgeInsets.only(
+                                right: 8.0),
+                        child: Text('進階',
+                            style: MyStyles
+                                .kTextStyleNormal)),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Padding(
+                          padding:
+                              const EdgeInsets
+                                      .only(
+                                  right: 10.0,
+                                  left: 10.0),
+                          child: Text('!',
+                              style: MyStyles
+                                  .kTextStyleH2)),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(
+                                999),
+                        color: MyStyles
+                            .greyScaleD9D9D9,
+                      ),
+                      height: 25,
+                    ),
+                  ])),
+          Container(
+              height: 25,
+              child: Text('中級山',
+                  style: MyStyles.kTextStyleNormal)),
+          Container(
+              height: 25,
+              child: Text('百岳',
+                  style: MyStyles.kTextStyleNormal)),
+        ]));
   }
 }
