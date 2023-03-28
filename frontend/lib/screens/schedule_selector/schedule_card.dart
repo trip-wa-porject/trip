@@ -14,7 +14,7 @@ class ScheduleCard extends StatelessWidget {
     // final ScheduleModel _model = model ?? ScheduleModel.sample();
     return Card(
       child: SizedBox(
-        height: 200,
+        height: 230,
         child: Row(
           children: [
             _leftSideImage(),
@@ -40,7 +40,7 @@ class ScheduleCard extends StatelessWidget {
       flex: 3,
       child: Container(
         alignment: Alignment.topLeft,
-        height: 180,
+        height: 200,
         child: _tripInfo(),
       ),
     );
@@ -77,7 +77,7 @@ class ScheduleCard extends StatelessWidget {
 
   Widget _tripInfoLevel() {
     return SizedBox(
-        height: 120,
+        height: 140,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
               height: 25,
@@ -89,7 +89,7 @@ class ScheduleCard extends StatelessWidget {
                 Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(999),
+                    borderRadius: BorderRadius.circular(9999),
                     color: MyStyles.greyScaleD9D9D9,
                   ),
                   height: 25,
@@ -99,9 +99,46 @@ class ScheduleCard extends StatelessWidget {
                 ),
               ])),
           const SizedBox(
-              height: 25, child: Text('中級山', style: MyStyles.kTextStyleNormal)),
-          const SizedBox(
-              height: 25, child: Text('百岳', style: MyStyles.kTextStyleNormal)),
+              height: 40,
+              width: 55,
+              child: Center(
+                child: Text(
+                  '中級山',
+                  style: MyStyles.kTextStyleNormal,
+                ),
+              )),
+          Row(
+            children: const [
+              Text('百岳'),
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Text(
+                  '\$3300起',
+                  textAlign: TextAlign.end,
+                ),
+              ))
+            ],
+          ),
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [_customButton('了解更多'), _customButton('立即預訂')],
+          ))
         ]));
+  }
+
+  Widget _customButton(String label) {
+    return Container(
+        height: 48,
+        margin: const EdgeInsets.only(right: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[300],
+        ),
+        child: Padding(
+            padding: const EdgeInsets.only(
+                right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
+            child: Text(label, style: MyStyles.kTextStyleH2)));
   }
 }
