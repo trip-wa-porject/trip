@@ -26,6 +26,7 @@ class MyStyles {
   static const Color greyScale616161 = Color(0xff616161);
   static const Color greyScale757575 = Color(0xff757575);
   static const Color greyScale9E9E9E = Color(0xff9E9E9E);
+  static const Color greyScaleD9D9D9 = Color(0xffD9D9D9);
 
   ///其他
   static const Color greyScaleE7EAEE = Color(0xffE7EAEE);
@@ -46,6 +47,11 @@ class MyStyles {
     fontSize: 20,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.15,
+  );
+  static const TextStyle kTextStyleNormal = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0,
   );
   static const TextStyle kTextStyleSubtitle1 = TextStyle(
     fontSize: 16,
