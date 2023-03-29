@@ -4,9 +4,10 @@ import '../../models/schedule_model.dart';
 import '../../consts.dart';
 
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key, this.model, this.index}) : super(key: key);
+  const ScheduleCard({Key? key, required this.model, this.index})
+      : super(key: key);
 
-  final ScheduleModel? model;
+  final ScheduleModel model;
   final int? index;
 
   @override
@@ -18,11 +19,14 @@ class ScheduleCard extends StatelessWidget {
           Expanded(flex: 1, child: _leftSideImage('我是行程編號')),
           Expanded(
               flex: 1,
-              child: Row(
-                children: [
-                  _rightSideInfo('04/07-04/09', '屏東縣'),
-                  _rightSideBook('3300'),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    _rightSideInfo('04/07-04/09', '屏東縣'),
+                    _rightSideBook('${model.price}'),
+                  ],
+                ),
               )),
         ],
       ),
@@ -62,29 +66,24 @@ class ScheduleCard extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.only(left: 20),
-              child: Text("$date $location"),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.only(left: 20),
-              child: const Text('舊好茶部落巡禮 雲豹的故鄉\n(三天，週五~週日)',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
-          ),
+          Text("$date $location"),
+          const Text('舊好茶部落巡禮 雲豹的故鄉\n(三天，週五~週日)',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              )),
           Row(
             children: [
               _customTab(true, '2天'),
+              SizedBox(
+                width: 12.0,
+              ),
               _customTab(false, '健行'),
+              SizedBox(
+                width: 12.0,
+              ),
               _customTab(false, '大眾路線 (入門)')
             ],
           )
@@ -96,31 +95,36 @@ class ScheduleCard extends StatelessWidget {
   Widget _rightSideBook(String price) {
     return Expanded(
         flex: 1,
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          const Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              '熱烈報名中',
-              style: MyStyles.kTextStyleH1,
-            ),
-          ),
-          Align(
-              alignment: Alignment.centerRight,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                "\$ $price起",
-                style: MyStyles.kTextStyleSubtitle1,
-              )),
-          Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _customButton('瞭解更多'),
-                  _customButton('立即預訂'),
-                ],
-              ))
-        ]));
+                '熱烈報名中',
+                style: MyStyles.kTextStyleH1,
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "\$ $price起",
+                  style: MyStyles.kTextStyleSubtitle1,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _customButton('瞭解更多'),
+                    _customButton('立即預訂'),
+                  ],
+                )
+              ],
+            )
+          ],
+        ));
   }
 
   Widget _customButton(String label) {
@@ -139,7 +143,7 @@ class ScheduleCard extends StatelessWidget {
   Widget _customTab(bool active, String label) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(right: 0, left: 20, top: 12, bottom: 12),
+      margin: const EdgeInsets.only(right: 0, left: 0, top: 12, bottom: 12),
       padding: const EdgeInsets.only(left: 6, right: 6, bottom: 4),
       decoration: BoxDecoration(
           border: Border.all(color: MyStyles.greyScale757575),
