@@ -13,25 +13,41 @@ class ScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // final ScheduleModel _model = model ?? ScheduleModel.sample();
     return Card(
-      child: SizedBox(
-        height: 230,
-        child: Row(
-          children: [
-            _leftSideImage(),
-            _rightSideInfo(),
-          ],
-        ),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: _leftSideImage('我是行程編號')),
+          Expanded(flex: 1, child: const Text('test')),
+        ],
       ),
     );
   }
 
-  Widget _leftSideImage() {
-    return Expanded(
-      flex: 1,
-      child: Container(
-          height: 180,
-          alignment: Alignment.center,
-          child: Image.asset('assets/Demo/demo.jpeg')),
+  Widget _leftSideImage(String tripNum) {
+    return Container(
+      height: 230,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            alignment: const Alignment(-.2, 0),
+            image: Image.asset('assets/images/demo.jpeg').image,
+            fit: BoxFit.cover),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+      ),
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                color: const Color.fromRGBO(255, 255, 255, 0.6)),
+            child: Text(
+              tripNum,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          )),
     );
   }
 
