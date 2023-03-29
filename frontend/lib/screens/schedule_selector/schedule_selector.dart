@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../schedule_detail/schdule_detail.dart';
 import 'schedule_card.dart';
-import '../../component/schedule_detail.dart';
 import '../../models/schedule_model.dart';
 import 'schedule_options.dart';
 import 'package:get/get.dart';
