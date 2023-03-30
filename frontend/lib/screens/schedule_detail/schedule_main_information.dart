@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripflutter/consts.dart';
 
 import '../../models/schedule_model.dart';
 
@@ -16,7 +17,7 @@ class ScheduleMainInformation extends StatelessWidget {
         //標題區
         Padding(
           padding:
-              const EdgeInsets.only(left: 24, top: 8, right: 24, bottom: 8),
+              const EdgeInsets.only(top: 8, bottom: 8),
           child: Column(
             children: const [
               SizedBox(
@@ -24,29 +25,29 @@ class ScheduleMainInformation extends StatelessWidget {
                   child: Text(
                     '標題',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 26, color: Colors.lightGreen),
+                    style: TextStyle(fontSize: 34, color: MyStyles.tripTertiary),
                   )),
               SizedBox(
                   width: double.infinity,
                   child: Text(
                     '2023/03/19(日) - 03/17(一)',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(fontSize: 20, color: MyStyles.greyScale757575),
                   )),
               //tags
             ],
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.only(top:24.0, bottom: 48.0),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(18.0),
                   child: SizedBox.fromSize(
-                      size: const Size.fromRadius(120),
+                      size: const Size.fromRadius(140),
                       child: Image.asset(
                         'assets/images/forest.jpg',
                         fit: BoxFit.fill,
@@ -58,28 +59,26 @@ class ScheduleMainInformation extends StatelessWidget {
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
-                          left: 24.0,
-                          right: 24.0,
+                          left: 48.0,
                         ),
                         child: const Text(
                           '活動簡介',
                           textAlign: TextAlign.left,
                           style:
-                              TextStyle(fontSize: 20, color: Colors.blueGrey),
+                              TextStyle(fontSize: 24, color: MyStyles.greyScale212121),
                         ),
                       ),
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
-                          left: 24.0,
-                          right: 24.0,
+                          left: 48.0,
                         ),
                         child: const Text(
                           '活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 5,
                           textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: TextStyle(fontSize: 14, color: MyStyles.greyScale757575),
                         ),
                       ),
                       Flexible(
@@ -89,21 +88,21 @@ class ScheduleMainInformation extends StatelessWidget {
                               child: Container(
                                 alignment: Alignment.bottomLeft,
                                 padding: const EdgeInsets.only(
-                                  left: 24.0,
+                                  left: 48.0,
                                 ),
                                 child: Image.asset(
                                   'assets/images/mountain.jpg',
-                                  width: 75,
-                                  height: 75,
+                                  width: 98,
+                                  height: 98,
                                 ),
                               ),
                             ),
                             Flexible(
                               child: Container(
                                 alignment: Alignment.bottomRight,
-                                padding: const EdgeInsets.only(
-                                  right: 24.0,
-                                ),
+                                // padding: const EdgeInsets.only(
+                                //   right: 24.0,
+                                // ),
                                 child: SizedBox(
                                   height: 55,
                                   width: 230,
@@ -125,7 +124,7 @@ class ScheduleMainInformation extends StatelessWidget {
                                     child: const Text(
                                       '立即報名',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: MyStyles.greyScale000000,
                                         fontSize: 20,
                                       ),
                                     ),
