@@ -48,7 +48,7 @@ class ScheduleMainInformation extends StatelessWidget {
                   child: SizedBox.fromSize(
                       size: const Size.fromRadius(120),
                       child: Image.asset(
-                        'assets/forest.jpg',
+                        'assets/images/forest.jpg',
                         fit: BoxFit.fill,
                       )),
                 ),
@@ -92,7 +92,7 @@ class ScheduleMainInformation extends StatelessWidget {
                                   left: 24.0,
                                 ),
                                 child: Image.asset(
-                                  'assets/mountain.jpg',
+                                  'assets/images/mountain.jpg',
                                   width: 75,
                                   height: 75,
                                 ),

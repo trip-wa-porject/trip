@@ -92,7 +92,7 @@ Widget createTab(String tabTitle, String tabImage) {
         topLeft: Radius.circular(20.0),
       ),
       image: DecorationImage(
-        image: AssetImage('assets/$tabImage.png'),
+        image: AssetImage('assets/images/$tabImage.png'),
         fit: BoxFit.none,
       ),
     ),

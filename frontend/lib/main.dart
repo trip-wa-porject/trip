@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tripflutter/consts.dart';
 import 'firebase_options.dart';
 
 import 'screens/schedule_selector/schedule_selector.dart';
 
-void main() async{
+void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -21,18 +23,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorSchemeSeed: MyStyles.tripPrimary,
+        textTheme: GoogleFonts.notoSansTextTheme(
+          ThemeData(brightness: Brightness.light).textTheme,
+        ),
       ),
-      home: const MyHomePage(title: 'Hiking Taiwan'),
+      home: const MyHomePage(title: '登峰造極'),
     );
   }
 }
@@ -53,8 +50,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body:
-          ScheduleSelector(), // This trailing comma makes auto-formatting nicer for build methods.
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 80.0,
+            right: 200,
+            left: 200,
+          ),
+          child: ScheduleSelector(),
+        ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
