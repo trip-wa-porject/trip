@@ -34,13 +34,15 @@
 
 class ScheduleModel {
   //title
-  final String? title;
+  final String title;
 
   //start_date
   final DateTime startDate;
 
   //end_date
   final DateTime endDate;
+
+  final String imageUrl;
 
   //level
   final String level;
@@ -76,6 +78,7 @@ class ScheduleModel {
     required this.title,
     required this.startDate,
     required this.endDate,
+    required this.imageUrl,
     required this.level,
     required this.type,
     required this.area,
@@ -90,9 +93,11 @@ class ScheduleModel {
 
   static ScheduleModel sample() {
     return ScheduleModel(
-      title: "秀霸線(四天，週五~週一)",
+      title: "秀霸線",
       startDate: DateTime(2023, 3, 31), //2023-03-31
-      endDate: DateTime(2022, 4, 3),
+      endDate: DateTime(2023, 4, 3),
+      imageUrl:
+          'https://cdntwrunning.biji.co/800_74e082409a0b128a84a0cc4ff9ff494bde926f8df342a0394ea9358938f32f17.jpg',
       level: 'BK',
       type: '百岳',
       area: ["新竹縣尖石鄉", "苗栗縣泰安鄉", "台中市和平區"],

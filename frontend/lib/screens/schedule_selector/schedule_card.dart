@@ -3,27 +3,40 @@ import 'package:flutter/material.dart';
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
 
+Map<int, String> intToDate = {
+  1: '一',
+  2: '二',
+  3: '三',
+  4: '四',
+  5: '五',
+  6: '六',
+  7: '日'
+};
+
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key, required this.model, this.index})
+  const ScheduleCard({Key? key, required this.model, required this.index})
       : super(key: key);
 
   final ScheduleModel model;
-  final int? index;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    // final ScheduleModel _model = model ?? ScheduleModel.sample();
+    final ScheduleModel _model = ScheduleModel.sample();
+
     return Card(
       child: Row(
         children: [
-          Expanded(flex: 1, child: _leftSideImage('我是行程編號')),
+          Expanded(
+              flex: 1, child: _leftSideImage("${index + 1}", _model.imageUrl)),
           Expanded(
               flex: 1,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    _rightSideInfo('04/07-04/09', '屏東縣'),
+                    _rightSideInfo(_model.startDate, _model.endDate,
+                        _model.area, _model.title),
                     _rightSideBook('${model.price}'),
                   ],
                 ),
@@ -33,13 +46,13 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget _leftSideImage(String tripNum) {
+  Widget _leftSideImage(String tripNum, String imageUrl) {
     return Container(
       height: 230,
       decoration: BoxDecoration(
         image: DecorationImage(
             alignment: const Alignment(-.2, 0),
-            image: Image.asset('assets/images/demo.jpeg').image,
+            image: Image.network(imageUrl).image,
             fit: BoxFit.cover),
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
@@ -62,26 +75,36 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget _rightSideInfo(String date, String location) {
+  Widget _rightSideInfo(
+      DateTime startDate, DateTime endDate, List<String> area, String title) {
+    final handleStartDate =
+        "${startDate.month.toString()}/${startDate.day.toString()}";
+
+    final handleEndDate =
+        "${endDate.month.toString()}/${endDate.day.toString()}";
+
+    final timeDelta = endDate.difference(startDate).inDays;
+
     return Expanded(
       flex: 1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("$date $location"),
-          const Text('舊好茶部落巡禮 雲豹的故鄉\n(三天，週五~週日)',
-              style: TextStyle(
+          Text("$handleStartDate - $handleEndDate ${area.join(', ')}"),
+          Text(
+              "$title \n(${intToDate[timeDelta]}天，週${intToDate[startDate.weekday]}~週${intToDate[endDate.weekday]})",
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               )),
           Row(
             children: [
               _customTab(true, '2天'),
-              SizedBox(
+              const SizedBox(
                 width: 12.0,
               ),
               _customTab(false, '健行'),
-              SizedBox(
+              const SizedBox(
                 width: 12.0,
               ),
               _customTab(false, '大眾路線 (入門)')
@@ -99,8 +122,8 @@ class ScheduleCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 '熱烈報名中',
                 style: MyStyles.kTextStyleH1,
@@ -129,7 +152,7 @@ class ScheduleCard extends StatelessWidget {
 
   Widget _customButton(String label) {
     return Container(
-        margin: const EdgeInsets.only(left: 10.0),
+        margin: const EdgeInsets.only(left: 10.0, top: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.grey[300],
@@ -137,7 +160,7 @@ class ScheduleCard extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(
                 right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
-            child: Text(label, style: MyStyles.kTextStyleH2)));
+            child: Text(label, style: MyStyles.kTextStyleNormal)));
   }
 
   Widget _customTab(bool active, String label) {
