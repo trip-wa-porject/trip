@@ -1,29 +1,90 @@
 import 'package:get/get.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 
+import '../schedule_detail/schdule_detail.dart';
+
 class ScheduleSelectorController extends GetxController {
   RxBool isLoading = false.obs;
 
   RxList<AreaOption> areaOptions = <AreaOption>[].obs;
-  List<PriceOption> priceOptions = <PriceOption>[].obs;
-  List<LevelOption> levelOptions = <LevelOption>[].obs;
-  List<DayOption> dayOptions = <DayOption>[].obs;
-  List<TypeOption> typeOptions = <TypeOption>[].obs;
-
+  RxList<PriceOption> priceOptions = <PriceOption>[].obs;
+  RxList<LevelOption> levelOptions = <LevelOption>[].obs;
+  RxList<DayOption> dayOptions = <DayOption>[].obs;
+  RxList<TypeOption> typeOptions = <TypeOption>[].obs;
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
+  Rxn<DateTime> selectedStartDateTime = Rxn<DateTime>();
+  Rxn<DateTime> selectedEndDateTime = Rxn<DateTime>();
+
+  RxBool hasSeat = false.obs;
+
+  selectTypeOption(List<TypeOption> options) {
+    typeOptions.assignAll(options);
+    typeOptions.refresh();
+  }
+
+  selectDayOption(List<DayOption> options) {
+    dayOptions.assignAll(options);
+    dayOptions.refresh();
+  }
+
+  selectLevelOption(List<LevelOption> options) {
+    levelOptions.assignAll(options);
+    levelOptions.refresh();
+  }
+
+  selectAreaOption(List<AreaOption> options) {
+    areaOptions.assignAll(options);
+    areaOptions.refresh();
+  }
+
+  selectPriceOption(List<PriceOption> options) {
+    priceOptions.assignAll(options);
+    priceOptions.refresh();
+  }
+
+  selectStartDate(DateTime dateTime) {
+    selectedStartDateTime.value = dateTime;
+  }
+
+  selectEndDate(DateTime dateTime) {
+    selectedEndDateTime.value = dateTime;
+  }
+
+  selectHasSeat(bool newValue) {
+    hasSeat.value = !hasSeat.value;
+  }
 
   clearAllSelected() {
     print('clearAllSelected');
+    areaOptions.clear();
+    priceOptions.clear();
+    levelOptions.clear();
+    dayOptions.clear();
+    typeOptions.clear();
+    selectedStartDateTime.value = null;
+    selectedEndDateTime.value = null;
+    hasSeat.value = false;
   }
 
   search() async {
     print('search');
+    print(typeOptions);
+    print(levelOptions);
+    print(areaOptions);
+    print(dayOptions);
+    print(priceOptions);
     isLoading.value = true;
     List<ScheduleModel> list =
         List.generate(3, (index) => ScheduleModel.sample());
     scheduleList.addAll(list);
     await 3.delay();
     isLoading.value = false;
+  }
+
+  goToDetail(ScheduleModel scheduleModel) {
+    Get.to(ScheduleDetail(
+      model: scheduleModel,
+    ));
   }
 
   @override
@@ -72,6 +133,9 @@ enum AreaOption {
 
   const AreaOption(this.showedString);
   final String showedString;
+
+  @override
+  String toString() => showedString;
 }
 
 enum PriceOption {
@@ -83,6 +147,9 @@ enum PriceOption {
 
   const PriceOption(this.showedString);
   final String showedString;
+
+  @override
+  String toString() => showedString;
 }
 
 enum LevelOption {
@@ -93,6 +160,9 @@ enum LevelOption {
 
   const LevelOption(this.showedString);
   final String showedString;
+
+  @override
+  String toString() => showedString;
 }
 
 enum DayOption {
@@ -103,6 +173,9 @@ enum DayOption {
 
   const DayOption(this.showedString);
   final String showedString;
+
+  @override
+  String toString() => showedString;
 }
 
 enum TypeOption {
@@ -115,4 +188,7 @@ enum TypeOption {
 
   const TypeOption(this.showedString);
   final String showedString;
+
+  @override
+  String toString() => showedString;
 }

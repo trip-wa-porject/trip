@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
@@ -151,6 +153,12 @@ class ScheduleCard extends StatelessWidget {
   }
 
   Widget _customButton(String label) {
+    return OutlinedButton(
+      onPressed: () {
+        Get.find<ScheduleSelectorController>().goToDetail(model);
+      },
+      child: Text(label, style: MyStyles.kTextStyleNormal),
+    );
     return Container(
         margin: const EdgeInsets.only(left: 10.0, top: 10),
         decoration: BoxDecoration(

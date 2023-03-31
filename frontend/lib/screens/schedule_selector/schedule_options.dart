@@ -5,6 +5,7 @@ import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import 'schedule_options/check_box_group.dart';
+import 'schedule_options/date_selector.dart';
 
 class ScheduleOptions extends GetView<ScheduleSelectorController> {
   const ScheduleOptions({Key? key}) : super(key: key);
@@ -24,90 +25,104 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
             children: [
               Row(
                 children: [
-                  ScheduleOptionCheckSelector(
-                    title: "類型",
-                    width: 120,
-                    allItems:
-                        TypeOption.values.map((e) => e.showedString).toList(),
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionCheckSelector<TypeOption>(
+                      title: "類型",
+                      width: 120,
+                      selectedItems: controller.typeOptions.toList(),
+                      allItems: TypeOption.values,
+                      onChangeCallback: (List<TypeOption> value) {
+                        controller.selectTypeOption(value);
+                      },
+                    ),
                   ),
                   SizedBox(
                     width: spacerWidth,
                   ),
-                  ScheduleOptionCheckSelector(
-                    title: "等級",
-                    width: 220,
-                    allItems:
-                        LevelOption.values.map((e) => e.showedString).toList(),
-                    mode: CheckBoxOptionMode.multiple,
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionCheckSelector<LevelOption>(
+                      title: "等級",
+                      width: 220,
+                      allItems: LevelOption.values,
+                      mode: CheckBoxOptionMode.multiple,
+                      selectedItems: controller.levelOptions.toList(),
+                      onChangeCallback: (List<LevelOption> value) {
+                        controller.selectLevelOption(value);
+                      },
+                    ),
                   ),
                   SizedBox(
                     width: spacerWidth,
                   ),
-                  ScheduleOptionCheckSelector(
-                    title: "區域",
-                    width: 100,
-                    allItems:
-                        AreaOption.values.map((e) => e.showedString).toList(),
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionCheckSelector<AreaOption>(
+                      title: "區域",
+                      width: 120,
+                      allItems: AreaOption.values,
+                      selectedItems: controller.areaOptions.toList(),
+                      onChangeCallback: (value) {
+                        controller.selectAreaOption(value);
+                      },
+                    ),
                   ),
                   SizedBox(
                     width: spacerWidth,
                   ),
-                  ScheduleOptionCheckSelector(
-                    title: "天數",
-                    width: 120,
-                    allItems:
-                        DayOption.values.map((e) => e.showedString).toList(),
-                    mode: CheckBoxOptionMode.multiple,
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionCheckSelector<DayOption>(
+                      title: "天數",
+                      width: 120,
+                      allItems: DayOption.values,
+                      mode: CheckBoxOptionMode.multiple,
+                      selectedItems: controller.dayOptions.toList(),
+                      onChangeCallback: (value) {
+                        controller.selectDayOption(value);
+                      },
+                    ),
                   ),
                   SizedBox(
                     width: spacerWidth,
                   ),
-                  ScheduleOptionCheckSelector(
-                    title: "行程預算",
-                    width: 200,
-                    allItems:
-                        PriceOption.values.map((e) => e.showedString).toList(),
-                    mode: CheckBoxOptionMode.multiple,
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionCheckSelector<PriceOption>(
+                      title: "行程預算",
+                      width: 240,
+                      allItems: PriceOption.values,
+                      selectedItems: controller.priceOptions.toList(),
+                      mode: CheckBoxOptionMode.multiple,
+                      onChangeCallback: (value) {
+                        controller.selectPriceOption(value);
+                      },
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  ScheduleOptionCheckSelector(
-                    title: "起始日期",
-                    width: 360,
-                    allItems: [],
-                    selectorOptionType: ScheduleOptionType.datePicker,
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionDateSelector(
+                      title: "起始日期",
+                      width: 360,
+                      selectedDate: controller.selectedStartDateTime.value,
+                      lastDate: controller.selectedEndDateTime.value,
+                      onDateChangeCallback: (DateTime dateTime) {
+                        controller.selectStartDate(dateTime);
+                      },
+                    ),
                   ),
                   SizedBox(
                     width: spacerWidth,
                   ),
-                  ScheduleOptionCheckSelector(
-                    title: "結束日期",
-                    width: 360,
-                    allItems: [],
-                    selectorOptionType: ScheduleOptionType.datePicker,
-                    onChangeCallback: (dynamic value) {
-                      print(value);
-                    },
+                  Obx(
+                    () => ScheduleOptionDateSelector(
+                      title: "結束日期",
+                      width: 360,
+                      startDate: controller.selectedStartDateTime.value,
+                      selectedDate: controller.selectedEndDateTime.value,
+                      onDateChangeCallback: (DateTime dateTime) {
+                        controller.selectEndDate(dateTime);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -121,10 +136,14 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       Row(
                         children: [
                           Text('顯示: '),
-                          Checkbox(
-                            value: true,
-                            onChanged: (value) {},
-                            activeColor: MyStyles.tripTertiary,
+                          Obx(
+                            () => Checkbox(
+                              value: controller.hasSeat.value,
+                              onChanged: (value) {
+                                controller.selectHasSeat(value!);
+                              },
+                              activeColor: MyStyles.tripTertiary,
+                            ),
                           ),
                           Text('尚有名額'), //TODO check box
                         ],
