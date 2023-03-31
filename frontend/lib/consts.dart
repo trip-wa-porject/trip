@@ -30,6 +30,9 @@ class MyStyles {
 
   ///其他
   static const Color greyScaleE7EAEE = Color(0xffE7EAEE);
+  static const Color greyScaleCFCFCE = Color(0xffCFCFCE);
+  static const Color greyScale6037392F = Color(0x6037392F);
+  static const Color greyScale8037392F = Color(0x8037392F);
 
 //TextStyles
   static const TextStyle kTextStyleH1 = TextStyle(

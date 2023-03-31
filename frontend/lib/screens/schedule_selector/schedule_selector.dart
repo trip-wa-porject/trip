@@ -3,8 +3,8 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
+import '../schedule_detail/schdule_detail.dart';
 import 'schedule_card.dart';
-import '../../component/schedule_detail.dart';
 import '../../models/schedule_model.dart';
 import 'schedule_options.dart';
 import 'package:get/get.dart';
