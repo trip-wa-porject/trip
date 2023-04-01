@@ -2,8 +2,8 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-wi067-561cb1a027.json");
-//mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json
+const serviceAccount = require("../mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json");
+//wa-project-mountain-firebase-adminsdk-v7hwp-381a4156a3.json
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -60,8 +60,9 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   .then(res => res.forEach(doc => {
     let rec = doc.data();
     
+    functions.logger.info(`document id: ${doc.id}`);
+    
     if (filter(req.body, rec)) {
-      functions.logger.info(`document id: ${doc.id}`);
       result.push({[doc.id]: doc.data()});
     }
   }))
@@ -96,7 +97,7 @@ function filter(query, rec) {
       return false;
     }
     
-    if (query.area && query.area.indexOf(rec['area'][0]) == -1 && query.area.indexOf(rec['area'][1]) == -1) {
+    if (query.area && !(areaFound(query.area, rec['area']))) {
       return false;
     }
     
@@ -119,6 +120,23 @@ function keywordFound(keyword, fields) {
   }
   
   return result;
+}
+
+function areaFound(areas, cities) {
+  let result = [];
+
+  for (area of areas) {
+    
+    for (v of cities) {      
+      if (v.city == area) {
+        result.push(v);
+        break;
+      }
+    }
+  }
+  
+  functions.logger.info('areas result: ', result);
+  return result.length > 0;
 }
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
