@@ -1,23 +1,23 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:cloud_functions/cloud_functions.dart';
 
 abstract class GeneralRepository {}
 
 class BackendRepository implements GeneralRepository {
-  Future<List<Map<String, dynamic>>> fetchTrip(Map<String, dynamic> args) async {
-  var queries = '';
-  args.forEach((k, v) => queries += '&${k}=${v}');
-
-  final response = await http
-      .get(Uri.parse('http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/searchTrips?${queries}'));
-
-  Map json = jsonDecode(response.body);
-
-  if (response.statusCode == 200) {
-    return json['result'].cast<Map<String, dynamic>>() as List<Map<String, dynamic>>;
-  } else {
-    throw Exception('Failed to load trip');
+  //http://127.0.0.1:5001/wa-project-mountain/us-central1/searchTrips
+  Future<List<Map<String, dynamic>>> fetchTrip(
+      Map<String, dynamic> args) async {
+    try {
+      final result = await FirebaseFunctions.instance
+          .httpsCallable('searchTripsOnCall')
+          .call(args);
+      List data = result.data;
+      return List<Map<String, dynamic>>.from(data);
+    } on FirebaseFunctionsException catch (error) {
+      print(error.code);
+      print(error.details);
+      print(error.message);
+      rethrow;
+    }
   }
-}
 }

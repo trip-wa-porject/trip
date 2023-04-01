@@ -1,81 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/schedule_selector/customized_dropdown_button/customized_dropdown_button.dart';
 
 enum CheckBoxOptionMode { single, multiple }
 
-enum CheckBoxOptionAxisMode { vertical, horizontal }
-
-class ScheduleOptionCheckBoxGroup extends StatefulWidget {
-  const ScheduleOptionCheckBoxGroup({
+class ScheduleOptionCheckSelector<T> extends StatelessWidget {
+  ScheduleOptionCheckSelector({
     Key? key,
     required this.title,
-    required this.allItem,
+    required this.allItems,
     required this.onChangeCallback,
-    this.selectedItems,
+    List<T>? selectedItems,
     this.mode = CheckBoxOptionMode.single,
-    this.axisMode = CheckBoxOptionAxisMode.vertical,
-  }) : super(key: key);
+    this.width = 100,
+  }) : super(key: key) {
+    this.selectedItems = selectedItems ?? [];
+  }
 
   final String title;
-  final List<dynamic> allItem;
-  final List<dynamic>? selectedItems;
-  final Function(dynamic) onChangeCallback;
+  final List<T> allItems;
+  late List<T> selectedItems;
+  final void Function(List<T>) onChangeCallback;
   final CheckBoxOptionMode mode;
-  final CheckBoxOptionAxisMode axisMode;
-
-  @override
-  State<ScheduleOptionCheckBoxGroup> createState() =>
-      _ScheduleOptionCheckBoxGroupState();
-}
-
-class _ScheduleOptionCheckBoxGroupState
-    extends State<ScheduleOptionCheckBoxGroup> {
-  late List<dynamic> selectedItems;
-  @override
-  void initState() {
-    selectedItems = widget.selectedItems ?? [];
-    super.initState();
-  }
+  final double width;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('路線等級'),
-          Flex(
-            direction: Axis.vertical,
-            children: widget.allItem
-                .map((e) => Row(
-                      children: [
-                        Checkbox(
-                            value: selectedItems.contains(e),
-                            onChanged: (value) {
-                              setState(() {
-                                if (widget.mode == CheckBoxOptionMode.single) {
-                                  if (value == true) {
-                                    selectedItems.clear();
-                                    selectedItems.add(e);
-                                  } else {
-                                    selectedItems.clear();
-                                  }
-                                } else {
-                                  if (value == true) {
-                                    selectedItems.add(e);
-                                  } else {
-                                    selectedItems.remove(e);
-                                  }
-                                }
+    EdgeInsets hintPadding = const EdgeInsets.only(left: 8.0);
+    ButtonStyleData buttonStyleData = ButtonStyleData(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: MyStyles.greyScaleE7EAEE,
+        ),
+      ),
+      height: 40,
+      width: width,
+    );
+    MenuItemStyleData menuItemStyleData = const MenuItemStyleData(
+      height: 40,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+    );
+    DropdownStyleData dropdownStyleData = DropdownStyleData(
+      width: width, //展開視窗風格
+      maxHeight: allItems.length > 8 ? 400 : null,
+      offset: const Offset(0, -8.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
+      //一般check box
+      child: DropdownButtonHideUnderline(
+        child: CustomizedDropdownButton(
+          isExpanded: true,
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: hintPadding,
+              child: Text(
+                '${title}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).hintColor,
+                ),
+              ),
+            ),
+          ),
 
-                                widget.onChangeCallback(selectedItems);
-                              });
-                            }),
-                        Text("$e"),
-                      ],
-                    ))
-                .toList(),
-          )
-        ],
+          items: allItems.map((item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              //disable default onTap to avoid closing menu when selecting an item
+              enabled: false,
+              child: StatefulBuilder(
+                builder: (context, menuSetState) {
+                  final _isSelected = selectedItems.contains(item);
+                  return InkWell(
+                    onTap: () {
+                      _isSelected
+                          ? selectedItems.remove(item)
+                          : selectedItems.add(item);
+                      //This rebuilds the StatefulWidget to update the button's text
+                      // setState(() {});
+                      //This rebuilds the dropdownMenu Widget to update the check mark
+                      menuSetState(() {});
+                      onChangeCallback(selectedItems);
+                    },
+                    child: Container(
+                      height: double.infinity,
+                      // padding:
+                      //     const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        children: [
+                          _isSelected
+                              ? Icon(
+                                  Icons.check_box_rounded,
+                                  color: MyStyles.tripTertiary,
+                                )
+                              : const Icon(
+                                  Icons.check_box_outline_blank,
+                                ),
+                          const SizedBox(width: 8),
+                          Text(
+                            item.toString(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }).toList(),
+          //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
+          value: selectedItems.isEmpty ? null : selectedItems.last,
+          onChanged: (value) {},
+          selectedItemBuilder: (context) {
+            return allItems.map(
+              (item) {
+                return Container(
+                  alignment: AlignmentDirectional.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    selectedItems.join(', '),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
+                  ),
+                );
+              },
+            ).toList();
+          },
+          buttonStyleData: buttonStyleData,
+          menuItemStyleData: menuItemStyleData,
+          dropdownStyleData: dropdownStyleData,
+        ),
       ),
     );
   }

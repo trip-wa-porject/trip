@@ -17,7 +17,7 @@ class ScheduleDetail extends StatelessWidget {
             child: Column(
               children: [
                 Text('行程名稱：${model.title} '),
-                Text('金額: ${model.cost}'),
+                Text('金額: ${model.price}'),
               ],
             ),
           ),

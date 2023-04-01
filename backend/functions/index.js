@@ -2,16 +2,18 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-wi067-561cb1a027.json");
+const serviceAccount = require("../../../wa-project-mountain-5adff5001301.json");
 //mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-const data = require('../final_output.json');
+
+// const data = require('../final_output.json');
 
 const db = getFirestore();
+
 
 exports.searchTrips = functions.https.onRequest(async (req, res) => {
   let result = [];
@@ -71,6 +73,63 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
     res.json({result: result});
   })
   .catch(err => console.error(err));
+});
+
+
+exports.searchTripsOnCall = functions.https.onCall(async (data, context) => {
+  const query = data;
+  let result = [];
+  functions.logger.info({structuredData: true, request: query});
+  
+  let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
+  let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
+  let type = ['百岳', '郊山', '中級山步道', '海外', '健行', '郊山步道'];
+  //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
+  let level = ['A', 'B', 'C'];
+  //let area = ['台北市', '新北市'];
+  //['台北市', '基隆市', '新北市', '宜蘭縣', '新竹市', '新竹縣', '桃園市', '苗栗縣', '台中市', '彰化縣', '南投縣', '嘉義市', '嘉義縣', '雲林縣', '台南市', '高雄市', '澎湖縣', '屏東縣', '台東縣', '花蓮縣', '金門縣', '連江縣', '南海諸島', '釣魚台列嶼'];
+  
+  if (query.startDateFrom) {
+    startDateFrom = query.startDateFrom;
+  }
+  
+  if (query.startDateTo) {
+    startDateTo = query.startDateTo;
+  }
+  
+  if (query.type) {
+    type = query.type;
+  }
+  
+  if (query.level) {
+    level = query.level;
+  }
+  
+  functions.logger.info(`startDatefrom: ${startDateFrom}`);
+  functions.logger.info(`startDateTo: ${startDateTo}`);
+
+  let finalRes = db.collection('trips')
+  .where('startDate', '>=', startDateFrom)
+  .where('startDate', '<=', startDateTo)
+  .where('type', 'in', type)
+  .where('level', 'in', level)
+  .orderBy('startDate')
+  .limit(20)
+  .get()
+  .then(res => res.forEach(doc => {
+    let rec = doc.data();
+    
+    if (filter(query, rec)) {
+      functions.logger.info(`document id: ${doc.id}`);
+      result.push({id:doc.id , ...doc.data()});
+    }
+  }))
+  .then(() => {
+    functions.logger.info('result: ', result);
+    return result;
+  })
+  .catch(err => console.error(err));
+  return finalRes;
 });
 
 function filter(query, rec) {
@@ -153,7 +212,7 @@ exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
       "title": v.title,
       "startDate": new Date(v.startDate * 1000).toJSON().substring(0, 10),
       "endDate": new Date(v.endDate * 1000).toJSON().substring(0, 10),
-      "area": areas,
+      "area": v.area,
       "type": v.type,
       "level": v.level,
       "breif": "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
