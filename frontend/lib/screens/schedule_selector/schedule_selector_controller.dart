@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:tripflutter/models/schedule_model.dart';
+import 'package:tripflutter/modules/hike_repository.dart';
 
 import '../schedule_detail/schdule_detail.dart';
 
 class ScheduleSelectorController extends GetxController {
+  BackendRepository backendRepository = BackendRepository();
   RxBool isLoading = false.obs;
 
   RxList<AreaOption> areaOptions = <AreaOption>[].obs;
@@ -73,12 +75,22 @@ class ScheduleSelectorController extends GetxController {
     print(areaOptions);
     print(dayOptions);
     print(priceOptions);
-    isLoading.value = true;
-    List<ScheduleModel> list =
-        List.generate(3, (index) => ScheduleModel.sample());
-    scheduleList.addAll(list);
-    await 3.delay();
-    isLoading.value = false;
+    //TODO 帶參數進入下面function
+    try {
+      isLoading.value = true;
+
+      List<Map<String, dynamic>> result = await backendRepository.fetchTrip({
+        "startDateFrom": "2023-04-01",
+        "type": ["郊山步道"]
+      });
+      List<ScheduleModel> list =
+          result.map((e) => ScheduleModel.fromJson(e)).toList();
+      scheduleList.addAll(list);
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   goToDetail(ScheduleModel scheduleModel) {
