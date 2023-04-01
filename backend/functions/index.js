@@ -96,7 +96,7 @@ function filter(query, rec) {
       return false;
     }
     
-    if (query.area && query.area.indexOf(rec['area']) == -1) {
+    if (query.area && query.area.indexOf(rec['area'][0]) == -1 && query.area.indexOf(rec['area'][1]) == -1) {
       return false;
     }
     
