@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-v7hwp-381a4156a3.json");
+const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-wi067-561cb1a027.json");
 //mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json
 
 admin.initializeApp({
@@ -141,7 +141,7 @@ function areaFound(areas, cities) {
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
   data.forEach(v => {
-    const docRef = admin.firestore().collection('trips').doc(v.id.toString() . '000');
+    let docRef = admin.firestore().collection('trips').doc(`${v.id.toString()}000`);
     let areas = v.area.map(v => {
       return {"city": v.substring(0, 3), "county": v.substring(3, 6)};
     });
