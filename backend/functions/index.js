@@ -126,6 +126,9 @@ function areaFound(areas, cities) {
   let result = [];
 
   for (area of areas) {
+    if (result.length > 0) {
+      break;
+    }
     
     for (v of cities) {      
       if (v.city == area) {
