@@ -1019,7 +1019,7 @@ class CustomizedDropdownButton<T> extends StatefulWidget {
   /// if it is non-null.
   CustomizedDropdownButton({
     super.key,
-    required this.items,
+    this.items,
     this.selectedItemBuilder,
     this.value,
     this.hint,
@@ -1049,6 +1049,7 @@ class CustomizedDropdownButton<T> extends StatefulWidget {
     // DropdownButtonFormField.
   })  : assert(
           items == null ||
+              dropdownMenuType == DropdownMenuType.datePicker ||
               items.isEmpty ||
               value == null ||
               items.where((DropdownMenuItem<T> item) {
@@ -1444,23 +1445,24 @@ class CustomizedDropdownButtonState<T>
 
   void _handleTap() {
     final List<_MenuItem<T>> menuItems = <_MenuItem<T>>[
-      for (int index = 0; index < widget.items!.length; index += 1)
-        _MenuItem<T>(
-          item: widget.items![index],
-          onLayout: (Size size) {
-            // If [_dropdownRoute] is null and onLayout is called, this means
-            // that performLayout was called on a _DropdownRoute that has not
-            // left the widget tree but is already on its way out.
-            //
-            // Since onLayout is used primarily to collect the desired heights
-            // of each menu item before laying them out, not having the _DropdownRoute
-            // collect each item's height to lay out is fine since the route is
-            // already on its way out.
-            if (_dropdownRoute == null) return;
+      if (widget.items != null)
+        for (int index = 0; index < widget.items!.length; index += 1)
+          _MenuItem<T>(
+            item: widget.items![index],
+            onLayout: (Size size) {
+              // If [_dropdownRoute] is null and onLayout is called, this means
+              // that performLayout was called on a _DropdownRoute that has not
+              // left the widget tree but is already on its way out.
+              //
+              // Since onLayout is used primarily to collect the desired heights
+              // of each menu item before laying them out, not having the _DropdownRoute
+              // collect each item's height to lay out is fine since the route is
+              // already on its way out.
+              if (_dropdownRoute == null) return;
 
-            _dropdownRoute!.itemHeights[index] = size.height;
-          },
-        ),
+              _dropdownRoute!.itemHeights[index] = size.height;
+            },
+          ),
     ];
 
     final NavigatorState navigator =

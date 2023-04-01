@@ -31,6 +31,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
       }
       return SizedBox(
         height: paintHeight,
+        width: kCardWidth,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -100,25 +101,24 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                           ),
                         );
                       }
-                      return ListView.builder(
+                      return ListView.separated(
                         cacheExtent: kCardHeight,
+                        padding: const EdgeInsets.all(0.0),
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: controller.scheduleList.length,
                         itemBuilder: (c, index) {
                           return SizedBox(
                             height: kCardHeight,
-                            child: GestureDetector(
-                              onTap: () async {
-                                print('onTap');
-                                await Get.dialog(ScheduleDetail(
-                                  model: ScheduleModel.sample(),
-                                ));
-                              },
-                              child: ScheduleCard(
-                                model: controller.scheduleList[index],
-                                index: index + 1,
-                              ),
+                            width: kCardWidth,
+                            child: ScheduleCard(
+                              model: controller.scheduleList[index],
+                              index: index + 1,
                             ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(
+                            height: 8.0,
                           );
                         },
                       );

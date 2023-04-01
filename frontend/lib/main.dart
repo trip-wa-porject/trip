@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,9 +9,11 @@ import 'firebase_options.dart';
 import 'screens/schedule_selector/schedule_selector.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(const MyApp());
 }
 
@@ -51,13 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 80.0,
-            right: 200,
-            left: 200,
+        child: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: 1160,
+            child: ScheduleSelector(),
           ),
-          child: ScheduleSelector(),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

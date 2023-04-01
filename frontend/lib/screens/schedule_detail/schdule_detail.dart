@@ -81,7 +81,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
               ),
               SliverToBoxAdapter(
                 child: ScheduleMainInformation(
-                  model: ScheduleModel.sample(),
+                  model: widget.model,
                 ),
               ),
               SliverToBoxAdapter(
@@ -118,13 +118,13 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
             physics: const NeverScrollableScrollPhysics(),
             children: [
               ScheduleBasic(
-                model: ScheduleModel.sample(),
+                model: widget.model,
               ),
               ScheduleTransportation(
-                model: ScheduleModel.sample(),
+                model: widget.model,
               ),
               ScheduleRoute(
-                model: ScheduleModel.sample(),
+                model: widget.model,
               ),
             ],
           ),
@@ -165,7 +165,8 @@ Widget createTab(String tabTitle, String tabImage) {
 }
 
 class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const DecoratedTabBar({super.key, required this.tabBar, required this.decoration});
+  const DecoratedTabBar(
+      {super.key, required this.tabBar, required this.decoration});
 
   final TabBar tabBar;
   final BoxDecoration decoration;
@@ -178,10 +179,7 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
     return Stack(
       children: [
         Positioned.fill(
-          left: 1.5,
-            right: 1.5,
-            child: Container(
-                decoration: decoration)),
+            left: 1.5, right: 1.5, child: Container(decoration: decoration)),
         tabBar,
       ],
     );

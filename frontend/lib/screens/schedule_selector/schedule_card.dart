@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
+import 'dart:math' as math;
+
+import '../schedule_apply/schedule_apply.dart';
 
 Map<int, String> intToDate = {
   1: '一',
@@ -13,6 +18,29 @@ Map<int, String> intToDate = {
   7: '日'
 };
 
+Map<String, String> levelToString = {
+  'A': '大眾路線（入門',
+  'B': '健腳山友（中級）',
+  'C': '艱難路線（進階）',
+  'Ｋ': '特殊行程（事前繳費',
+};
+
+Map<int, String> intToStatus = {
+  0: '熱烈報名中',
+  1: '已額滿',
+  2: '尚有#名額',
+  3: '已取消',
+  4: '即將額滿',
+};
+
+Map<int, TextStyle> intToStatusStyle = {
+  0: MyStyles.kTextStyleH1,
+  1: MyStyles.kTextStyleH1.copyWith(color: MyStyles.redC80000),
+  2: MyStyles.kTextStyleH1,
+  3: MyStyles.kTextStyleH1.copyWith(color: MyStyles.greyScale9E9E9E),
+  4: MyStyles.kTextStyleH1,
+};
+
 class ScheduleCard extends StatelessWidget {
   const ScheduleCard({Key? key, required this.model, required this.index})
       : super(key: key);
@@ -22,37 +50,45 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScheduleModel _model = ScheduleModel.sample();
+    final ScheduleModel _model = model;
 
     return Card(
+      margin: const EdgeInsets.all(0.0),
       child: Row(
         children: [
-          Expanded(
-              flex: 1, child: _leftSideImage("${index + 1}", _model.imageUrl)),
-          Expanded(
-              flex: 1,
+          SizedBox(
+              width: 560,
+              child: _leftSideImage("${_model.id}", _model.imageUrls.first)),
+          SizedBox(
+            width: 350,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _rightSideInfo(
+                  _model.startDate, _model.endDate, _model.area, _model.title),
+            ),
+          ),
+          SizedBox(
+              width: 250,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    _rightSideInfo(_model.startDate, _model.endDate,
-                        _model.area, _model.title),
-                    _rightSideBook('${model.price}'),
-                  ],
-                ),
+                child: _rightSideBook(model.price),
               )),
         ],
       ),
     );
   }
 
-  Widget _leftSideImage(String tripNum, String imageUrl) {
+  Widget _leftSideImage(String tripNum, String? imageUrl) {
     return Container(
       height: 230,
       decoration: BoxDecoration(
         image: DecorationImage(
             alignment: const Alignment(-.2, 0),
-            image: Image.network(imageUrl).image,
+            // image: AssetImage('assets/images/demo.jpeg'), //TODO 使用真實URL
+            image: Image.network(imageUrl != null
+                    ? imageUrl
+                    : "https://www.thepackablelife.com/wp-content/uploads/2020/01/get-paid-to-hike.jpg")
+                .image,
             fit: BoxFit.cover),
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
@@ -85,82 +121,106 @@ class ScheduleCard extends StatelessWidget {
 
     final timeDelta = endDate.difference(startDate).inDays;
 
-    return Expanded(
-      flex: 1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("$handleStartDate - $handleEndDate ${area.join(', ')}"),
-          Text(
-              "$title \n(${intToDate[timeDelta]}天，週${intToDate[startDate.weekday]}~週${intToDate[endDate.weekday]})",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              )),
-          Row(
-            children: [
-              _customTab(true, '2天'),
-              const SizedBox(
-                width: 12.0,
-              ),
-              _customTab(false, '健行'),
-              const SizedBox(
-                width: 12.0,
-              ),
-              _customTab(false, '大眾路線 (入門)')
-            ],
-          )
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$handleStartDate(${intToDate[startDate.weekday]}) - $handleEndDate(${intToDate[endDate.weekday]}) ${area.first.substring(0, 3)}",
+          maxLines: 1,
+          style: MyStyles.kTextStyleBody1,
+        ),
+        Text(
+          "$title",
+          maxLines: 1,
+          style: MyStyles.kTextStyleH3,
+        ),
+        Text(
+          '領隊- ${model.information.leader.substring(0, 3)} /嚮導- ${model.information.guides.join(',')}',
+          maxLines: 1,
+        ),
+        Row(
+          children: [
+            _customTab(true, '${timeDelta}天'),
+            const SizedBox(
+              width: 12.0,
+            ),
+            _customTab(false, '${model.type}'),
+            const SizedBox(
+              width: 12.0,
+            ),
+            _customTab(false, '${levelToString[model.level]}')
+          ],
+        )
+      ],
     );
   }
 
-  Widget _rightSideBook(String price) {
-    return Expanded(
-        flex: 1,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _rightSideBook(int price) {
+    int _status = 0;
+
+    int count = model.limitation - model.applicants;
+    if (count > 9) {
+      _status = 0;
+    } else if (count > 0) {
+      _status = 2;
+    } else if (count == 0) {
+      _status = 1;
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            '${intToStatus[_status]!.replaceAll('#', count.toString())}',
+            style: intToStatusStyle[_status],
+          ),
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                '熱烈報名中',
-                style: MyStyles.kTextStyleH1,
+            Text(
+              price == 0 ? "免費" : "\$ $price 起",
+              style: MyStyles.kTextStyleSubtitle1.copyWith(
+                color: price == 0 ? MyStyles.redC80000 : null,
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  "\$ $price起",
-                  style: MyStyles.kTextStyleSubtitle1,
+                _customButton('了解更多', () {
+                  Get.find<ScheduleSelectorController>().goToDetail(model);
+                }),
+                SizedBox(
+                  width: 8,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _customButton('瞭解更多'),
-                    _customButton('立即預訂'),
-                  ],
-                )
+                _customButton('立即預訂', () async {
+                  await Get.dialog(const ScheduleApply());
+                }),
               ],
             )
           ],
-        ));
+        )
+      ],
+    );
   }
 
-  Widget _customButton(String label) {
-    return Container(
-        margin: const EdgeInsets.only(left: 10.0, top: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey[300],
-        ),
-        child: Padding(
-            padding: const EdgeInsets.only(
-                right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
-            child: Text(label, style: MyStyles.kTextStyleNormal)));
+  Widget _customButton(String label, void Function()? onPressed) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: label == '了解更多' ? Colors.white : MyStyles.tripPrimary,
+        side: BorderSide(width: 1.0, color: MyStyles.tripPrimary),
+        foregroundColor: MyStyles.greyScale424242,
+        textStyle: MyStyles.kTextStyleBody1,
+      ),
+      onPressed: onPressed,
+      child: Text(label, style: MyStyles.kTextStyleNormal),
+    );
   }
 
   Widget _customTab(bool active, String label) {
