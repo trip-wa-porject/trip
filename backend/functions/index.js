@@ -14,11 +14,10 @@ const data = require('../final_output.json');
 const db = getFirestore();
 
 exports.searchTrips = functions.https.onRequest(async (req, res) => {
-  const query = req.query;
   let result = [];
   
-  functions.logger.info({structuredData: true, request: query, body: req.body});
-  functions.logger.info(req.body.area.indexOf('苗栗縣泰安鄉'));
+  functions.logger.info({structuredData: true, request: req.query, body: req.body});
+  
   let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
   let type = ['百岳', '郊山', '中級山', '海外', '健行'];
@@ -56,6 +55,7 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   .where('type', 'in', type)
   .where('level', 'in', level)
   .where('area', 'array-contains-any', area)
+  .orderBy('startDate')
   .get()
   .then(res => res.forEach(doc => {
     let rec = doc.data();
