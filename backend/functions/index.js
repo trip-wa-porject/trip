@@ -17,27 +17,34 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   const query = req.query;
   let result = [];
   
-  functions.logger.info({structuredData: true, request: query});
-  
+  functions.logger.info({structuredData: true, request: query, body: req.body});
+  functions.logger.info(req.body.area.indexOf('苗栗縣泰安鄉'));
   let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
-  let queryType = ['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
-  let level = ['A', 'B', 'C', 'K'];
+  let type = ['百岳', '郊山', '中級山', '海外', '健行'];
+  //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
+  let level = ['A', 'B', 'C'];
+  let area = ['台北市', '新北市'];
+  //['台北市', '基隆市', '新北市', '宜蘭縣', '新竹市', '新竹縣', '桃園市', '苗栗縣', '台中市', '彰化縣', '南投縣', '嘉義市', '嘉義縣', '雲林縣', '台南市', '高雄市', '澎湖縣', '屏東縣', '台東縣', '花蓮縣', '金門縣', '連江縣', '南海諸島', '釣魚台列嶼'];
   
-  if (query.startDateFrom) {
-    startDateFrom = query.startDateFrom;
+  if (req.body.startDateFrom) {
+    startDateFrom = req.body.startDateFrom;
   }
   
-  if (query.startDateTo) {
-    startDateTo = query.startDateTo;
+  if (req.body.startDateTo) {
+    startDateTo = req.body.startDateTo;
   }
   
-  if (query.type) {
-    queryType = [query.type];
+  if (req.body.type) {
+    type = req.body.type;
   }
   
-  if (query.level) {
-    level = query.level;
+  if (req.body.level) {
+    level = req.body.level;
+  }
+  
+  if (req.body.area) {
+    area = req.body.area;
   }
   
   functions.logger.info(`startDatefrom: ${startDateFrom}`);
@@ -46,14 +53,14 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   db.collection('trips')
   .where('startDate', '>=', startDateFrom)
   .where('startDate', '<=', startDateTo)
-  .where('type', 'in', queryType)
-  .where('level', 'in', ['BK'])
-  .where('area', 'array-contains-any', ['新竹縣尖石鄉','苗栗縣泰安鄉'])
+  .where('type', 'in', type)
+  .where('level', 'in', level)
+  .where('area', 'array-contains-any', area)
   .get()
   .then(res => res.forEach(doc => {
     let rec = doc.data();
     
-    if (filter(query, rec)) {
+    if (filter(req.body, rec)) {
       functions.logger.info(`document id: ${doc.id}`);
       result.push({[doc.id]: doc.data()});
     }
