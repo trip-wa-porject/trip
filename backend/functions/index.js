@@ -3,32 +3,151 @@ const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
 const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-wi067-561cb1a027.json");
+//mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
+const data = require('../final_output.json');
 
 const db = getFirestore();
 
 exports.searchTrips = functions.https.onRequest(async (req, res) => {
   const query = req.query;
   let result = [];
-  functions.logger.info("query", {structuredData: true, request: query});
+  
+  functions.logger.info({structuredData: true, request: query});
+  
+  let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
+  let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
+  let queryType = ['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
+  let level = ['A', 'B', 'C', 'K'];
+  
+  if (query.startDateFrom) {
+    startDateFrom = query.startDateFrom;
+  }
+  
+  if (query.startDateTo) {
+    startDateTo = query.startDateTo;
+  }
+  
+  if (query.type) {
+    queryType = [query.type];
+  }
+  
+  if (query.level) {
+    level = query.level;
+  }
+  
+  functions.logger.info(`startDatefrom: ${startDateFrom}`);
+  functions.logger.info(`startDateTo: ${startDateTo}`);
   
   db.collection('trips')
-  .where('area', 'array-contains-any', ['新竹縣尖石鄉','苗栗縣泰安鄉'])
-  .where('start_date', '>', '2023-03-26')
-  .where('price', '==', 5200)
-  .where('type', 'in', ['百岳'])
+  .where('startDate', '>=', startDateFrom)
+  .where('startDate', '<=', startDateTo)
+  .where('type', 'in', queryType)
   .where('level', 'in', ['BK'])
+  .where('area', 'array-contains-any', ['新竹縣尖石鄉','苗栗縣泰安鄉'])
   .get()
   .then(res => res.forEach(doc => {
-    functions.logger.info(`${query.id}-${doc.id}`, doc.data());
-    result.push({[doc.id]: doc.data()});
+    let rec = doc.data();
+    
+    if (filter(query, rec)) {
+      functions.logger.info(`document id: ${doc.id}`);
+      result.push({[doc.id]: doc.data()});
+    }
   }))
   .then(() => {
     functions.logger.info('result: ', result);
     res.json({result: result});
   })
   .catch(err => console.error(err));
+});
+
+function filter(query, rec) {
+  
+    functions.logger.info(rec);
+    
+    if (query.endDateFrom && rec['endDate'] < query.endDateFrom) {
+      return false;
+    }
+    
+    if (query.endDateTo && rec['endDate'] > query.endDateTo) {
+      return false;
+    }
+    
+    if (query.priceFrom && rec['price'] < query.priceFrom) {
+      return false;
+    }
+    
+    if (query.priceTo && rec['price'] > query.priceTo) {
+      return false;
+    }
+    
+    if (query.keyword && !keywordFound(query.keyword, [rec['title'], rec['information'].leader, rec['information'].guides])) {
+      return false;
+    }
+    
+    return true;
+}
+
+function keywordFound(keyword, fields) {
+  let result = false;
+  
+  if (fields[0].indexOf(keyword) !== -1) {
+    result = true;
+  }
+  
+  if (fields[1].indexOf(keyword) !== -1) {
+    result = true;
+  }
+  
+  if (fields[2].indexOf(keyword) !== -1) {
+    result = true;
+  }
+  
+  return result;
+}
+
+exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
+  data.forEach(v => {
+    const docRef = admin.firestore().collection('trips').doc(v.id.toString());
+  
+    docRef.set({
+      "title": v.title,
+      "startDate": new Date(v.startDate * 1000).toJSON().substring(0, 10),
+      "endDate": new Date(v.endDate * 1000).toJSON().substring(0, 10),
+      "area": v.area,
+      "type": v.type,
+      "level": v.level,
+      "breif": "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
+      "roadImage": v.roadImage,
+      "price": v.price,
+      "memberPrice": v.memberPrice,
+      "url": v.url,
+      "applicants": v.applicants,
+      "limitation": v.limitation,
+      "images": v.images,
+      "information": {
+        "applyStart": new Date(v.information.applyStart * 1000).toJSON().substring(0, 10),
+        "applyEnd": new Date(v.information.applyEnd * 1000).toJSON().substring(0, 10),
+        "applyWay": v.information.applyWay,
+        "gatherPlace": v.information.gatherPlace,
+        "gatherTime": new Date(v.information.gatherTime * 1000).toJSON().substring(0, 16),
+        "transportationWay": v.information.transportationWay,
+        "transportationInfo": v.information.transportationInfo,
+        "preDepartureMeetingDate": new Date(v.information.preDepartureMeetingDate * 1000).toJSON().substring(0, 16),
+        "preDepartureMeetingPlace": v.information.preDepartureMeetingPlace,
+        "memo": v.information.memo,
+        "leader": v.information.leader,
+        "guides": v.information.guides,
+        "note": v.information.note,
+        "arriveSite": v.information.arriveSite
+      },
+      "status": v.status
+    })
+    .then(res => console.log('response', res))
+    .catch(err => console.error(err));
+  });
 });
