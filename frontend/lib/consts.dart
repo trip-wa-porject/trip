@@ -9,6 +9,7 @@ class MyStyles {
 
   /// 橘色
   static const Color tripPrimary = Color(0xffEA9F49);
+  static const Color tripPrimary50 = Color(0x50EA9F49);
 
   ///棕色
   static const Color tripSecondary = Color(0xff998167);
@@ -18,6 +19,9 @@ class MyStyles {
 
   ///淺色
   static const Color tripNeutral = Color(0xffF6F2EA);
+
+  ///紅色
+  static const Color redC80000 = Color(0xffC80000);
 
   ///灰色們
   static const Color greyScale000000 = Color(0xff000000);
