@@ -23,7 +23,7 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   let type = ['百岳', '郊山', '中級山', '海外', '健行'];
   //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
   let level = ['A', 'B', 'C'];
-  let area = ['台北市', '新北市'];
+  //let area = ['台北市', '新北市'];
   //['台北市', '基隆市', '新北市', '宜蘭縣', '新竹市', '新竹縣', '桃園市', '苗栗縣', '台中市', '彰化縣', '南投縣', '嘉義市', '嘉義縣', '雲林縣', '台南市', '高雄市', '澎湖縣', '屏東縣', '台東縣', '花蓮縣', '金門縣', '連江縣', '南海諸島', '釣魚台列嶼'];
   
   if (req.body.startDateFrom) {
@@ -42,9 +42,9 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
     level = req.body.level;
   }
   
-  if (req.body.area) {
+  /*if (req.body.area) {
     area = req.body.area;
-  }
+  }*/
   
   functions.logger.info(`startDatefrom: ${startDateFrom}`);
   functions.logger.info(`startDateTo: ${startDateTo}`);
@@ -54,7 +54,7 @@ exports.searchTrips = functions.https.onRequest(async (req, res) => {
   .where('startDate', '<=', startDateTo)
   .where('type', 'in', type)
   .where('level', 'in', level)
-  .where('area', 'array-contains-any', area)
+  //.where('area', 'array-contains-any', area)
   .orderBy('startDate')
   .get()
   .then(res => res.forEach(doc => {
@@ -93,6 +93,10 @@ function filter(query, rec) {
     }
     
     if (query.keyword && !keywordFound(query.keyword, [rec['title'], rec['information'].leader, rec['information'].guides])) {
+      return false;
+    }
+    
+    if (query.area && query.area.indexOf(rec['area']) == -1) {
       return false;
     }
     
