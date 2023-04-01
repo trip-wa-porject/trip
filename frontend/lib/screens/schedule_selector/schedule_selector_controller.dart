@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
 
@@ -6,14 +9,15 @@ import '../schedule_detail/schdule_detail.dart';
 
 class ScheduleSelectorController extends GetxController {
   BackendRepository backendRepository = BackendRepository();
+  FloatingSearchBarController searchController = FloatingSearchBarController();
   RxBool isLoading = false.obs;
+  RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
 
   RxList<AreaOption> areaOptions = <AreaOption>[].obs;
   RxList<PriceOption> priceOptions = <PriceOption>[].obs;
   RxList<LevelOption> levelOptions = <LevelOption>[].obs;
   RxList<DayOption> dayOptions = <DayOption>[].obs;
   RxList<TypeOption> typeOptions = <TypeOption>[].obs;
-  RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
   Rxn<DateTime> selectedStartDateTime = Rxn<DateTime>();
   Rxn<DateTime> selectedEndDateTime = Rxn<DateTime>();
 
@@ -66,25 +70,61 @@ class ScheduleSelectorController extends GetxController {
     selectedStartDateTime.value = null;
     selectedEndDateTime.value = null;
     hasSeat.value = false;
+    searchController.query = '';
   }
 
   search() async {
     print('search');
-    print(typeOptions);
-    print(levelOptions);
-    print(areaOptions);
-    print(dayOptions);
-    print(priceOptions);
-    //TODO 帶參數進入下面function
     try {
       isLoading.value = true;
+      Map<String, dynamic> querys = {};
+      DateTime? startDate = selectedStartDateTime.value;
+      DateTime? endDate = selectedEndDateTime.value;
+      if (startDate != null) {
+        querys.addAll({
+          "startDateFrom": "${DateFormat('yyyy-MM-dd').format(startDate)}",
+        });
+      }
+      if (endDate != null) {
+        querys.addAll({
+          "startDateTo": "${DateFormat('yyyy-MM-dd').format(endDate)}",
+        });
+      }
+      List<String> selectedLevels =
+          levelOptions.toList().map((e) => e.queryString).toList();
+      if (selectedLevels.isNotEmpty) {
+        querys.addAll({
+          "level": selectedLevels,
+        });
+      }
 
-      List<Map<String, dynamic>> result = await backendRepository.fetchTrip({
-        "startDateFrom": "2023-04-01",
-        "type": ["郊山步道"]
-      });
+      List<String> selectedTypes =
+          typeOptions.toList().map((e) => '${e.showedString}步道').toList();
+      if (selectedTypes.isNotEmpty) {
+        querys.addAll({
+          "type": selectedTypes,
+        });
+      }
+      List<String> selectedAreas =
+          areaOptions.toList().map((e) => e.showedString).toList();
+      if (selectedAreas.isNotEmpty) {
+        querys.addAll({
+          "area": selectedAreas,
+        });
+      }
+      String keyword = searchController.query;
+      if (keyword.isNotEmpty) {
+        querys.addAll({
+          "keyword": keyword,
+        });
+      }
+
+      print(querys);
+      List<Map<String, dynamic>> result =
+          await backendRepository.fetchTrip(querys);
       List<ScheduleModel> list =
           result.map((e) => ScheduleModel.fromJson(e)).toList();
+      scheduleList.clear();
       scheduleList.addAll(list);
     } catch (e) {
       print(e);
@@ -94,13 +134,18 @@ class ScheduleSelectorController extends GetxController {
   }
 
   goToDetail(ScheduleModel scheduleModel) {
-    Get.to(ScheduleDetail(
-      model: scheduleModel,
-    ));
+    Get.to(
+      () => ScheduleDetail(
+        model: scheduleModel,
+      ),
+    );
   }
 
   @override
   void onInit() {
+    // List<ScheduleModel> list =
+    //     List.generate(2, (index) => ScheduleModel.sampleFromJson());
+    // scheduleList.assignAll(list);
     super.onInit();
   }
 }
@@ -165,13 +210,14 @@ enum PriceOption {
 }
 
 enum LevelOption {
-  A('A.大眾路線（入門）'),
-  B('B.健腳山友（中級）'),
-  C('C.艱難路線（進階）'),
-  K('Ｋ.特殊行程（事前繳費）');
+  A('A.大眾路線（入門）', 'A'),
+  B('B.健腳山友（中級）', 'B'),
+  C('C.艱難路線（進階）', 'C');
+  // K('Ｋ.特殊行程（事前繳費）');
 
-  const LevelOption(this.showedString);
+  const LevelOption(this.showedString, this.queryString);
   final String showedString;
+  final String queryString;
 
   @override
   String toString() => showedString;
@@ -196,7 +242,19 @@ enum TypeOption {
   //中級山
   type2('中級山'),
   //百岳
-  type3('百岳');
+  type3('百岳'),
+  //海外
+  type4('海外'),
+  //健行
+  type5('健行'),
+  //攀岩/攀樹
+  type6('攀岩/攀樹'),
+  //溯溪
+  type7('溯溪'),
+  //攝影
+  type8('攝影'),
+  //攝影
+  type9('其他');
 
   const TypeOption(this.showedString);
   final String showedString;

@@ -75,11 +75,16 @@ class ScheduleMainInformation extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(18.0),
                   child: SizedBox.fromSize(
-                      size: const Size.fromRadius(140),
-                      child: Image.asset(
-                        'assets/images/forest.jpg',
-                        fit: BoxFit.fill,
-                      )),
+                    size: const Size.fromRadius(140),
+                    child: Image.network(
+                      model.imageUrls.first,
+                      fit: BoxFit.cover,
+                    ),
+                    // child: Image.asset(
+                    //   'assets/images/forest.jpg',
+                    //   fit: BoxFit.fill,
+                    // ),
+                  ),
                 ),
                 Expanded(
                   child: Column(
@@ -132,7 +137,7 @@ class ScheduleMainInformation extends StatelessWidget {
                                   left: 48.0,
                                 ),
                                 child: Image.asset(
-                                  'assets/images/mountain.jpg',
+                                  'assets/images/qrcode.jpeg',
                                   width: 98,
                                   height: 98,
                                 ),

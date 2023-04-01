@@ -54,13 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 80.0,
-            right: 200,
-            left: 200,
+        child: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: 1160,
+            child: ScheduleSelector(),
           ),
-          child: ScheduleSelector(),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

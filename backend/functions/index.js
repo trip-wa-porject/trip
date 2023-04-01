@@ -82,7 +82,7 @@ exports.searchTripsOnCall = functions.https.onCall(async (data, context) => {
   
   let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
-  let type = ['百岳', '郊山', '中級山', '海外', '健行'];
+  let type = ['百岳', '郊山', '中級山步道', '海外', '健行', '郊山步道'];
   //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
   let level = ['A', 'B', 'C'];
   //let area = ['台北市', '新北市'];

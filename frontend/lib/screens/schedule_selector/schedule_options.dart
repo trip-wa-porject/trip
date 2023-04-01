@@ -28,7 +28,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   Obx(
                     () => ScheduleOptionCheckSelector<TypeOption>(
                       title: "類型",
-                      width: 120,
+                      width: 140,
                       selectedItems: controller.typeOptions.toList(),
                       allItems: TypeOption.values,
                       onChangeCallback: (List<TypeOption> value) {
@@ -42,7 +42,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   Obx(
                     () => ScheduleOptionCheckSelector<LevelOption>(
                       title: "等級",
-                      width: 220,
+                      width: 204,
                       allItems: LevelOption.values,
                       mode: CheckBoxOptionMode.multiple,
                       selectedItems: controller.levelOptions.toList(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../../consts.dart';
 
@@ -12,9 +14,11 @@ class MySearchBar extends StatelessWidget {
         MediaQuery.of(context).orientation == Orientation.portrait;
     return LayoutBuilder(builder: (context, constrains) {
       return FloatingSearchBar(
+        controller: Get.find<ScheduleSelectorController>().searchController,
+        clearQueryOnClose: false,
         leadingActions: [
           FloatingSearchBarAction(
-            showIfOpened: false,
+            showIfOpened: true,
             child: CircularButton(
               icon: const Icon(
                 Icons.search_rounded,
@@ -52,20 +56,7 @@ class MySearchBar extends StatelessWidget {
         transition: CircularFloatingSearchBarTransition(),
         actions: [],
         builder: (context, transition) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Material(
-              color: Colors.white,
-              elevation: 4.0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [Text('tag?')],
-                // children: Colors.accents.map((color) {
-                //   return Container(height: 112, color: color);
-                // }).toList(),
-              ),
-            ),
-          );
+          return SizedBox();
         },
       );
     });

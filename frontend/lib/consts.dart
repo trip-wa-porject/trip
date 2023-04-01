@@ -73,5 +73,6 @@ class MyStyles {
 }
 
 double kSearchBarHeight = 60.0;
-double kCardHeight = 230;
+double kCardHeight = 180;
+double kCardWidth = 1160;
 double kEmptyImageHeight = 500;
