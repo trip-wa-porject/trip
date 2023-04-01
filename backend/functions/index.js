@@ -2,8 +2,8 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const serviceAccount = require("../mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json");
-//wa-project-mountain-firebase-adminsdk-v7hwp-381a4156a3.json
+const serviceAccount = require("../wa-project-mountain-firebase-adminsdk-v7hwp-381a4156a3.json");
+//mountain-climb-b03b9-firebase-adminsdk-v7hwp-381a4156a3.json
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -141,13 +141,16 @@ function areaFound(areas, cities) {
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
   data.forEach(v => {
-    const docRef = admin.firestore().collection('trips').doc(v.id.toString());
+    const docRef = admin.firestore().collection('trips').doc(v.id.toString() . '000');
+    let areas = v.area.map(v => {
+      return {"city": v.substring(0, 3), "county": v.substring(3, 6)};
+    });
   
     docRef.set({
       "title": v.title,
       "startDate": new Date(v.startDate * 1000).toJSON().substring(0, 10),
       "endDate": new Date(v.endDate * 1000).toJSON().substring(0, 10),
-      "area": v.area,
+      "area": areas,
       "type": v.type,
       "level": v.level,
       "breif": "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
