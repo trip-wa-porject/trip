@@ -45,7 +45,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.only(
           right: 200,
           left: 200,
@@ -85,40 +85,48 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
                 ),
               ),
               SliverToBoxAdapter(
-                child: TabBar(
-                  labelColor: Colors.white,
-                  unselectedLabelColor: MyStyles.greyScaleCFCFCE,
-                  controller: _tabController,
-                  indicatorColor: MyStyles.tripPrimary,
-                  indicatorWeight: 7,
-                  padding: EdgeInsets.zero,
-                  indicatorPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                  labelPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                  tabs: [
-                    createTab(scheduleTabs[0].text!, 'tab_left'),
-                    createTab(scheduleTabs[1].text!, 'tab_middle'),
-                    createTab(scheduleTabs[2].text!, 'tab_right'),
-                  ],
+                child: DecoratedTabBar(
+                  tabBar: TabBar(
+                    labelColor: Colors.white,
+                    unselectedLabelColor: MyStyles.greyScaleCFCFCE,
+                    controller: _tabController,
+                    indicatorColor: MyStyles.tripPrimary,
+                    indicatorWeight: 6,
+                    padding: EdgeInsets.zero,
+                    indicatorPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
+                    labelPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
+                    tabs: [
+                      createTab(scheduleTabs[0].text!, 'tab_left'),
+                      createTab(scheduleTabs[1].text!, 'tab_middle'),
+                      createTab(scheduleTabs[2].text!, 'tab_right'),
+                    ],
+                  ),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: MyStyles.tripPrimary50,
+                        width: 6.0,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ];
           },
-          body: Container(
-            child: TabBarView(
-              controller: _tabController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                ScheduleBasic(
-                  model: ScheduleModel.sample(),
-                ),
-                ScheduleTransportation(
-                  model: ScheduleModel.sample(),
-                ),
-                ScheduleRoute(
-                  model: ScheduleModel.sample(),
-                ),
-              ],
-            ),
+          body: TabBarView(
+            controller: _tabController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              ScheduleBasic(
+                model: ScheduleModel.sample(),
+              ),
+              ScheduleTransportation(
+                model: ScheduleModel.sample(),
+              ),
+              ScheduleRoute(
+                model: ScheduleModel.sample(),
+              ),
+            ],
           ),
         ),
       ),
@@ -135,6 +143,7 @@ Widget createTab(String tabTitle, String tabImage) {
         topLeft: Radius.circular(20.0),
       ),
       image: DecorationImage(
+        colorFilter: const ColorFilter.mode(Color(0x80FFFFFF), BlendMode.color),
         image: AssetImage('assets/images/$tabImage.png'),
         fit: BoxFit.none,
       ),
@@ -153,4 +162,28 @@ Widget createTab(String tabTitle, String tabImage) {
       ),
     ),
   );
+}
+
+class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
+  const DecoratedTabBar({super.key, required this.tabBar, required this.decoration});
+
+  final TabBar tabBar;
+  final BoxDecoration decoration;
+
+  @override
+  Size get preferredSize => tabBar.preferredSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          left: 1.5,
+            right: 1.5,
+            child: Container(
+                decoration: decoration)),
+        tabBar,
+      ],
+    );
+  }
 }

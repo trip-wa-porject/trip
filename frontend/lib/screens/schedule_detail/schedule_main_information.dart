@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/utils/level_format_utils.dart';
 
 import '../../models/schedule_model.dart';
+import '../../utils/date_format_utils.dart';
+import '../schedule_apply/schedule_apply.dart';
 
 class ScheduleMainInformation extends StatelessWidget {
   const ScheduleMainInformation({Key? key, required this.model})
@@ -16,30 +21,53 @@ class ScheduleMainInformation extends StatelessWidget {
       children: [
         //標題區
         Padding(
-          padding:
-              const EdgeInsets.only(top: 8, bottom: 8),
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
           child: Column(
-            children: const [
+            children: [
               SizedBox(
                   width: double.infinity,
                   child: Text(
-                    '標題',
+                    model.title ?? '',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 34, color: MyStyles.tripTertiary),
+                    style: const TextStyle(
+                        fontSize: 34, color: MyStyles.tripTertiary),
                   )),
               SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    '2023/03/19(日) - 03/17(一)',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 20, color: MyStyles.greyScale757575),
-                  )),
-              //tags
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Text(
+                      DateFormatUtils.getDateWithFullDateTemplate(
+                          model.startDate, model.endDate),
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontSize: 20, color: MyStyles.greyScale757575),
+                    ),
+                    //tags
+                    const SizedBox(
+                      width: 12.0,
+                    ),
+                    _customTab(
+                        true,
+                        DateFormatUtils.getTotalDate(
+                            model.startDate, model.endDate)),
+                    const SizedBox(
+                      width: 12.0,
+                    ),
+                    _customTab(false, model.type),
+                    const SizedBox(
+                      width: 12.0,
+                    ),
+                    _customTab(false,
+                        LevelFormatUtils.getLevelStringTemplate(model.level)),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
         Container(
-          padding: const EdgeInsets.only(top:24.0, bottom: 48.0),
+          padding: const EdgeInsets.only(top: 24.0, bottom: 48.0),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,21 +92,34 @@ class ScheduleMainInformation extends StatelessWidget {
                         child: const Text(
                           '活動簡介',
                           textAlign: TextAlign.left,
-                          style:
-                              TextStyle(fontSize: 24, color: MyStyles.greyScale212121),
+                          style: TextStyle(
+                              fontSize: 24, color: MyStyles.greyScale212121),
                         ),
                       ),
                       Container(
+                        height: 135,
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
                           left: 48.0,
+                          top: 12.0,
                         ),
-                        child: const Text(
-                          '活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容活動內容',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 5,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 14, color: MyStyles.greyScale757575),
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          //always show scrollbar
+                          thickness: 8,
+                          //width of scrollbar
+                          radius: const Radius.circular(20),
+                          //corner radius of scrollbar
+                          scrollbarOrientation: ScrollbarOrientation.right,
+                          child: SingleChildScrollView(
+                            child: Text(
+                              model.breif,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: MyStyles.greyScale757575),
+                            ),
+                          ),
                         ),
                       ),
                       Flexible(
@@ -100,14 +141,13 @@ class ScheduleMainInformation extends StatelessWidget {
                             Flexible(
                               child: Container(
                                 alignment: Alignment.bottomRight,
-                                // padding: const EdgeInsets.only(
-                                //   right: 24.0,
-                                // ),
                                 child: SizedBox(
                                   height: 55,
                                   width: 230,
                                   child: TextButton(
-                                    onPressed: null,
+                                    onPressed: () async {
+                                      await Get.dialog(const ScheduleApply());
+                                    },
                                     style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all<Color>(
@@ -145,4 +185,25 @@ class ScheduleMainInformation extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget _customTab(bool active, String label) {
+  return Container(
+    alignment: Alignment.center,
+    margin: const EdgeInsets.only(right: 0, left: 0, top: 12, bottom: 12),
+    padding: const EdgeInsets.only(left: 6, right: 6, bottom: 2, top: 2),
+    decoration: BoxDecoration(
+        border: Border.all(color: MyStyles.greyScale757575),
+        borderRadius: BorderRadius.circular(6.0),
+        color: active ? MyStyles.tripTertiary : Colors.white),
+    child: Align(
+      alignment: Alignment.center,
+      child: Text(
+        label,
+        style: TextStyle(
+            color: active ? Colors.white : MyStyles.greyScale757575,
+            fontSize: 14),
+      ),
+    ),
+  );
 }

@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tripflutter/component/tableViewColumn.dart';
 
 import '../../models/schedule_model.dart';
+import '../../utils/date_format_utils.dart';
+import '../../utils/level_format_utils.dart';
 
 class ScheduleBasic extends StatelessWidget {
   const ScheduleBasic({Key? key, required this.model}) : super(key: key);
@@ -24,8 +25,10 @@ class ScheduleBasic extends StatelessWidget {
             color: Colors.white,
           ),
           children: [
-            TableViewColumn.createColumn('活動日期', '2023/03/19-2023/03/31'),
-            TableViewColumn.createColumn('報名期間', '2023/03/01-2023/03/18'),
+            TableViewColumn.createColumn(
+                '活動日期', DateFormatUtils.getDateWithFullDateTemplate(model.startDate, model.endDate)),
+            TableViewColumn.createColumn('報名期間', DateFormatUtils.getDateWithFullDateTemplate(
+                model.information.applyStart, model.information.applyEnd)),
           ],
         ),
         TableRow(
@@ -33,8 +36,10 @@ class ScheduleBasic extends StatelessWidget {
             color: Colors.white,
           ),
           children: [
-            TableViewColumn.createColumn('等級', '大眾路線（入門）'),
-            TableViewColumn.createColumn('名額限制', '20人(剩三人)'),
+            TableViewColumn.createColumn('等級', LevelFormatUtils.getLevelStringTemplate(model.level)),
+            TableViewColumn.createColumn('名額限制',
+                '${model.limitation} / 剩${model.limitation -
+                    model.applicants}人'),
           ],
         ),
         TableRow(
@@ -42,8 +47,8 @@ class ScheduleBasic extends StatelessWidget {
             color: Colors.white,
           ),
           children: [
-            TableViewColumn.createColumn('類型', '百岳'),
-            TableViewColumn.createColumn('收費金額', '非會員 \$3,500 會員 \$3,000'),
+            TableViewColumn.createColumn('類型', model.type),
+            TableViewColumn.createColumnWithPriceRichText('收費金額', model.price, model.memberPrice),
           ],
         ),
       ],

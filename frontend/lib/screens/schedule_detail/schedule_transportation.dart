@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 
+import 'package:intl/intl.dart';
 import '../../component/tableViewColumn.dart';
 
 class ScheduleTransportation extends StatelessWidget {
@@ -12,6 +13,14 @@ class ScheduleTransportation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getGuidesColumn(List<String> guides) {
+      var stringBuffer = StringBuffer();
+      for (var guide in guides) {
+        stringBuffer.write('$guide、');
+      }
+      return stringBuffer.toString();
+    }
+
     return Column(
       children: [
         Table(
@@ -27,7 +36,8 @@ class ScheduleTransportation extends StatelessWidget {
                 color: Colors.white,
               ),
               children: [
-                TableViewColumn.createColumn('集合地點', '三重捷運站二號出口'),
+                TableViewColumn.createColumn(
+                    '集合地點', model.information.gatherPlace),
                 TableViewColumn.createColumn('行前會議', '3/4(六) 陽明山山腳'),
               ],
             ),
@@ -36,8 +46,9 @@ class ScheduleTransportation extends StatelessWidget {
                 color: Colors.white,
               ),
               children: [
-                TableViewColumn.createColumn('集合時間', '3/25 9:00'),
-                TableViewColumn.createColumn('領隊', '林麗英'),
+                TableViewColumn.createColumn(
+                    '集合時間',  DateFormat('MM/dd kk:mm').format(model.information.gatherTime)),
+                TableViewColumn.createColumn('領隊', model.information.leader),
               ],
             ),
             TableRow(
@@ -45,8 +56,9 @@ class ScheduleTransportation extends StatelessWidget {
                 color: Colors.white,
               ),
               children: [
-                TableViewColumn.createColumn('交通方式', '專車'),
-                TableViewColumn.createColumn('嚮導', '呂萬隆、吳泰學、黃博宇'),
+                TableViewColumn.createColumn(
+                    '交通方式', model.information.transportationWay),
+                TableViewColumn.createColumn('嚮導', getGuidesColumn(model.information.guides)),
               ],
             ),
             TableRow(
@@ -55,7 +67,7 @@ class ScheduleTransportation extends StatelessWidget {
               ),
               children: [
                 TableViewColumn.createColumn('下車地點', '陽明山'),
-                TableViewColumn.createColumn('注意事項', '食物'),
+                TableViewColumn.createColumn('注意事項', model.information.memo),
               ],
             ),
           ],
@@ -72,7 +84,7 @@ class ScheduleTransportation extends StatelessWidget {
               ),
               children: [
                 TableViewColumn.createColumnExpandHeight(
-                    '交通資訊', '一、原下車地點...\n二、可搭乘...\n三、劍潭......'),
+                    '交通資訊', model.information.transportationInfo),
               ],
             ),
           ],
