@@ -166,7 +166,7 @@ function daysFound(days, startDate, endDate) {
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
   data.forEach(v => {
-    let docRef = admin.firestore().collection('trips').doc(`${v.id.toString()}000`);
+    let docRef = db.collection('trips').doc(`${v.id.toString()}000`);
     let areas = v.area.map(v => {
       return {"city": v.substring(0, 3), "county": v.substring(3, 6)};
     });

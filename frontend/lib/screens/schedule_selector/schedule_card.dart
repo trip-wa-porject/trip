@@ -63,8 +63,8 @@ class ScheduleCard extends StatelessWidget {
             width: 350,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: _rightSideInfo(
-                  _model.startDate, _model.endDate, _model.area, _model.title),
+              child: _rightSideInfo(_model.startDate, _model.endDate,
+                  _model.area.map((e) => e.toString()).toList(), _model.title),
             ),
           ),
           SizedBox(
