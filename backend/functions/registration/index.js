@@ -3,7 +3,7 @@ const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestor
 const db = getFirestore();
 
 exports.addRegistration = functions.https.onRequest(async(req, res) => {
-  functions.logger.info({structuredData: true, data: req.body});
+  functions.logger.info({data: req.body});
   
   let result = await addRegistration(req.body);
   
@@ -14,6 +14,18 @@ exports.addRegistration = functions.https.onRequest(async(req, res) => {
 
 exports.addRegistrationOnCall = functions.https.onCall(async (data, context) => {
   return addRegistration(data);
+});
+
+exports.getUserAllTrips = functions.https.onRequest(async(req, res) => {
+  functions.logger.info({data: req.body});
+  
+  let result = await getUserAllTrips(req.body.userId);
+  
+  res.json({result: result});
+});
+
+exports.getUserAllTripsOnCall = functions.https.onCall(async (data, context) => {
+  return getUserAllTrips(data.userId);
 });
 
 async function addRegistration(data) {
@@ -32,4 +44,16 @@ async function addRegistration(data) {
     })
     .then(res => docRef.id)
     .catch(err => console.error(err));
+}
+
+async functioni getUserAllTrips(userId) {
+  let result = [];
+
+  return db.collection('registrations')
+  .where('userId', '=', userId)
+  .orderBy('createDate')
+  .get()
+  .then(snapshot => snapshot.forEach(doc => result.push(doc.data())))
+  .then(() => result)
+  .catch(err => console.error(err));
 }

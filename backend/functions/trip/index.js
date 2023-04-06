@@ -21,8 +21,6 @@ async function searchTrips(data) {
   
   let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
-  let type = ['百岳', '郊山', '中級山', '海外', '健行'];
-  //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
   let level = ['A', 'B', 'C'];
   
   if (data.startDateFrom) {
@@ -33,10 +31,6 @@ async function searchTrips(data) {
     startDateTo = data.startDateTo;
   }
   
-  if (data.type) {
-    type = data.type;
-  }
-  
   if (data.level) {
     level = data.level;
   }
@@ -44,7 +38,6 @@ async function searchTrips(data) {
   return db.collection('trips')
   .where('startDate', '>=', startDateFrom)
   .where('startDate', '<=', startDateTo)
-  .where('type', 'in', type)
   .where('level', 'in', level)
   .orderBy('startDate')
   .get()
@@ -71,6 +64,10 @@ function filter(query, rec) {
     }
     
     if (query.endDateTo && rec['endDate'] > query.endDateTo) {
+      return false;
+    }
+    
+    if (query.type && query.type.indexOf(rec['type']) == -1) {
       return false;
     }
     
