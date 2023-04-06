@@ -146,7 +146,9 @@ class ScheduleModel {
   static ScheduleModel sampleFromJson() {
     Map<String, dynamic> map = {
       "id": "104",
-      "area": ["新北市土城區"],
+      "area": [
+        {'city': '新北市', 'county': '土城區'}
+      ],
       "limitation": 12,
       "images": [
         "https://cdntwrunning.biji.co/600_faf2493ca508b44713cfde49f54a92ef.jpg"
