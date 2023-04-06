@@ -62,8 +62,9 @@ async function searchTrips(data) {
 }
 
 function filter(query, rec) {
-  
-    //functions.logger.info(rec);
+    if (rec['information']['applyEnd'] < new Date(Date.now()).toJSON().substring(0, 10)) {
+      return false;
+    }
     
     if (query.endDateFrom && rec['endDate'] < query.endDateFrom) {
       return false;
@@ -130,8 +131,6 @@ function areaFound(areas, cities) {
 }
 
 function priceFound(prices, recPrice) {
-  //functions.logger.info(prices);
-  
   let result = [];
   
   for(price of prices) {
@@ -166,7 +165,7 @@ function daysFound(days, startDate, endDate) {
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
   data.forEach(v => {
-    let docRef = admin.firestore().collection('trips').doc(`${v.id.toString()}000`);
+    let docRef = db.collection('trips').doc(v.id.toString());
     let areas = v.area.map(v => {
       return {"city": v.substring(0, 3), "county": v.substring(3, 6)};
     });

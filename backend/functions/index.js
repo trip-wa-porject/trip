@@ -7,9 +7,27 @@ admin.initializeApp({
 });
 
 const trip = require('./trip');
+const user = require('./user');
+const registration = require('./registration');
 
 exports.searchTrips = trip.searchTrips;
 
 exports.searchTripsOnCall = trip.searchTripsOnCall;
 
 exports.batchAddTrips = trip.batchAddTrips;
+
+exports.addUser = user.addUser;
+
+exports.addUserOnCall = user.addUserOnCall;
+
+exports.getUser = user.getUser;
+
+exports.getUserOnCall = user.getUserOnCall;
+
+exports.updateUser = user.updateUser;
+
+exports.updateUserOnCall = user.updateUserOnCall;
+
+exports.addRegistration = registration.addRegistration;
+
+exports.addRegistrationOnCall = registration.addRegistrationOnCall;
