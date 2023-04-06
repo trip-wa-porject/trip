@@ -112,6 +112,22 @@ class ScheduleSelectorController extends GetxController {
           "area": selectedAreas,
         });
       }
+
+      List<int> selectedDays = dayOptions.toList().map((e) => e.value).toList();
+      if (selectedDays.isNotEmpty) {
+        querys.addAll({
+          "days": selectedDays.first, //TODO修改為複選
+        });
+      }
+
+      List<List<int>> selectedPrices =
+          priceOptions.toList().map((e) => e.range).toList();
+      if (selectedPrices.isNotEmpty) {
+        querys.addAll({
+          "price": selectedPrices.first, //TODO修改為複選
+        });
+      }
+
       String keyword = searchController.query;
       if (keyword.isNotEmpty) {
         querys.addAll({
@@ -196,14 +212,18 @@ enum AreaOption {
 }
 
 enum PriceOption {
-  Range1(r"NT$ 0 - NT$3,000"),
-  Range2(r'NT$ 3,000 - NT$5,000'),
-  Range3(r'NT$ 5,000 - NT$7,000'),
-  Range4(r'NT$ 7,000 - NT$10,000'),
-  Range5(r'NT$ 10,000以上');
+  Range1(r"NT$ 0 - NT$3,000", 0, 3000),
+  Range2(r'NT$ 3,000 - NT$5,000', 3000, 5000),
+  Range3(r'NT$ 5,000 - NT$7,000', 5000, 7000),
+  Range4(r'NT$ 7,000 - NT$10,000', 7000, 10000),
+  Range5(r'NT$ 10,000以上', 10000, 100000);
 
-  const PriceOption(this.showedString);
+  const PriceOption(this.showedString, this.start, this.end);
   final String showedString;
+  final int start;
+  final int end;
+
+  List<int> get range => [start, end];
 
   @override
   String toString() => showedString;
@@ -224,13 +244,14 @@ enum LevelOption {
 }
 
 enum DayOption {
-  oneDays('1天內'),
-  twoDays('2天'),
-  threeDays('3天'),
-  moreThanThreeDays('3天以上');
+  oneDays('1天內', 1),
+  twoDays('2天', 2),
+  threeDays('3天', 3),
+  moreThanThreeDays('3天以上', 4);
 
-  const DayOption(this.showedString);
+  const DayOption(this.showedString, this.value);
   final String showedString;
+  final int value;
 
   @override
   String toString() => showedString;

@@ -58,7 +58,7 @@ class ScheduleModel {
   final String type;
 
   //area
-  final List<String> area;
+  final List<Area> area;
 
   //breif
   final String breif;
@@ -116,7 +116,7 @@ class ScheduleModel {
       ],
       level: 'BK',
       type: '百岳',
-      area: ["新竹縣尖石鄉", "苗栗縣泰安鄉", "台中市和平區"],
+      area: [Area("新竹縣", "新竹縣"), Area("苗栗縣", "泰安鄉"), Area('台中市', '和平區')],
       breif:
           "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
       memberPrice: 5000,
@@ -146,7 +146,9 @@ class ScheduleModel {
   static ScheduleModel sampleFromJson() {
     Map<String, dynamic> map = {
       "id": "104",
-      "area": ["新北市土城區"],
+      "area": [
+        {'city': '新北市', 'county': '土城區'}
+      ],
       "limitation": 12,
       "images": [
         "https://cdntwrunning.biji.co/600_faf2493ca508b44713cfde49f54a92ef.jpg"
@@ -203,6 +205,21 @@ class ScheduleModel {
         "note": ""
       }
  */
+
+@JsonSerializable()
+class Area {
+  Area(this.city, this.county);
+  final String city;
+  final String county;
+  factory Area.fromJson(Map<String, dynamic> json) => _$AreaFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AreaToJson(this);
+
+  @override
+  String toString() {
+    return '$city$county';
+  }
+}
 
 @JsonSerializable()
 class ScheduleInformation {
