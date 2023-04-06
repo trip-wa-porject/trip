@@ -46,7 +46,7 @@ async function addRegistration(data) {
     .catch(err => console.error(err));
 }
 
-async functioni getUserAllTrips(userId) {
+async function getUserAllTrips(userId) {
   let result = [];
 
   return db.collection('registrations')
