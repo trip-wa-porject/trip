@@ -16,7 +16,9 @@ ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) =>
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       level: json['level'] as String,
       type: json['type'] as String,
-      area: (json['area'] as List<dynamic>).map((e) => e as String).toList(),
+      area: (json['area'] as List<dynamic>)
+          .map((e) => Area.fromJson(e as Map<String, dynamic>))
+          .toList(),
       breif: json['breif'] as String,
       memberPrice: json['memberPrice'] as int,
       price: json['price'] as int,
@@ -44,6 +46,16 @@ Map<String, dynamic> _$ScheduleModelToJson(ScheduleModel instance) =>
       'limitation': instance.limitation,
       'information': instance.information,
       'status': instance.status,
+    };
+
+Area _$AreaFromJson(Map<String, dynamic> json) => Area(
+      json['city'] as String,
+      json['county'] as String,
+    );
+
+Map<String, dynamic> _$AreaToJson(Area instance) => <String, dynamic>{
+      'city': instance.city,
+      'county': instance.county,
     };
 
 ScheduleInformation _$ScheduleInformationFromJson(Map<String, dynamic> json) =>

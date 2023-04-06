@@ -40,8 +40,11 @@ dependencies:
   firebase_core: ^2.8.0
   google_fonts: ^4.0.3
   material_floating_search_bar: ^0.3.7
-  intl: 0.18.0
+  intl: ^0.17.0
   cloud_functions: ^4.1.0
+  firebase_auth: ^4.2.2
+  cloud_firestore: ^4.5.0
+  firebase_dynamic_links: ^5.1.0
 
 dev_dependencies:
   flutter_test:
