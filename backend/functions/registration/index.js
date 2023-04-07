@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 const db = getFirestore();
-const { getUserOnCall } = require('../user');
 
 exports.addRegistration = functions.https.onRequest(async(req, res) => {
   functions.logger.info({data: req.body});
@@ -38,8 +37,6 @@ exports.updateRegistration = functions.https.onRequest(async(req, res) => {
     functions.logger.error(err.message);
     res.json({result: `failed to update registration ${req.body.id}`});
   }
-  
-  
 });
 
 exports.updateRegistrationOnCall = functions.https.onCall(async (data, context) => {

@@ -14,6 +14,16 @@ exports.searchTripsOnCall = functions.https.onCall(async (data, context) => {
   return searchTrips(data);
 });
 
+exports.getOneTrip = functions.https.onRequest(async(req, res) => {
+  let result = await getOneTrip(req.body.id);
+
+  res.json({result: result});
+});
+
+exports.getOneTripOnCall = functions.https.onCall(async (data, context) => {
+  return getOneTrip(data);
+});
+
 async function searchTrips(data) {
   let result = [];
   
@@ -204,3 +214,11 @@ exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
     .catch(err => console.error(err));
   });
 });
+
+async function getOneTrip(id) {
+  return db.collection('registrations')
+  .doc(id)
+  .get()
+  .then(snapshot => snapshot.data())
+  .catch(err => console.error(err));
+}

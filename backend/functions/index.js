@@ -39,3 +39,7 @@ exports.getUserAllTripsOnCall = registration.getUserAllTripsOnCall;
 exports.updateRegistration = registration.updateRegistration;
 
 exports.updateRegistrationOnCall = registration.updateRegistrationOnCall;
+
+exports.getOneTrip = trip.getOneTrip;
+
+exports.getOneTripOnCall = trip.getOneTripOnCall;
