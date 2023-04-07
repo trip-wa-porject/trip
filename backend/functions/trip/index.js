@@ -21,7 +21,7 @@ exports.getOneTrip = functions.https.onRequest(async(req, res) => {
 });
 
 exports.getOneTripOnCall = functions.https.onCall(async (data, context) => {
-  return getOneTrip(data);
+  return getOneTrip(data.id);
 });
 
 async function searchTrips(data) {
