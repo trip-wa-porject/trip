@@ -1,13 +1,12 @@
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 const db = getFirestore();
+const { getUserOnCall } = require('../user');
 
 exports.addRegistration = functions.https.onRequest(async(req, res) => {
   functions.logger.info({data: req.body});
   
   let result = await addRegistration(req.body);
-  
-  functions.logger.info({result: result});
 
   res.json({result: result});
 });
@@ -26,6 +25,25 @@ exports.getUserAllTrips = functions.https.onRequest(async(req, res) => {
 
 exports.getUserAllTripsOnCall = functions.https.onCall(async (data, context) => {
   return getUserAllTrips(data.userId);
+});
+
+exports.updateRegistration = functions.https.onRequest(async(req, res) => {
+  functions.logger.info({data: req.body});
+  
+  try {
+    let result = await updateRegistration(req.body);
+  
+    res.json({result: result});
+  } catch(err) {
+    functions.logger.error(err.message);
+    res.json({result: `failed to update registration ${req.body.id}`});
+  }
+  
+  
+});
+
+exports.updateRegistrationOnCall = functions.https.onCall(async (data, context) => {
+  return updateRegistration(data);
 });
 
 async function addRegistration(data) {
@@ -56,4 +74,11 @@ async function getUserAllTrips(userId) {
   .then(snapshot => snapshot.forEach(doc => result.push(doc.data())))
   .then(() => result)
   .catch(err => console.error(err));
+}
+
+async function updateRegistration(data) {
+  functions.logger.info({data: data});
+  
+  return db.collection('registrations')
+  .doc(data.id).update(data);
 }

@@ -27,9 +27,15 @@ exports.getUserOnCall = functions.https.onCall(async (data, context) => {
 });
 
 exports.updateUser = functions.https.onRequest(async(req, res) => {
-  let result = await updateUser(req.body);
+  try {
+    let result = await updateUser(req.body);
   
-  res.json({result: result});
+    res.json({result: result});
+  } catch (err) {
+    functions.logger.error(err.message);
+    res.json({result: `failed to update user ${req.body.id}`});
+  }
+  
 });
 
 exports.updateUserOnCall = functions.https.onCall(async (data, context) => {
