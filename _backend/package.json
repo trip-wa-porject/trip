@@ -1,0 +1,26 @@
+{
+  "name": "trip_backend",
+  "version": "1.0.0",
+  "description": "for flutter app backend service",
+  "main": "index.js",
+  "scripts": {
+    "start": "GOOGLE_APPLICATION_CREDENTIALS=./credential.json tsc && node functions/index.js",
+    "lint": "eslint . --ext .ts"
+  },
+  "author": "WeiChen Lin",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.38.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "firebase-admin": "^11.6.0",
+    "firebase-functions": "^4.2.1"
+  }
+}
