@@ -14,6 +14,16 @@ exports.searchTripsOnCall = functions.https.onCall(async (data, context) => {
   return searchTrips(data);
 });
 
+exports.getOneTrip = functions.https.onRequest(async(req, res) => {
+  let result = await getOneTrip(req.body.id);
+
+  res.json({result: result});
+});
+
+exports.getOneTripOnCall = functions.https.onCall(async (data, context) => {
+  return getOneTrip(data.id);
+});
+
 async function searchTrips(data) {
   let result = [];
   
@@ -21,8 +31,6 @@ async function searchTrips(data) {
   
   let startDateFrom = new Date(Date.now()).toJSON().substring(0, 10);
   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toJSON().substring(0, 10);
-  let type = ['百岳', '郊山', '中級山', '海外', '健行'];
-  //['郊山', '中級山', '百岳', '海外', '健行', '攀岩/攀樹', '溯溪', '攝影', '其他'];
   let level = ['A', 'B', 'C'];
   
   if (data.startDateFrom) {
@@ -33,10 +41,6 @@ async function searchTrips(data) {
     startDateTo = data.startDateTo;
   }
   
-  if (data.type) {
-    type = data.type;
-  }
-  
   if (data.level) {
     level = data.level;
   }
@@ -44,7 +48,6 @@ async function searchTrips(data) {
   return db.collection('trips')
   .where('startDate', '>=', startDateFrom)
   .where('startDate', '<=', startDateTo)
-  .where('type', 'in', type)
   .where('level', 'in', level)
   .orderBy('startDate')
   .get()
@@ -62,14 +65,19 @@ async function searchTrips(data) {
 }
 
 function filter(query, rec) {
-  
-    //functions.logger.info(rec);
+    if (rec['information']['applyEnd'] < new Date(Date.now()).toJSON().substring(0, 10)) {
+      return false;
+    }
     
     if (query.endDateFrom && rec['endDate'] < query.endDateFrom) {
       return false;
     }
     
     if (query.endDateTo && rec['endDate'] > query.endDateTo) {
+      return false;
+    }
+    
+    if (query.type && query.type.indexOf(rec['type']) == -1) {
       return false;
     }
     
@@ -130,8 +138,6 @@ function areaFound(areas, cities) {
 }
 
 function priceFound(prices, recPrice) {
-  //functions.logger.info(prices);
-  
   let result = [];
   
   for(price of prices) {
@@ -166,7 +172,7 @@ function daysFound(days, startDate, endDate) {
 
 exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
   data.forEach(v => {
-    let docRef = db.collection('trips').doc(`${v.id.toString()}000`);
+    let docRef = db.collection('trips').doc(v.id.toString());
     let areas = v.area.map(v => {
       return {"city": v.substring(0, 3), "county": v.substring(3, 6)};
     });
@@ -208,3 +214,11 @@ exports.batchAddTrips = functions.https.onRequest(async (req, res) => {
     .catch(err => console.error(err));
   });
 });
+
+async function getOneTrip(id) {
+  return db.collection('registrations')
+  .doc(id)
+  .get()
+  .then(snapshot => snapshot.data())
+  .catch(err => console.error(err));
+}
