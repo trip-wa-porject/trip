@@ -66,4 +66,3 @@ node_modules/
 .env
 
 credential.json
-_backend/functions/*
