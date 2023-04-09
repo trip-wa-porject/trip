@@ -9,7 +9,9 @@ class MyStyles {
 
   /// 橘色
   static const Color tripPrimary = Color(0xffEA9F49);
-  static const Color tripPrimary50 = Color(0x50EA9F49);
+
+  /// 淺橘色
+  static const Color tripSecondaryF8D797 = Color(0xffF8D797);
 
   ///棕色
   static const Color tripSecondary = Color(0xff998167);
@@ -48,6 +50,11 @@ class MyStyles {
   static const TextStyle kTextStyleH2 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
+    letterSpacing: 0,
+  );
+  static const TextStyle kTextStyleH2Normal = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
     letterSpacing: 0,
   );
   static const TextStyle kTextStyleH3 = TextStyle(

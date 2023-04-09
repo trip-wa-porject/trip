@@ -27,6 +27,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   late TabController _tabController;
   late ScrollController _scrollController;
   late bool fixedScroll;
+  late double padding;
 
   @override
   void initState() {
@@ -44,41 +45,19 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(
-          right: 200,
-          left: 200,
+    padding = MediaQuery.of(context).size.width * 0.1;
+
+    return Container(
+        alignment: Alignment.topCenter,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.only(
+          right: padding,
+          left: padding,
         ),
         child: NestedScrollView(
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => Get.back(),
-                          iconSize: 24,
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: MyStyles.greyScale424242,
-                          ),
-                        ),
-                        const Text(
-                          'back',
-                          style: TextStyle(
-                              fontSize: 16, color: MyStyles.greyScale000000),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                    const Divider(color: MyStyles.greyScale757575)
-                  ],
-                ),
-              ),
               SliverToBoxAdapter(
                 child: ScheduleMainInformation(
                   model: widget.model,
@@ -104,7 +83,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: MyStyles.tripPrimary50,
+                        color: MyStyles.tripSecondaryF8D797,
                         width: 6.0,
                       ),
                     ),
@@ -129,7 +108,6 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
             ],
           ),
         ),
-      ),
     );
   }
 }

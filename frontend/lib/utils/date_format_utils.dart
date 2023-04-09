@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 class DateFormatUtils {
   static var weekDay = ['', '一', '二', '三', '四', '五', '六', '日'];
 
+  /// yyyy/MM/dd(weekDay) - MM/dd(weekDay)
   static String getDateWithFullDateTemplate(
       DateTime startDate, DateTime endDate) {
     return '${DateFormat('yyyy/MM/dd').format(startDate)}'
@@ -12,6 +13,15 @@ class DateFormatUtils {
         '(${weekDay[endDate.weekday]})';
   }
 
+  /// MM/dd - MM/dd
+  static String getDateWithDateTemplate(
+      DateTime startDate, DateTime endDate) {
+    return '${DateFormat('MM/dd').format(startDate)}'
+        ' - '
+        '${DateFormat('MM/dd').format(endDate)}';
+  }
+
+  /// {total days) x天
   static String getTotalDate(DateTime startDate, DateTime endDate) {
     return '${daysBetween(startDate, endDate)}天';
   }
