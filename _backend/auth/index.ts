@@ -4,9 +4,21 @@ import { config } from 'dotenv'
 
 config()
 
-const app = admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-})
+const _needToConnectToEmulator = true
+
+if (_needToConnectToEmulator) {
+  process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
+}
+
+console.log(process.env['FIRESTORE_EMULATOR_HOST'])
+
+const app = admin.initializeApp(
+  _needToConnectToEmulator
+    ? {}
+    : {
+        // credential: admin.credential.applicationDefault()
+      }
+)
 
 // console.log(app.firestore)
 
