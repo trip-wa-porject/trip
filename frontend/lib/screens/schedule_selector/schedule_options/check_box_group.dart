@@ -10,16 +10,14 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     required this.title,
     required this.allItems,
     required this.onChangeCallback,
-    List<T>? selectedItems,
+    required this.selectedItems,
     this.mode = CheckBoxOptionMode.single,
     this.width = 100,
-  }) : super(key: key) {
-    this.selectedItems = selectedItems ?? [];
-  }
+  }) : super(key: key);
 
   final String title;
   final List<T> allItems;
-  late List<T> selectedItems;
+  final List<T> selectedItems;
   final void Function(List<T>) onChangeCallback;
   final CheckBoxOptionMode mode;
   final double width;
@@ -29,10 +27,8 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     EdgeInsets hintPadding = const EdgeInsets.only(left: 8.0);
     ButtonStyleData buttonStyleData = ButtonStyleData(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: MyStyles.greyScaleE7EAEE,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
       ),
       height: 40,
       width: width,
@@ -46,102 +42,109 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
       maxHeight: allItems.length > 8 ? 400 : null,
       offset: const Offset(0, -8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(4.0),
       ),
     );
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
-      //一般check box
-      child: DropdownButtonHideUnderline(
-        child: CustomizedDropdownButton(
-          isExpanded: true,
-          hint: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: hintPadding,
-              child: Text(
-                '${title}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).hintColor,
-                ),
+
+    IconStyleData iconStyleData = IconStyleData(
+      icon: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(Icons.keyboard_arrow_up),
+      ),
+      iconDisabledColor: MyStyles.greyScale757575,
+      iconEnabledColor: MyStyles.greyScale757575,
+      iconSize: 16,
+    );
+    return DropdownButtonHideUnderline(
+      child: CustomizedDropdownButton(
+        isExpanded: true,
+        hint: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: hintPadding,
+            child: Text(
+              '${title}',
+              style: TextStyle(
+                fontSize: 14,
+                color: MyStyles.greyScale757575,
               ),
             ),
           ),
+        ),
 
-          items: allItems.map((item) {
-            return DropdownMenuItem<T>(
-              value: item,
-              //disable default onTap to avoid closing menu when selecting an item
-              enabled: false,
-              child: StatefulBuilder(
-                builder: (context, menuSetState) {
-                  final _isSelected = selectedItems.contains(item);
-                  return InkWell(
-                    onTap: () {
-                      _isSelected
-                          ? selectedItems.remove(item)
-                          : selectedItems.add(item);
-                      //This rebuilds the StatefulWidget to update the button's text
-                      // setState(() {});
-                      //This rebuilds the dropdownMenu Widget to update the check mark
-                      menuSetState(() {});
-                      onChangeCallback(selectedItems);
-                    },
-                    child: Container(
-                      height: double.infinity,
-                      // padding:
-                      //     const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        children: [
-                          _isSelected
-                              ? Icon(
-                                  Icons.check_box_rounded,
-                                  color: MyStyles.tripTertiary,
-                                )
-                              : const Icon(
-                                  Icons.check_box_outline_blank,
-                                ),
-                          const SizedBox(width: 8),
-                          Text(
-                            item.toString(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+        items: allItems.map((item) {
+          return DropdownMenuItem<T>(
+            value: item,
+            //disable default onTap to avoid closing menu when selecting an item
+            enabled: false,
+            child: StatefulBuilder(
+              builder: (context, menuSetState) {
+                final _isSelected = selectedItems.contains(item);
+                return InkWell(
+                  onTap: () {
+                    _isSelected
+                        ? selectedItems.remove(item)
+                        : selectedItems.add(item);
+                    //This rebuilds the StatefulWidget to update the button's text
+                    // setState(() {});
+                    //This rebuilds the dropdownMenu Widget to update the check mark
+                    menuSetState(() {});
+                    onChangeCallback(selectedItems);
+                  },
+                  child: Container(
+                    height: double.infinity,
+                    // padding:
+                    //     const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        _isSelected
+                            ? Icon(
+                                Icons.check_box_rounded,
+                                color: MyStyles.tripTertiary,
+                              )
+                            : const Icon(
+                                Icons.check_box_outline_blank,
+                              ),
+                        const SizedBox(width: 8),
+                        Text(
+                          item.toString(),
+                          style: const TextStyle(
+                            fontSize: 14,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            );
-          }).toList(),
-          //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
-          value: selectedItems.isEmpty ? null : selectedItems.last,
-          onChanged: (value) {},
-          selectedItemBuilder: (context) {
-            return allItems.map(
-              (item) {
-                return Container(
-                  alignment: AlignmentDirectional.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    selectedItems.join(', '),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    maxLines: 1,
                   ),
                 );
               },
-            ).toList();
-          },
-          buttonStyleData: buttonStyleData,
-          menuItemStyleData: menuItemStyleData,
-          dropdownStyleData: dropdownStyleData,
-        ),
+            ),
+          );
+        }).toList(),
+        //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
+        value: selectedItems.isEmpty ? null : selectedItems.last,
+        onChanged: (value) {},
+        selectedItemBuilder: (context) {
+          return allItems.map(
+            (item) {
+              return Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  selectedItems.join(', '),
+                  style: const TextStyle(
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      color: MyStyles.greyScale757575),
+                  maxLines: 1,
+                ),
+              );
+            },
+          ).toList();
+        },
+        buttonStyleData: buttonStyleData,
+        menuItemStyleData: menuItemStyleData,
+        dropdownStyleData: dropdownStyleData,
+        iconStyleData: iconStyleData,
       ),
     );
   }
