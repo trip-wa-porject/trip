@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import 'schedule_options/check_box_group.dart';
 import 'schedule_options/date_selector.dart';
 
+//total height = 180
 class ScheduleOptions extends GetView<ScheduleSelectorController> {
   const ScheduleOptions({Key? key}) : super(key: key);
 
@@ -14,21 +16,24 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
   Widget build(BuildContext context) {
     Get.put(ScheduleSelectorController());
     double spacerWidth = 16.0;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 24.0,
-        horizontal: 0.0,
-      ),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Row(
+    return Card(
+      elevation: 10.0,
+      color: MyStyles.secondaryE1D5C9,
+      surfaceTintColor: Colors.transparent,
+      margin: const EdgeInsets.all(0.0),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 18.0, right: 18, top: 20, bottom: 16.0),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40.0,
+              child: Row(
                 children: [
                   Obx(
                     () => ScheduleOptionCheckSelector<TypeOption>(
                       title: "類型",
-                      width: 140,
+                      width: 125,
                       selectedItems: controller.typeOptions.toList(),
                       allItems: TypeOption.values,
                       onChangeCallback: (List<TypeOption> value) {
@@ -42,7 +47,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   Obx(
                     () => ScheduleOptionCheckSelector<LevelOption>(
                       title: "等級",
-                      width: 204,
+                      width: 220,
                       allItems: LevelOption.values,
                       mode: CheckBoxOptionMode.multiple,
                       selectedItems: controller.levelOptions.toList(),
@@ -97,7 +102,13 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   ),
                 ],
               ),
-              Row(
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            SizedBox(
+              height: 40,
+              child: Row(
                 children: [
                   Obx(
                     () => ScheduleOptionDateSelector(
@@ -126,72 +137,67 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Text('顯示: '),
-                          Obx(
-                            () => Checkbox(
-                              value: controller.hasSeat.value,
-                              onChanged: (value) {
-                                controller.selectHasSeat(value!);
-                              },
-                              activeColor: MyStyles.tripTertiary,
-                            ),
-                          ),
-                          Text('尚有名額'), //TODO check box
-                        ],
+                      Text(
+                        '顯示: ',
+                        style: MyStyles.kTextStyleBody1.copyWith(
+                          color: MyStyles.greyScale616161,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              controller.clearAllSelected();
-                            },
-                            child: Row(
-                              children: const [
-                                Icon(Icons.filter_list_alt),
-                                SizedBox(
-                                  width: 8.0,
-                                ),
-                                Text(
-                                  '清除所有',
-                                  style: MyStyles.kTextStyleBody1,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 16.0,
-                          ),
-                          SizedBox(
-                            width: 200,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: MyStyles.tripTertiary,
-                                textStyle: MyStyles.kTextStyleH3,
-                              ),
-                              onPressed: () {
-                                controller.search();
-                              },
-                              child: Center(child: Text('搜尋')),
-                            ),
-                          ),
-                        ],
+                      Obx(
+                        () => Checkbox(
+                          value: controller.hasSeat.value,
+                          onChanged: (value) {
+                            controller.selectHasSeat(value!);
+                          },
+                          activeColor: MyStyles.tripTertiary,
+                        ),
+                      ),
+                      Text(
+                        '尚有名額',
+                        style: MyStyles.kTextStyleBody1.copyWith(
+                          color: MyStyles.greyScale000000,
+                        ),
+                      ), //TODO check box
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      MyOutlinedButton(
+                        label: '清除所有',
+                        style: MyOutlinedButton.style2(),
+                        onPressed: () {
+                          controller.clearAllSelected();
+                        },
+                      ),
+                      const SizedBox(
+                        width: 16.0,
+                      ),
+                      MyFilledButton(
+                        label: '搜尋',
+                        style: MyFilledButton.style1(),
+                        onPressed: () {
+                          controller.search();
+                        },
                       ),
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
