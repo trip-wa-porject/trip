@@ -26,8 +26,8 @@ class ScheduleRoute extends StatelessWidget {
             color: Colors.white,
           ),
           children: [
-            TableViewColumn.createColumnWithImage(
-                createDownloadButton(), '路線地圖', 'assets/images/forest.jpg'),
+            TableViewColumn.createColumnWithMap(
+                createDownloadButton(), '路線地圖', model.area),
           ],
         ),
         TableRow(

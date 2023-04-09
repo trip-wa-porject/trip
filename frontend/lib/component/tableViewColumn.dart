@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:tripflutter/component/popup_download.dart';
+import 'package:tripflutter/component/map_widget.dart';
 
 import '../consts.dart';
 
@@ -168,6 +165,49 @@ class TableViewColumn {
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: SizedBox(
                     height: 310, width: 550, child: Image.asset(image)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget createColumnWithMap(
+      Widget? button, String columnTitle, List<String> keywordList) {
+    return Expanded(
+      flex: 3,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+                height: 350,
+                color: MyStyles.tripNeutral,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      columnTitle,
+                      style: const TextStyle(
+                          fontSize: 24, color: MyStyles.greyScale424242),
+                    ),
+                    if (button != null) button,
+                  ],
+                )),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              height: 350,
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: SizedBox(
+                    height: 310, width: 550,
+                    child: MapWidget(keywordList: keywordList)),
               ),
             ),
           ),
