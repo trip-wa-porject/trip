@@ -9,9 +9,10 @@ class MyStyles {
 
   /// 橘色
   static const Color tripPrimary = Color(0xffEA9F49);
+  static const Color tripPrimary50 = Color(0x50EA9F49);
 
-  /// 淺橘色
-  static const Color tripSecondaryF8D797 = Color(0xffF8D797);
+  ///淺橘色
+  static const Color primary = Color(0xFFF6BD79);
 
   ///棕色
   static const Color tripSecondary = Color(0xff998167);
@@ -24,6 +25,16 @@ class MyStyles {
 
   ///紅色
   static const Color redC80000 = Color(0xffC80000);
+
+  ///次要色
+  ///
+  static const Color secondaryE1D5C9 = Color(0xffE1D5C9);
+  static const Color green1 = Color(0xffDDE1DA);
+  static const Color green2 = Color(0xffC8CABE);
+  static const Color green3 = Color(0xffA9B19C);
+  static const Color yellow1 = Color(0xffF4F1D5);
+  static const Color yellow2 = Color(0xffF0EEC9);
+  static const Color yellow3 = Color(0xffEDD9A1);
 
   ///灰色們
   static const Color greyScale000000 = Color(0xff000000);
@@ -42,6 +53,12 @@ class MyStyles {
 
 //TextStyles
   static const TextStyle kTextStyleH1 = TextStyle(
+    fontSize: 44,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.25,
+  );
+
+  static const TextStyle kTextStyleH2Bold = TextStyle(
     fontSize: 34,
     fontWeight: FontWeight.bold,
     letterSpacing: 0.25,
@@ -57,21 +74,44 @@ class MyStyles {
     fontWeight: FontWeight.normal,
     letterSpacing: 0,
   );
+  static const TextStyle kTextStyleH3Bold = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.15,
+  );
+
   static const TextStyle kTextStyleH3 = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0.15,
+  );
+
+  static const TextStyle kTextStyleH4 = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.15,
   );
+
+  @Deprecated('棄用')
   static const TextStyle kTextStyleNormal = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.normal,
     letterSpacing: 0,
   );
+  //sub bold
+  static const TextStyle kTextStyleSubtitle1Bold = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.15,
+  );
+
+  //sub regular
   static const TextStyle kTextStyleSubtitle1 = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.15,
   );
+
   static const TextStyle kTextStyleBody1 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
@@ -80,6 +120,11 @@ class MyStyles {
 }
 
 double kSearchBarHeight = 60.0;
-double kCardHeight = 180;
+double kSearchBarTopPadding = 20;
+double kSearchBarBottomPadding = 124;
+double kScheduleOptionsHeight = 180;
+double kCardHeight = 174;
 double kCardWidth = 1160;
-double kEmptyImageHeight = 500;
+double kEmptyImageHeight = 493;
+double kEmptyImageWidth = 551;
+double kFooterHeight = 389;

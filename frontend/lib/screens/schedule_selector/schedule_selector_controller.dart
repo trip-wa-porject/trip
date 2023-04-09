@@ -10,6 +10,7 @@ import '../schedule_detail/schdule_detail.dart';
 class ScheduleSelectorController extends GetxController {
   BackendRepository backendRepository = BackendRepository();
   FloatingSearchBarController searchController = FloatingSearchBarController();
+  TextEditingController searchTextController = TextEditingController();
   RxBool isLoading = false.obs;
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
 
@@ -128,7 +129,7 @@ class ScheduleSelectorController extends GetxController {
         });
       }
 
-      String keyword = searchController.query;
+      String keyword = searchTextController.text;
       if (keyword.isNotEmpty) {
         querys.addAll({
           "keyword": keyword,
@@ -140,6 +141,9 @@ class ScheduleSelectorController extends GetxController {
           await backendRepository.fetchTrip(querys);
       List<ScheduleModel> list =
           result.map((e) => ScheduleModel.fromJson(e)).toList();
+      if (hasSeat.value == true) {
+        list = list.where(filter).toList();
+      }
       scheduleList.clear();
       scheduleList.addAll(list);
     } catch (e) {
@@ -147,6 +151,13 @@ class ScheduleSelectorController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  //has seat
+  bool filter(ScheduleModel model) {
+    int count = model.limitation - model.applicants;
+    if (count > 0) return true;
+    return false;
   }
 
   goToDetail(ScheduleModel scheduleModel) {
@@ -157,12 +168,21 @@ class ScheduleSelectorController extends GetxController {
     );
   }
 
+  searchBarListener() {}
+
   @override
   void onInit() {
-    // List<ScheduleModel> list =
-    //     List.generate(2, (index) => ScheduleModel.sampleFromJson());
-    // scheduleList.assignAll(list);
+    List<ScheduleModel> list =
+        List.generate(2, (index) => ScheduleModel.sampleFromJson());
+    scheduleList.assignAll(list);
+    searchTextController.addListener(searchBarListener);
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    searchTextController.removeListener(searchBarListener);
+    super.onClose();
   }
 }
 
