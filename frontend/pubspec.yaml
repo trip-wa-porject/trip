@@ -42,6 +42,9 @@ dependencies:
   material_floating_search_bar: ^0.3.7
   intl: 0.18.0
   cloud_functions: ^4.1.0
+  firebase_auth: ^4.2.2
+  cloud_firestore: ^4.5.0
+  firebase_dynamic_links: ^5.1.0
   google_maps_flutter_web: ^0.4.0+7
   google_maps_flutter: ^2.2.5
   google_place: ^0.4.7
