@@ -1,11 +1,14 @@
 // level 跟 status 可以規定嚴格一點
 
 export interface Trip {
-  id: number
+  id: string
   title: string
   startDate: number
   endDate: number
-  area: string[]
+  area: {
+    city: string
+    county: string
+  }
   type: string
   level: 'A' | 'B' | 'C'
   roadImage: string
@@ -35,7 +38,11 @@ export interface Trip {
 }
 
 export interface TripFilter {
-  startDateFrom?: number
-  startDateTo?: number
-  level?: string[]
+  startDate: number
+  endDate: number
+  level: string[]
+  type: string[]
+  region: string[]
+  price_interval: number[]
+  day_interval: 1 | 2 | 3 | 4
 }

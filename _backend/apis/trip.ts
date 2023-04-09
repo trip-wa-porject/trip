@@ -1,53 +1,75 @@
-// import { https, logger } from 'firebase-functions/v1'
-// import type { Trip, TripFilter } from '@types'
-// import { db } from 'auth'
+import { https, logger } from 'firebase-functions/v1'
+import type { Trip, TripFilter } from '@types'
+import { db } from 'auth'
+import filter from './utils'
 
-// const searchTripsOnCall = https.onCall(async (data) => {
-//   return await searchTrips(data)
-// })
+const searchTripsOnCall = https.onCall(async (data) => {
+  return await searchTrips(data)
+})
 
-// const searchTrips = async (data: TripFilter) => {
-//   let result = []
+const regions = [
+  '南投縣',
+  '台北市',
+  '台中市',
+  '台南市',
+  '高雄市',
+  '台東縣',
+  '雲林縣',
+  '嘉義縣',
+  '新北市',
+  '桃園市',
+  '基隆市',
+  '新竹市',
+  '花蓮縣',
+  '苗栗縣',
+  '彰化縣',
+  '屏東縣',
+  '宜蘭縣',
+  '澎湖縣'
+]
 
-//   logger.info({ structuredData: true, data: data })
+const levels = ['A', 'B', 'C']
 
-//   let startDateFrom = new Date(Date.now()).toISOString().slice(0, 10)
-//   let startDateTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
-//     .toISOString()
-//     .slice(0, 10)
+const types = ['高山步道', '郊山步道', '中級山步道']
 
-//   let level = ['A', 'B', 'C']
+const searchTrips = async (data: Partial<TripFilter>) => {
+  const result: Trip[] = []
 
-//   if (data.startDateFrom) {
-//     startDateFrom = data.startDateFrom
-//   }
+  logger.info({ structuredData: true, data: data })
 
-//   if (data.startDateTo) {
-//     startDateTo = data.startDateTo
-//   }
+  const filters = {
+    startDate: new Date().getTime(),
+    endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).getTime(),
+    level: levels,
+    type: types,
+    region: regions,
+    ...data
+  }
 
-//   if (data.level) {
-//     level = data.level
-//   }
+  return db
+    .collection('trips')
+    .orderBy('startDate')
+    .get()
+    .then((snapshot) =>
+      snapshot.forEach((doc) => {
+        const rec = doc.data()
 
-//   return db
-//     .collection('trips')
-//     .where('startDate', '>=', startDateFrom)
-//     .where('startDate', '<=', startDateTo)
-//     .where('level', 'in', level)
-//     .orderBy('startDate')
-//     .get()
-//     .then((snapshot) =>
-//       snapshot.forEach((doc) => {
-//         let rec = doc.data()
+        result.push({
+          ...rec,
+          id: doc.id
+        } as Trip)
 
-//         logger.info(`filtering document id: ${doc.id}`)
+        const passfilter = filter(filters, rec as Trip)
+        if (passfilter) {
+          result.push({
+            ...rec,
+            id: doc.id
+          } as Trip)
+        }
+      })
+    )
+    .then(() => result)
+    .catch(() => [])
+}
 
-//         if (filter(data, rec)) {
-//           result.push({ id: doc.id, ...doc.data() })
-//         }
-//       })
-//     )
-//     .then(() => result)
-//     .catch((err) => console.error(err))
-// }
+export { searchTripsOnCall }
