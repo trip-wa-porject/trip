@@ -4,7 +4,7 @@
   "description": "for flutter app backend service",
   "main": "index.js",
   "scripts": {
-    "start": "GOOGLE_APPLICATION_CREDENTIALS=./credential.json tsc && node functions/index.js",
+    "start": "tsc && NODE_ENV=development node functions/index.js",
     "lint": "eslint . --ext .ts"
   },
   "author": "WeiChen Lin",

@@ -1,11 +1,9 @@
 import { db } from './auth'
 import trips from './data/test_trips.json'
 
-import type { Trip } from './@types'
-
 const batch = db.batch()
 
-trips.forEach((e: Trip) => {
+trips.forEach((e) => {
   const current_trip = db.collection('dev_trip').doc(e.id.toString())
 
   const areas = e.area.map((v) => {
@@ -14,8 +12,8 @@ trips.forEach((e: Trip) => {
 
   batch.set(current_trip, {
     title: e.title,
-    startDate: new Date(e.startDate * 1000).toJSON().substring(0, 10),
-    endDate: new Date(e.endDate * 1000).toJSON().substring(0, 10),
+    startDate: e.startDate,
+    endDate: e.endDate,
     area: areas,
     type: e.type,
     level: e.level,
@@ -29,24 +27,14 @@ trips.forEach((e: Trip) => {
     limitation: e.limitation,
     images: e.images,
     information: {
-      applyStart: new Date(e.information.applyStart * 1000)
-        .toJSON()
-        .substring(0, 10),
-      applyEnd: new Date(e.information.applyEnd * 1000)
-        .toJSON()
-        .substring(0, 10),
+      applyStart: e.information.applyStart,
+      applyEnd: e.information.applyEnd,
       applyWay: e.information.applyWay,
       gatherPlace: e.information.gatherPlace,
-      gatherTime: new Date(e.information.gatherTime * 1000)
-        .toJSON()
-        .substring(0, 16),
+      gatherTime: e.information.gatherTime,
       transportationWay: e.information.transportationWay,
       transportationInfo: e.information.transportationInfo,
-      preDepartureMeetingDate: new Date(
-        e.information.preDepartureMeetingDate * 1000
-      )
-        .toJSON()
-        .substring(0, 16),
+      preDepartureMeetingDate: e.information.preDepartureMeetingDate,
       preDepartureMeetingPlace: e.information.preDepartureMeetingPlace,
       memo: e.information.memo,
       leader: e.information.leader,

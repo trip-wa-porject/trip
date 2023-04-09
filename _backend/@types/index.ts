@@ -1,3 +1,3 @@
-import Trip from './trip'
+import { Trip, TripFilter } from './trip'
 
-export { Trip }
+export { Trip, TripFilter }

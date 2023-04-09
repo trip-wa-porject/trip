@@ -1,13 +1,13 @@
 // level 跟 status 可以規定嚴格一點
 
-export default interface Trip {
+export interface Trip {
   id: number
   title: string
   startDate: number
   endDate: number
   area: string[]
   type: string
-  level: string
+  level: 'A' | 'B' | 'C'
   roadImage: string
   price: number
   memberPrice: number
@@ -32,4 +32,10 @@ export default interface Trip {
     arriveSite: string
   }
   status: number
+}
+
+export interface TripFilter {
+  startDateFrom?: number
+  startDateTo?: number
+  level?: string[]
 }

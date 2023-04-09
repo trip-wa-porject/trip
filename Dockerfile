@@ -27,4 +27,4 @@ RUN apk --no-cache add openjdk11-jre bash && \
     npm install -g firebase-tools && \
     firebase use wa-project-mountain --token=$FIREBASE_TOKEN
 
-CMD ["firebase", "emulators:start"]    
+CMD ["firebase", "emulators:start", "--project=wa-project-mountain-dev"]    
