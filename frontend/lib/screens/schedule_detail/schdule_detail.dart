@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_basic.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_main_information.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_route.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_transportation.dart';
 import '../../consts.dart';
 import '../../models/schedule_model.dart';
+
+class ScheduleDetailPage extends GetView {
+  const ScheduleDetailPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(),
+      body: ScheduleDetail(
+        model: ScheduleModel.sample(),
+      ),
+    );
+  }
+}
 
 class ScheduleDetail extends StatefulWidget {
   const ScheduleDetail({Key? key, required this.model}) : super(key: key);
@@ -45,46 +60,62 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
 
   @override
   Widget build(BuildContext context) {
-    padding = MediaQuery.of(context).size.width * 0.1;
+    // padding = MediaQuery.of(context).size.width * 0.1;
 
-    return Container(
+    return Material(
+      child: Container(
         alignment: Alignment.topCenter,
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(
-          right: padding,
-          left: padding,
-        ),
+        // width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.only(
+        //   right: padding,
+        //   left: padding,
+        // ),
         child: NestedScrollView(
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [
               SliverToBoxAdapter(
-                child: ScheduleMainInformation(
-                  model: widget.model,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: kCardWidth,
+                    ),
+                    child: ScheduleMainInformation(
+                      model: widget.model,
+                    ),
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: DecoratedTabBar(
-                  tabBar: TabBar(
-                    labelColor: Colors.white,
-                    unselectedLabelColor: MyStyles.greyScaleCFCFCE,
-                    controller: _tabController,
-                    indicatorColor: MyStyles.tripPrimary,
-                    indicatorWeight: 6,
-                    padding: EdgeInsets.zero,
-                    indicatorPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                    labelPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                    tabs: [
-                      createTab(scheduleTabs[0].text!, 'tab_left'),
-                      createTab(scheduleTabs[1].text!, 'tab_middle'),
-                      createTab(scheduleTabs[2].text!, 'tab_right'),
-                    ],
-                  ),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: MyStyles.tripSecondaryF8D797,
-                        width: 6.0,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: kCardWidth,
+                    ),
+                    child: DecoratedTabBar(
+                      tabBar: TabBar(
+                        labelColor: Colors.white,
+                        unselectedLabelColor: MyStyles.greyScaleCFCFCE,
+                        controller: _tabController,
+                        indicatorColor: MyStyles.tripPrimary,
+                        indicatorWeight: 6,
+                        padding: EdgeInsets.zero,
+                        indicatorPadding:
+                            const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
+                        labelPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
+                        tabs: [
+                          createTab(scheduleTabs[0].text!, 'tab_left'),
+                          createTab(scheduleTabs[1].text!, 'tab_middle'),
+                          createTab(scheduleTabs[2].text!, 'tab_right'),
+                        ],
+                      ),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: MyStyles.tripTertiary,
+                            width: 6.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -92,22 +123,30 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
               ),
             ];
           },
-          body: TabBarView(
-            controller: _tabController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              ScheduleBasic(
-                model: widget.model,
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: kCardWidth,
               ),
-              ScheduleTransportation(
-                model: widget.model,
+              child: TabBarView(
+                controller: _tabController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  ScheduleBasic(
+                    model: widget.model,
+                  ),
+                  ScheduleTransportation(
+                    model: widget.model,
+                  ),
+                  ScheduleRoute(
+                    model: widget.model,
+                  ),
+                ],
               ),
-              ScheduleRoute(
-                model: widget.model,
-              ),
-            ],
+            ),
           ),
         ),
+      ),
     );
   }
 }
@@ -123,7 +162,7 @@ Widget createTab(String tabTitle, String tabImage) {
       image: DecorationImage(
         colorFilter: const ColorFilter.mode(Color(0x80FFFFFF), BlendMode.color),
         image: AssetImage('assets/images/$tabImage.png'),
-        fit: BoxFit.none,
+        fit: BoxFit.fill,
       ),
     ),
     child: Tab(

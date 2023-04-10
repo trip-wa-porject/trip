@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/utils/level_format_utils.dart';
 
@@ -44,7 +45,8 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
       children: [
         //標題區
         Padding(
-          padding: const EdgeInsets.only(left:10, top: 8, bottom: 10, right: 10),
+          padding:
+              const EdgeInsets.only(left: 10, top: 8, bottom: 10, right: 10),
           child: Column(
             children: [
               SizedBox(
@@ -128,7 +130,8 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
         //資訊區 Card
         Container(
           width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(top: 30, bottom: 30, left: 10, right: 10),
+          margin:
+              const EdgeInsets.only(top: 30, bottom: 30, left: 10, right: 10),
           padding: const EdgeInsets.all(35),
           decoration: BoxDecoration(
               color: Colors.white,
@@ -142,60 +145,51 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textScaleFactor: ScaleSize.textScaleFactor(context),
-                    text: TextSpan(
-                      text: '非會員 ',
-                      style: MyStyles.kTextStyleH1
-                          .copyWith(color: MyStyles.greyScale000000),
-                      children: [
-                        TextSpan(
-                          text: '\$${widget.model.price}',
-                          style: MyStyles.kTextStyleH1
-                              .copyWith(color: MyStyles.redC80000),
-                        ),
-                        const TextSpan(
-                          text: ' 會員 ',
-                        ),
-                        TextSpan(
-                          text: '\$${widget.model.memberPrice}',
-                          style: MyStyles.kTextStyleH1
-                              .copyWith(color: MyStyles.redC80000),
-                        ),
-                      ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      text: TextSpan(
+                        text: '非會員 ',
+                        style: MyStyles.kTextStyleH1
+                            .copyWith(color: MyStyles.greyScale000000),
+                        children: [
+                          TextSpan(
+                            text: '\$${widget.model.price}',
+                            style: MyStyles.kTextStyleH1
+                                .copyWith(color: MyStyles.redC80000),
+                          ),
+                          const TextSpan(
+                            text: ' 會員 ',
+                          ),
+                          TextSpan(
+                            text: '\$${widget.model.memberPrice}',
+                            style: MyStyles.kTextStyleH1
+                                .copyWith(color: MyStyles.redC80000),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    '報名期間：${DateFormatUtils.getDateWithDateTemplate(widget.model.information.applyStart, widget.model.information.applyEnd)}',
-                    style: MyStyles.kTextStyleH3
-                        .copyWith(color: MyStyles.greyScale757575),
-                    // textScaleFactor: ScaleSize.textScaleFactor(context),
-                  ),
-                ],
-              ),),
+                    Text(
+                      '報名期間：${DateFormatUtils.getDateWithDateTemplate(widget.model.information.applyStart, widget.model.information.applyEnd)}',
+                      style: MyStyles.kTextStyleH3
+                          .copyWith(color: MyStyles.greyScale757575),
+                      // textScaleFactor: ScaleSize.textScaleFactor(context),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 65,
                 width: 205,
-                child: TextButton(
+                child: MyFilledButton(
+                  label: '立即報名',
+                  style: MyFilledButton.style3(),
                   onPressed: () async {
                     await Get.dialog(const ScheduleApply());
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          MyStyles.tripSecondaryF8D797),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: const BorderSide(
-                                  color: MyStyles.tripSecondaryF8D797)))),
-                  child: Text(
-                    '立即報名',
-                    style: MyStyles.kTextStyleH2Normal
-                        .copyWith(color: MyStyles.greyScale000000),
-                  ),
                 ),
               ),
             ],
@@ -365,7 +359,8 @@ List<Widget> _indicators(imagesLength, currentIndex) {
 }
 
 class ScaleSize {
-  static double textScaleFactor(BuildContext context, {double maxTextScaleFactor = 2}) {
+  static double textScaleFactor(BuildContext context,
+      {double maxTextScaleFactor = 2}) {
     final width = MediaQuery.of(context).size.width;
     double val = (width / 2500) * maxTextScaleFactor;
     return max(1, min(val, maxTextScaleFactor));

@@ -161,11 +161,12 @@ class ScheduleSelectorController extends GetxController {
   }
 
   goToDetail(ScheduleModel scheduleModel) {
-    Get.to(
-      () => ScheduleDetail(
-        model: scheduleModel,
-      ),
-    );
+    Get.to(() => ScheduleDetailPage());
+    // Get.to(
+    //   () => ScheduleDetail(
+    //     model: scheduleModel,
+    //   ),
+    // );
   }
 
   searchBarListener() {}
