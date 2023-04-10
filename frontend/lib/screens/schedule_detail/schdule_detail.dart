@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_basic.dart';
+import 'package:tripflutter/screens/schedule_detail/schedule_detail_controller.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_main_information.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_route.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_transportation.dart';
 import '../../consts.dart';
 import '../../models/schedule_model.dart';
 
-class ScheduleDetailPage extends GetView {
+class ScheduleDetailPage extends GetView<ScheduleDetailController> {
   const ScheduleDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ScheduleDetailController());
+
     return Scaffold(
       appBar: MyAppBar(),
-      body: ScheduleDetail(
-        model: ScheduleModel.sample(),
+      body: Obx(
+        () => controller.model.value == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ScheduleDetail(
+                model: ScheduleModel.sample(),
+              ),
       ),
     );
   }

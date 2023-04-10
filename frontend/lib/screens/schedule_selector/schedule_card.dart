@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
+import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
@@ -227,7 +228,7 @@ class ScheduleCard extends StatelessWidget {
           ),
         ),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             _customButton('了解更多', () {
               Get.find<ScheduleSelectorController>().goToDetail(model);
@@ -236,7 +237,7 @@ class ScheduleCard extends StatelessWidget {
               width: 8,
             ),
             _customButton('立即預訂', () async {
-              await Get.dialog(const ScheduleApply());
+              Get.find<ScheduleManagerController>().joinNewEvent(model.id);
             }),
           ],
         )

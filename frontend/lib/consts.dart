@@ -129,3 +129,12 @@ double kCardWidth = 1160;
 double kEmptyImageHeight = 493;
 double kEmptyImageWidth = 551;
 double kFooterHeight = 389;
+
+class AppLinks {
+  static const String MAIN = '';
+  static const String LOGIN = "/login";
+  static const String SIGNUP = "/signup";
+  static const String PAY = '/pay';
+  static const String SCHEDUL = '/schedule';
+  static const String DETAIL = '/detail';
+}

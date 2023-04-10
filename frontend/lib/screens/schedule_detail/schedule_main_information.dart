@@ -10,6 +10,7 @@ import 'package:tripflutter/utils/level_format_utils.dart';
 import '../../models/schedule_model.dart';
 import '../../utils/date_format_utils.dart';
 import '../schedule_apply/schedule_apply.dart';
+import 'schedule_detail_controller.dart';
 
 class ScheduleMainInformation extends StatefulWidget {
   const ScheduleMainInformation({Key? key, required this.model})
