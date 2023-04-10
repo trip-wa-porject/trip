@@ -69,6 +69,11 @@ class MyStyles {
     fontWeight: FontWeight.bold,
     letterSpacing: 0,
   );
+  static const TextStyle kTextStyleH2Normal = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0,
+  );
   static const TextStyle kTextStyleH3Bold = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
