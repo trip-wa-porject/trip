@@ -8,7 +8,9 @@ class SignUpController extends GetxController {
       Get.find<FirebaseAuthService>();
   final Rx<int> steps = Rx<int>(0);
   final RxBool nextStepsBtnStatus = false.obs;
-  final RxList<TermsCheckState> checkedStates = RxList<TermsCheckState>([
+
+  //step 0
+  final RxList<TermsCheckState> step0CheckedStates = RxList<TermsCheckState>([
     TermsCheckState(0)..isShowed = true,
     TermsCheckState(1),
     TermsCheckState(2),
@@ -17,26 +19,44 @@ class SignUpController extends GetxController {
 
   step1SelectCallback(int tapIndex) {
     for (int i = 0; i < 4; i++) {
-      checkedStates[i].isShowed = false;
+      step0CheckedStates[i].isShowed = false;
     }
-    checkedStates[tapIndex].isShowed = true;
-    checkedStates.refresh();
+    step0CheckedStates[tapIndex].isShowed = true;
+    step0CheckedStates.refresh();
   }
 
   step1CheckCallback(int tapIndex) {
-    checkedStates[tapIndex].checked = !checkedStates[tapIndex].checked;
+    step0CheckedStates[tapIndex].checked =
+        !step0CheckedStates[tapIndex].checked;
     if (tapIndex < 3) {
       step1SelectCallback(tapIndex + 1);
     } else {
-      checkedStates.refresh();
+      step0CheckedStates.refresh();
     }
-    checkAllChecked();
+    checkNextStepStatus();
   }
 
-  checkAllChecked() {
-    if (checkedStates.every((element) => element.checked == true)) {
-      if (steps.value == 0) {
+  //step1
+  final RxList<TermsCheckState> step1CheckedStates = RxList<TermsCheckState>([
+    TermsCheckState(0),
+    TermsCheckState(1),
+    TermsCheckState(2),
+    TermsCheckState(3)
+  ]);
+
+  //檢查下一步是否可以按
+  checkNextStepStatus() {
+    if (steps.value == 0) {
+      if (step0CheckedStates.every((element) => element.checked == true)) {
         nextStepsBtnStatus.value = true;
+      } else {
+        nextStepsBtnStatus.value = false;
+      }
+    } else if (steps.value == 1) {
+      if (step1CheckedStates.every((element) => element.checked == true)) {
+        nextStepsBtnStatus.value = true;
+      } else {
+        nextStepsBtnStatus.value = false;
       }
     }
   }
@@ -44,15 +64,18 @@ class SignUpController extends GetxController {
   nextStep() {
     if (steps < 2) {
       steps.value = steps.value + 1;
+      checkNextStepStatus();
     }
   }
 
   preStep() {
     if (steps > 0) {
       steps.value = steps.value - 1;
+      checkNextStepStatus();
     }
   }
 
+  //註冊
   signUp(String email, String password) async {
     if (email == null || email.isEmpty) {
       Get.snackbar('Error', 'No email provided for update.');

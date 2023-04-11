@@ -17,7 +17,7 @@ class SignUpContentOne extends GetView<SignUpController> {
     return Obx(
       () => Container(
         child: Column(
-          children: controller.checkedStates
+          children: controller.step0CheckedStates
               .map((element) => Padding(
                     padding: const EdgeInsets.only(bottom: 24.0),
                     child: DropdownTerm(checkState: element),

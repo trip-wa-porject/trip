@@ -87,17 +87,17 @@ class SignUpPage extends GetView<SignUpController> {
                                   StepContainer(
                                     stepIndex: 0,
                                     title: '申請成為會員',
-                                    isCurrentStep: controller.steps.value == 0,
+                                    isCurrentStep: controller.steps.value >= 0,
                                   ),
                                   StepContainer(
                                     stepIndex: 1,
                                     title: '填寫會員資料',
-                                    isCurrentStep: controller.steps.value == 1,
+                                    isCurrentStep: controller.steps.value >= 1,
                                   ),
                                   StepContainer(
                                     stepIndex: 2,
                                     title: '驗證 E-mail',
-                                    isCurrentStep: controller.steps.value == 2,
+                                    isCurrentStep: controller.steps.value >= 2,
                                   ),
                                 ],
                               ),
@@ -122,20 +122,58 @@ class SignUpPage extends GetView<SignUpController> {
                                           ][controller.steps.value],
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 208,
-                                        height: 65,
-                                        child: Obx(
-                                          () => MyFilledButton(
-                                            label: '下一步',
-                                            style: MyFilledButton.style1(),
-                                            onPressed: controller
-                                                    .nextStepsBtnStatus.value
-                                                ? () {
-                                                    controller.nextStep();
-                                                  }
-                                                : null,
-                                          ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Obx(
+                                              () => Visibility(
+                                                visible:
+                                                    controller.steps.value != 0,
+                                                child: SizedBox(
+                                                  width: 208,
+                                                  height: 65,
+                                                  child: Obx(
+                                                    () => MyOutlinedButton(
+                                                      label: '返回上一步',
+                                                      style: MyOutlinedButton
+                                                          .style1(),
+                                                      onPressed: controller
+                                                              .nextStepsBtnStatus
+                                                              .value
+                                                          ? () {
+                                                              controller
+                                                                  .preStep();
+                                                            }
+                                                          : null,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 32,
+                                            ),
+                                            SizedBox(
+                                              width: 208,
+                                              height: 65,
+                                              child: Obx(
+                                                () => MyFilledButton(
+                                                  label: '下一步',
+                                                  style:
+                                                      MyFilledButton.style1(),
+                                                  onPressed: controller
+                                                          .nextStepsBtnStatus
+                                                          .value
+                                                      ? () {
+                                                          controller.nextStep();
+                                                        }
+                                                      : null,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       )
                                     ],
