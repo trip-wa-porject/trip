@@ -54,73 +54,60 @@ class SignUpPage extends GetView<SignUpController> {
                 ),
               ),
               Center(
-                child: SizedBox(
-                  width: 1160,
-                  child: Column(
-                    children: [
-                      //加入會員
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: 307.0 + 86,
-                          top: 60,
-                          bottom: 44,
+                child: LayoutBuilder(builder: (context, constrains) {
+                  return Container(
+                    constraints: BoxConstraints(
+                        maxHeight: double.infinity, maxWidth: 1160),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 94,
                         ),
-                        child: SizedBox(
-                          width: 767,
-                          child: Center(
-                            child: Text(
-                              '新北山岳協會服務條款',
-                              style: MyStyles.kTextStyleH1,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 307,
-                              height: 1000,
-                              child: Column(
-                                children: [
-                                  StepContainer(
-                                    stepIndex: 0,
-                                    title: '申請成為會員',
-                                    isCurrentStep: controller.steps.value >= 0,
-                                  ),
-                                  StepContainer(
-                                    stepIndex: 1,
-                                    title: '填寫會員資料',
-                                    isCurrentStep: controller.steps.value >= 1,
-                                  ),
-                                  StepContainer(
-                                    stepIndex: 2,
-                                    title: '驗證 E-mail',
-                                    isCurrentStep: controller.steps.value >= 2,
-                                  ),
-                                ],
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 307,
+                                child: Column(
+                                  children: [
+                                    StepContainer(
+                                      stepIndex: 0,
+                                      title: '申請成為會員',
+                                      isCurrentStep:
+                                          controller.steps.value >= 0,
+                                    ),
+                                    StepContainer(
+                                      stepIndex: 1,
+                                      title: '填寫會員資料',
+                                      isCurrentStep:
+                                          controller.steps.value >= 1,
+                                    ),
+                                    StepContainer(
+                                      stepIndex: 2,
+                                      title: '驗證 E-mail',
+                                      isCurrentStep:
+                                          controller.steps.value >= 2,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 86,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12.0),
-                                child: SizedBox(
-                                  height: 760,
+                              const SizedBox(
+                                width: 86,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0),
                                   child: Column(
                                     children: [
-                                      Expanded(
-                                        child: Center(
-                                          child: const [
-                                            SignUpContentOne(),
-                                            SignUpContentTwo(),
-                                            SignUpContentThree(),
-                                          ][controller.steps.value],
-                                        ),
+                                      [
+                                        const SignUpContentOne(),
+                                        SignUpContentTwo(),
+                                        const SignUpContentThree(),
+                                      ][controller.steps.value],
+                                      const SizedBox(
+                                        height: 25,
                                       ),
                                       Align(
                                         alignment: Alignment.centerRight,
@@ -130,24 +117,17 @@ class SignUpPage extends GetView<SignUpController> {
                                             Obx(
                                               () => Visibility(
                                                 visible:
-                                                    controller.steps.value != 0,
+                                                    controller.steps.value == 0,
                                                 child: SizedBox(
                                                   width: 208,
                                                   height: 65,
-                                                  child: Obx(
-                                                    () => MyOutlinedButton(
-                                                      label: '返回上一步',
-                                                      style: MyOutlinedButton
-                                                          .style1(),
-                                                      onPressed: controller
-                                                              .nextStepsBtnStatus
-                                                              .value
-                                                          ? () {
-                                                              controller
-                                                                  .preStep();
-                                                            }
-                                                          : null,
-                                                    ),
+                                                  child: MyOutlinedButton(
+                                                    label: '返回上一步',
+                                                    style: MyOutlinedButton
+                                                        .style1(),
+                                                    onPressed: () {
+                                                      controller.preStep();
+                                                    },
                                                   ),
                                                 ),
                                               ),
@@ -155,21 +135,28 @@ class SignUpPage extends GetView<SignUpController> {
                                             const SizedBox(
                                               width: 32,
                                             ),
-                                            SizedBox(
-                                              width: 208,
-                                              height: 65,
-                                              child: Obx(
-                                                () => MyFilledButton(
-                                                  label: '下一步',
-                                                  style:
-                                                      MyFilledButton.style1(),
-                                                  onPressed: controller
-                                                          .nextStepsBtnStatus
-                                                          .value
-                                                      ? () {
-                                                          controller.nextStep();
-                                                        }
-                                                      : null,
+                                            Obx(
+                                              () => Visibility(
+                                                visible:
+                                                    controller.steps.value != 2,
+                                                child: SizedBox(
+                                                  width: 208,
+                                                  height: 65,
+                                                  child: Obx(
+                                                    () => MyFilledButton(
+                                                      label: '下一步',
+                                                      style: MyFilledButton
+                                                          .style1(),
+                                                      onPressed: controller
+                                                              .nextStepsBtnStatus
+                                                              .value
+                                                          ? () {
+                                                              controller
+                                                                  .nextStep();
+                                                            }
+                                                          : null,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -180,15 +167,18 @@ class SignUpPage extends GetView<SignUpController> {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }),
               ),
-              Footer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 120.0),
+                child: Footer(),
+              ),
             ],
           ),
         ),
@@ -365,7 +355,7 @@ class _DropdownTermState extends State<DropdownTerm> {
                       onPressed: checkable
                           ? () {
                               Get.find<SignUpController>()
-                                  .step1CheckCallback(checkState.index);
+                                  .step0CheckCallback(checkState.index);
                             }
                           : null,
                     ),

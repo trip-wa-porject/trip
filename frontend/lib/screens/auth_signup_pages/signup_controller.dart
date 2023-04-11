@@ -9,41 +9,6 @@ class SignUpController extends GetxController {
   final Rx<int> steps = Rx<int>(0);
   final RxBool nextStepsBtnStatus = false.obs;
 
-  //step 0
-  final RxList<TermsCheckState> step0CheckedStates = RxList<TermsCheckState>([
-    TermsCheckState(0)..isShowed = true,
-    TermsCheckState(1),
-    TermsCheckState(2),
-    TermsCheckState(3)
-  ]);
-
-  step1SelectCallback(int tapIndex) {
-    for (int i = 0; i < 4; i++) {
-      step0CheckedStates[i].isShowed = false;
-    }
-    step0CheckedStates[tapIndex].isShowed = true;
-    step0CheckedStates.refresh();
-  }
-
-  step1CheckCallback(int tapIndex) {
-    step0CheckedStates[tapIndex].checked =
-        !step0CheckedStates[tapIndex].checked;
-    if (tapIndex < 3) {
-      step1SelectCallback(tapIndex + 1);
-    } else {
-      step0CheckedStates.refresh();
-    }
-    checkNextStepStatus();
-  }
-
-  //step1
-  final RxList<TermsCheckState> step1CheckedStates = RxList<TermsCheckState>([
-    TermsCheckState(0),
-    TermsCheckState(1),
-    TermsCheckState(2),
-    TermsCheckState(3)
-  ]);
-
   //檢查下一步是否可以按
   checkNextStepStatus() {
     if (steps.value == 0) {
@@ -62,17 +27,72 @@ class SignUpController extends GetxController {
   }
 
   nextStep() {
-    if (steps < 2) {
-      steps.value = steps.value + 1;
-      checkNextStepStatus();
+    if (steps.value == 1) {
+      bool validate = formKey.currentState?.validate() ?? false;
+      print(validate);
+      if (!validate) {
+        return;
+      }
+      formKey.currentState?.save();
+      print(formData);
+      signUp(formData.email!, formData.password!);
     }
+    if (steps.value < 2) {
+      steps.value = steps.value + 1;
+    }
+    checkNextStepStatus();
   }
 
   preStep() {
-    if (steps > 0) {
+    if (steps.value > 0) {
       steps.value = steps.value - 1;
-      checkNextStepStatus();
     }
+    checkNextStepStatus();
+  }
+
+  //step 0
+  final RxList<TermsCheckState> step0CheckedStates = RxList<TermsCheckState>([
+    TermsCheckState(0)..isShowed = true,
+    TermsCheckState(1)..checked,
+    TermsCheckState(2)..checked,
+    TermsCheckState(3)..checked,
+  ]);
+
+  step1SelectCallback(int tapIndex) {
+    for (int i = 0; i < 4; i++) {
+      step0CheckedStates[i].isShowed = false;
+    }
+    step0CheckedStates[tapIndex].isShowed = true;
+    step0CheckedStates.refresh();
+  }
+
+  step0CheckCallback(int tapIndex) {
+    step0CheckedStates[tapIndex].checked =
+        !step0CheckedStates[tapIndex].checked;
+    if (tapIndex < 3) {
+      step1SelectCallback(tapIndex + 1);
+    } else {
+      step0CheckedStates.refresh();
+    }
+    checkNextStepStatus();
+  }
+
+  //step1
+  final formKey = GlobalKey<FormState>();
+  FormData formData = FormData();
+
+  final RxList<TermsCheckState> step1CheckedStates = RxList<TermsCheckState>([
+    TermsCheckState(0),
+    TermsCheckState(1),
+    TermsCheckState(2),
+    TermsCheckState(3)
+  ]);
+
+  step1CheckCallback(int tapIndex) {
+    step1CheckedStates[tapIndex].checked =
+        !step1CheckedStates[tapIndex].checked;
+    step1CheckedStates.refresh();
+    checkNextStepStatus();
   }
 
   //註冊
@@ -85,20 +105,13 @@ class SignUpController extends GetxController {
       Get.snackbar('Error', 'No email provided for update.');
       return;
     }
-    // await _firebaseAuthService.updateUserEmail(email); //更新訪客email
-
     await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
     await _firebaseAuthService.bindUserWithEmailLink(email, password);
+    await _firebaseAuthService.sendEmailVerification();
+  }
 
-    await Get.dialog(
-      Material(
-        child: Center(
-          child: Card(
-            child: Text('請去點擊會員驗證信件'),
-          ),
-        ),
-      ),
-    );
+  sendEmail() async {
+    await _firebaseAuthService.sendEmailVerification();
   }
 }
 
@@ -107,4 +120,14 @@ class TermsCheckState {
   bool checked = false;
   bool isShowed = false;
   TermsCheckState(this.index);
+}
+
+class FormData {
+  String? email;
+  String? password;
+
+  @override
+  String toString() {
+    return '$email, $password';
+  }
 }

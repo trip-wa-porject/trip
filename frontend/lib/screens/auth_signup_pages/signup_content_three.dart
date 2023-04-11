@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/modules/auth_service.dart';
 
 import 'signup_controller.dart';
@@ -14,13 +16,38 @@ class SignUpContentThree extends GetView<SignUpController> {
       child: Column(
         children: [
           Text(
-            'SignUpContentThree\n訪客：${Get.find<FirebaseAuthService>().user.value?.uid} \n email: aaabbbccc@gmail.com \n password: Aa12345678',
+            '就差一步！\n請透過以下連結前往信箱驗證以完成會員註冊',
+            style: MyStyles.kTextStyleH3,
+            textAlign: TextAlign.center,
           ),
-          ElevatedButton(
-              onPressed: () async {
-                await controller.signUp("aaabbbccc@gmail.com", 'Aa12345678');
-              },
-              child: Text('註冊會員'))
+          Image.asset(
+            'assets/images/check.png',
+            width: 745,
+            height: 655,
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          RichText(
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            text: TextSpan(
+              style: MyStyles.kTextStyleH3.copyWith(
+                color: Colors.black54,
+              ),
+              children: [
+                TextSpan(text: '若您十分鐘內尚未收到驗證信，請點擊'),
+                TextSpan(
+                  text: '重新傳送',
+                  style: MyStyles.kTextStyleH3.copyWith(
+                    color: Colors.black54,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => controller.sendEmail(),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
