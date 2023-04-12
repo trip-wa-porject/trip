@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 
+import '../models/schedule_model.dart';
+
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key, required this.keywordList}) : super(key: key);
 
-  final List<String> keywordList;
+  final List<Area> keywordList;
 
   @override
   State<StatefulWidget> createState() => _MapState();
@@ -22,7 +24,7 @@ class _MapState extends State<MapWidget> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
     var googlePlace = GooglePlace('AIzaSyAR4ABOvlLdPyaC4T_nyRHXVpCJPVSeOMU');
-    var response = await googlePlace.search.getTextSearch('台北車站');
+    var response = await googlePlace.search.getTextSearch(widget.keywordList[0].city);
     final results = response!.results;
 
     setState(() {

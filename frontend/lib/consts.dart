@@ -50,6 +50,7 @@ class MyStyles {
   static const Color greyScaleCFCFCE = Color(0xffCFCFCE);
   static const Color greyScale6037392F = Color(0x6037392F);
   static const Color greyScale8037392F = Color(0x8037392F);
+  static const Color greyScaleF4F4F4 = Color(0xffF4F4F4);
 
 //TextStyles
   static const TextStyle kTextStyleH1 = TextStyle(

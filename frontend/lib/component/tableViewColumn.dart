@@ -1,147 +1,117 @@
 import 'package:flutter/material.dart';
 import 'package:tripflutter/component/map_widget.dart';
+import 'package:tripflutter/models/schedule_model.dart';
 
 import '../consts.dart';
 
 class TableViewColumn {
-  static Widget createColumn(String columnTitle, String columnContent) {
-    return Expanded(
-      flex: 3,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 96,
-              color: MyStyles.tripNeutral,
+  static TableRow createColumnWithApplicantsRichText(
+      String columnTitle, int limitation, int applicants) {
+    return TableRow(children: <Widget>[
+      IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 265,
+              color: MyStyles.green1,
               alignment: Alignment.center,
               child: Text(
                 columnTitle,
-                style: const TextStyle(
-                    fontSize: 24, color: MyStyles.greyScale424242),
+                style: MyStyles.kTextStyleH3Bold
+                    .copyWith(color: MyStyles.greyScale424242),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 96,
-              alignment: Alignment.centerLeft,
+            Flexible(
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text(
-                  columnContent,
-                  style: const TextStyle(
-                      fontSize: 24, color: MyStyles.greyScale000000),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Widget createColumnWithPriceRichText(
-      String columnTitle, int price, int memberPrice) {
-    return Expanded(
-      flex: 3,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 96,
-              color: MyStyles.tripNeutral,
-              alignment: Alignment.center,
-              child: Text(
-                columnTitle,
-                style: const TextStyle(
-                    fontSize: 24, color: MyStyles.greyScale424242),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 96,
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  padding: const EdgeInsets.all(20),
                   child: RichText(
                     text: TextSpan(
-                      text: '非會員 ',
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 18.0),
+                      text: '$limitation位 / ',
+                      style: MyStyles.kTextStyleH3
+                          .copyWith(color: MyStyles.greyScale212121),
                       children: [
                         TextSpan(
-                            text: '\$$price',
-                            style: const TextStyle(color: MyStyles.redC80000)),
-                        const TextSpan(
-                          text: ' 會員 ',
-                        ),
-                        TextSpan(
-                            text: '\$$memberPrice',
+                            text: '剩${limitation - applicants}位',
                             style: const TextStyle(color: MyStyles.redC80000)),
                       ],
                     ),
                   )),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      )
+    ]);
   }
 
-  static Widget createColumnExpandHeight(
-      String columnTitle, String columnContent) {
-    return Expanded(
-      flex: 3,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 120,
-              color: MyStyles.tripNeutral,
+  static TableRow createColumn(String columnTitle, String columnContent) {
+    return TableRow(children: <Widget>[
+      IntrinsicHeight(
+        child: Row(children: <Widget>[
+          Container(
+            width: 265,
+            color: MyStyles.green1,
+            alignment: Alignment.center,
+            child: Text(
+              columnTitle,
+              style: MyStyles.kTextStyleH3Bold
+                  .copyWith(color: MyStyles.greyScale424242),
+            ),
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                columnContent,
+                overflow: TextOverflow.visible,
+                style: MyStyles.kTextStyleH3
+                    .copyWith(color: MyStyles.greyScale212121),
+              ),
+            ),
+          ),
+        ]),
+      )
+    ]);
+  }
+
+  static TableRow createColumnWithImage(
+      Widget? button, String columnTitle, String image) {
+    return TableRow(children: <Widget>[
+      IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 265,
+              color: MyStyles.green1,
               alignment: Alignment.center,
               child: Text(
                 columnTitle,
-                style: const TextStyle(
-                    fontSize: 24, color: MyStyles.greyScale424242),
+                style: MyStyles.kTextStyleH3Bold
+                    .copyWith(color: MyStyles.greyScale424242),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              alignment: Alignment.centerLeft,
+            Flexible(
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text(
-                  columnContent,
-                  style: const TextStyle(
-                      fontSize: 24, color: MyStyles.greyScale000000),
-                ),
+                padding: const EdgeInsets.only(
+                    top: 85, bottom: 85, left: 140, right: 140),
+                child: SizedBox(
+                    height: 350, width: 720, child: Image.asset(image)),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      )
+    ]);
   }
 
-  static Widget createColumnWithImage(
-      Widget? button, String columnTitle, String image) {
-    return Expanded(
-      flex: 3,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-                height: 350,
-                color: MyStyles.tripNeutral,
+  static TableRow createColumnWithMap(
+      Widget? button, String columnTitle, List<Area> keywordList) {
+    return TableRow(children: <Widget>[
+      IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            Container(
+                width: 265,
+                color: MyStyles.green1,
                 alignment: Alignment.center,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -149,70 +119,25 @@ class TableViewColumn {
                   children: [
                     Text(
                       columnTitle,
-                      style: const TextStyle(
-                          fontSize: 24, color: MyStyles.greyScale424242),
+                      style: MyStyles.kTextStyleH3Bold
+                          .copyWith(color: MyStyles.greyScale424242),
                     ),
                     if (button != null) button,
                   ],
                 )),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 350,
-              alignment: Alignment.center,
+            Flexible(
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
+                padding: const EdgeInsets.only(
+                    top: 85, bottom: 85, left: 140, right: 140),
                 child: SizedBox(
-                    height: 310, width: 550, child: Image.asset(image)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Widget createColumnWithMap(
-      Widget? button, String columnTitle, List<String> keywordList) {
-    return Expanded(
-      flex: 3,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-                height: 350,
-                color: MyStyles.tripNeutral,
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      columnTitle,
-                      style: const TextStyle(
-                          fontSize: 24, color: MyStyles.greyScale424242),
-                    ),
-                    if (button != null) button,
-                  ],
-                )),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 350,
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: SizedBox(
-                    height: 310, width: 550,
+                    height: 350,
+                    width: 720,
                     child: MapWidget(keywordList: keywordList)),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      )
+    ]);
   }
 }
