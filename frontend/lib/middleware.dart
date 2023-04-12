@@ -9,20 +9,13 @@ class PayMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     FirebaseAuthService authService = Get.find<FirebaseAuthService>();
     if (!authService.isLogin) {
-      Future.delayed(Duration(seconds: 1), () {
-        Get.back();
-        Get.snackbar("提示", "请先登录APP${Get.arguments}");
-      });
+      Get.back();
+      Get.snackbar("提示", "请先登录APP${Get.arguments}");
       return RouteSettings(
           name: "${AppLinks.SCHEDUL}${AppLinks.DETAIL}",
           arguments: Get.arguments); //TODO 想pop回去
     } else {
       print('!authService.isLogin');
-      Get.dialog(Center(
-        child: Text(
-          '你已經登入了： ${authService.user.value}',
-        ),
-      ));
       return super.redirect(route);
     }
   }

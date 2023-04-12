@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/utils/level_format_utils.dart';
 
 import '../../models/schedule_model.dart';
@@ -249,7 +250,8 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                   label: '立即報名',
                   style: MyFilledButton.style3(),
                   onPressed: () async {
-                    await Get.dialog(const ScheduleApply());
+                    Get.find<ScheduleManagerController>()
+                        .joinNewEvent(widget.model.id);
                   },
                 ),
               ),

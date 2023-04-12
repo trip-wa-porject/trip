@@ -43,3 +43,27 @@ class BgImage extends StatelessWidget {
     );
   }
 }
+
+//back button
+class MyBackButton extends StatelessWidget {
+  const MyBackButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      constraints: BoxConstraints(maxWidth: kCardWidth),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: MyStyles.greyScale212121),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.arrow_back),
+          Text('back'),
+        ],
+      ),
+    );
+  }
+}

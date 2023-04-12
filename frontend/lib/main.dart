@@ -36,7 +36,7 @@ void main() async {
       FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
       print('kDebugMode should useAuthEmulator');
-      await auth.useAuthEmulator('127.0.0.1', 9099);
+      // await auth.useAuthEmulator('127.0.0.1', 9099);
     } catch (e) {
       // ignore: avoid_print
       print(e);

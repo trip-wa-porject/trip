@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
 import 'package:tripflutter/screens/auth_login_pages/login_dialog.dart';
 import '../../modules/auth_service.dart';
@@ -18,18 +19,20 @@ class ScheduleManagerController extends GetxController {
     User? user = _firebaseAuthService.user.value;
     if (user == null || user.isAnonymous) {
       //未登入的user
-      await Get.dialog(const LoginDialog());
+      await Get.dialog(const LoginDialog(), arguments: eventId);
     } else {
-      await repository.attendTrip(user.uid, eventId);
-      // Get.snackbar('user：${user.email} ${user.uid} 加入行程', ' ${eventId}！');
+      // await repository.attendTrip(user.uid, eventId);//TODO
       //加入活動成功
-      Get.defaultDialog(
-        title: '活動報名成功！',
-        content: Text(
-          'user：${user.email} ${user.uid} 加入行程 ${eventId},\n請在三日內繳款',
-        ),
-        custom: Text('custom'),
-      );
+
+      Get.toNamed(
+          '${AppLinks.SCHEDUL}${AppLinks.DETAIL}${AppLinks.PAY}/$eventId');
+      // Get.defaultDialog(
+      //   title: '活動報名成功！',
+      //   content: Text(
+      //     'user：${user.email} ${user.uid} 加入行程 ${eventId},\n請在三日內繳款',
+      //   ),
+      //   custom: Text('custom'),
+      // );
     }
   }
 

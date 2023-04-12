@@ -62,10 +62,17 @@ class LoginController extends GetxController {
 
   signup() async {
     if (_firebaseAuthService.user.value == null) {
-      await _homeController.handleAnonymousSignIn();
+      await _firebaseAuthService.signInAnonymously();
     }
-    Get.offAndToNamed('/signup');
+    Get.toNamed('/signup', arguments: path);
   }
 
   forgetPassword() {}
+
+  String? path;
+  @override
+  void onInit() {
+    path = Get.arguments;
+    super.onInit();
+  }
 }

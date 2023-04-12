@@ -98,6 +98,38 @@ class MyFilledButton extends StatelessWidget {
     );
   }
 
+  //橘色 黑字
+  static ButtonStyle styleOrangeSmallBlack() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.primary,
+      foregroundColor: MyStyles.greyScale000000,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      // side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(
+        vertical: 9,
+        horizontal: 14,
+      ),
+    );
+  }
+
+  //紅底 白字
+  static ButtonStyle styleRedSmallWhite() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.redC80000,
+      foregroundColor: Colors.white,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      // side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(
+        vertical: 9,
+        horizontal: 14,
+      ),
+    );
+  }
+
   //橘色 黑字 大的
   static ButtonStyle style3() {
     return FilledButton.styleFrom(

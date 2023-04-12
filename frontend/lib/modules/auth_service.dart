@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class AuthenticationException implements Exception {}
@@ -159,16 +160,24 @@ class FirebaseAuthService extends GetxService {
     }
   }
 
-  sendEmailVerification() async {
+  //例如
+  //
+  sendEmailVerification(String? redirectPath) async {
     if (_firebaseAuth.currentUser == null) {
       return;
     }
+    String baseUrl = '';
+    if (kDebugMode) {
+      baseUrl = 'http://localhost:55088';
+    } else {
+      baseUrl = 'https://wa-project-mountain.web.app/#/';
+    }
+    ActionCodeSettings? settings;
     try {
-      await _firebaseAuth.currentUser!.sendEmailVerification(
-        ActionCodeSettings(
-            url:
-                'http://localhost:55088/emailVerification?email=${_firebaseAuth.currentUser!.email}'),
-      );
+      if (redirectPath != null) {
+        settings = ActionCodeSettings(url: '$baseUrl$redirectPath');
+      }
+      await _firebaseAuth.currentUser!.sendEmailVerification(settings);
     } on FirebaseAuthException catch (e) {
       authErrorHandel(e);
     }

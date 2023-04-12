@@ -19,13 +19,6 @@ class HomeController extends GetxController {
   }
 
   Future<void> handleAnonymousSignIn() async {
-    await _firebaseAuthService.signInAnonymously();
-    final User? user = _firebaseAuthService.user.value;
-    if (user != null) {
-      //todo update data
-      await repository.updateUserDocument(user.uid, {});
-    }
-
     Get.snackbar('Success signInAnonymously',
         ' user: ${_firebaseAuthService.user.value?.uid}. email: ${_firebaseAuthService.user.value?.email}');
   }

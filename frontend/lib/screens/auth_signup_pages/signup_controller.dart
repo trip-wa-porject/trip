@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/consts.dart';
 
 import '../../modules/auth_service.dart';
 
@@ -107,11 +108,22 @@ class SignUpController extends GetxController {
     }
     await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
     await _firebaseAuthService.bindUserWithEmailLink(email, password);
-    await _firebaseAuthService.sendEmailVerification();
+    String url = "${AppLinks.SCHEDUL}${AppLinks.DETAIL}/$eventId";
+    await _firebaseAuthService.sendEmailVerification(url); //TODO change later
   }
 
   sendEmail() async {
-    await _firebaseAuthService.sendEmailVerification();
+    await _firebaseAuthService.sendEmailVerification(
+        "${AppLinks.SCHEDUL}${AppLinks.DETAIL}/$eventId"); //TODO change later
+  }
+
+  String? eventId;
+
+  @override
+  void onInit() {
+    dynamic arg = Get.arguments;
+    eventId = arg;
+    super.onInit();
   }
 }
 
