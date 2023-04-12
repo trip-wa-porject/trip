@@ -40,9 +40,9 @@ trips.forEach((e) => {
       leader: e.information.leader,
       guides: e.information.guides,
       note: e.information.note,
-      arriveSite: e.information.arriveSite
+      arriveSite: e.information.arriveSite,
     },
-    status: e.status
+    status: e.status,
   })
 })
 
