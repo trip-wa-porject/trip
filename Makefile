@@ -4,7 +4,7 @@ build_emulators_image:
 	.
 
 run_emulators_image:
-	docker run --rm -p 4000:4000 -p 8080:8080 trip-emulators:base
+	docker run --rm -p 4000:4000 -p 8080:8080 -p 5001:5001 trip-emulators:base
 
 add_default_data_for_container:
 	docker exec trip-emulators:base sh && \

@@ -8,10 +8,11 @@
     "resolveJsonModule": true /* Enable importing .json files. */,
     /* JavaScript Support */
     "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
-    "outDir": "functions" /* Specify an output folder for all emitted files. */,
+    "outDir": "libs" /* Specify an output folder for all emitted files. */,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
     "baseUrl": ".",
+    "sourceMap": true,
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
     "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,

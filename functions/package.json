@@ -2,12 +2,12 @@
   "name": "trip_backend",
   "version": "1.0.0",
   "description": "for flutter app backend service",
-  "main": "index.js",
   "scripts": {
     "start": "tsc && NODE_ENV=development node functions/index.js",
     "lint": "eslint . --ext .ts",
     "addFakeData": "tsc && NODE_ENV=development node functions/makeFakeDate.js"
   },
+  "main": "libs/index.js",
   "author": "WeiChen Lin",
   "license": "ISC",
   "devDependencies": {
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
+    "firebase": "^9.19.1",
     "firebase-admin": "^11.6.0",
     "firebase-functions": "^4.2.1"
   }

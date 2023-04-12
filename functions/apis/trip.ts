@@ -1,9 +1,10 @@
-import { https, logger } from 'firebase-functions/v1'
-import type { Trip, TripFilter } from '@types'
-import { db } from 'auth'
+import { https, logger } from 'firebase-functions'
+import type { Trip, TripFilter } from '../@types'
+import { db } from '../auth'
 import filter from './utils'
 
 const searchTripsOnCall = https.onCall(async (data) => {
+  logger.warn('********************************88')
   return await searchTrips(data)
 })
 
@@ -25,7 +26,7 @@ const regions = [
   '彰化縣',
   '屏東縣',
   '宜蘭縣',
-  '澎湖縣'
+  '澎湖縣',
 ]
 
 const levels = ['A', 'B', 'C']
@@ -43,7 +44,7 @@ const searchTrips = async (data: Partial<TripFilter>) => {
     level: levels,
     type: types,
     region: regions,
-    ...data
+    ...data,
   }
 
   return db
@@ -56,14 +57,14 @@ const searchTrips = async (data: Partial<TripFilter>) => {
 
         result.push({
           ...rec,
-          id: doc.id
+          id: doc.id,
         } as Trip)
 
         const passfilter = filter(filters, rec as Trip)
         if (passfilter) {
           result.push({
             ...rec,
-            id: doc.id
+            id: doc.id,
           } as Trip)
         }
       })

@@ -1,8 +1,5 @@
-import * as admin from 'firebase-admin'
+import * as firebase from 'firebase-admin'
 import { config } from 'dotenv'
-import { hostname } from 'os'
-
-const site = hostname()
 
 config()
 
@@ -12,13 +9,13 @@ if (_needToConnectToEmulator) {
   process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
 }
 
-const app = admin.initializeApp(
+const app = firebase.initializeApp(
   _needToConnectToEmulator
     ? {
-        projectId: 'wa-project-mountain-dev'
+        projectId: 'wa-project-mountain-dev',
       }
     : {
-        credential: admin.credential.applicationDefault()
+        credential: firebase.credential.applicationDefault(),
       }
 )
 
