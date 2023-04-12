@@ -40,15 +40,20 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   ];
 
   late TabController _tabController;
+
   late ScrollController _scrollController;
-  late bool fixedScroll;
   late double padding;
 
   @override
   void initState() {
     _scrollController = ScrollController();
     _tabController = TabController(vsync: this, length: scheduleTabs.length);
+    _tabController.addListener(_handleTabSelection);
     super.initState();
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
   }
 
   @override
@@ -60,89 +65,81 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
 
   @override
   Widget build(BuildContext context) {
-    // padding = MediaQuery.of(context).size.width * 0.1;
+    padding = MediaQuery.of(context).size.width * 0.1;
 
-    return Material(
+    return SingleChildScrollView(
       child: Container(
-        alignment: Alignment.topCenter,
-        // width: MediaQuery.of(context).size.width,
-        // padding: EdgeInsets.only(
-        //   right: padding,
-        //   left: padding,
-        // ),
-        child: NestedScrollView(
-          controller: _scrollController,
-          headerSliverBuilder: (context, value) {
-            return [
-              SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: kCardWidth,
-                    ),
-                    child: ScheduleMainInformation(
-                      model: widget.model,
-                    ),
+        width: double.infinity,
+        color: MyStyles.greyScaleF4F4F4,
+        padding: EdgeInsets.only(
+          right: padding,
+          left: padding,
+        ),
+        child: SizedBox(
+          height: 1500,
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(
+                  child: ScheduleMainInformation(
+                    model: widget.model,
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: kCardWidth,
-                    ),
-                    child: DecoratedTabBar(
-                      tabBar: TabBar(
-                        labelColor: Colors.white,
-                        unselectedLabelColor: MyStyles.greyScaleCFCFCE,
-                        controller: _tabController,
-                        indicatorColor: MyStyles.tripPrimary,
-                        indicatorWeight: 6,
-                        padding: EdgeInsets.zero,
-                        indicatorPadding:
-                            const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                        labelPadding: const EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
-                        tabs: [
-                          createTab(scheduleTabs[0].text!, 'tab_left'),
-                          createTab(scheduleTabs[1].text!, 'tab_middle'),
-                          createTab(scheduleTabs[2].text!, 'tab_right'),
-                        ],
+                SliverToBoxAdapter(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      DecoratedTabBar(
+                        tabBar: TabBar(
+                          labelColor: Colors.white,
+                          unselectedLabelColor: MyStyles.greyScaleCFCFCE,
+                          controller: _tabController,
+                          indicatorColor: Colors.transparent,
+                          indicatorWeight: 0.01,
+                          padding: EdgeInsets.zero,
+                          indicatorPadding:
+                              const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          labelPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          tabs: [
+                            createTab(_tabController, 0, Icons.account_box,
+                                scheduleTabs[0].text!, 'tab_left'),
+                            createTab(_tabController, 1, Icons.directions_car,
+                                scheduleTabs[1].text!, 'tab_middle'),
+                            createTab(_tabController, 2, Icons.map,
+                                scheduleTabs[2].text!, 'tab_right'),
+                          ],
+                        ),
                       ),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: MyStyles.tripTertiary,
-                            width: 6.0,
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: _indicators(context, scheduleTabs.length, _tabController.index),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ),
-            ];
-          },
-          body: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: kCardWidth,
-              ),
-              child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  ScheduleBasic(
-                    model: widget.model,
-                  ),
-                  ScheduleTransportation(
-                    model: widget.model,
-                  ),
-                  ScheduleRoute(
-                    model: widget.model,
-                  ),
-                ],
-              ),
+              ];
+            },
+            body: TabBarView(
+              controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                ScheduleBasic(
+                  model: widget.model,
+                ),
+                ScheduleTransportation(
+                  model: widget.model,
+                ),
+                ScheduleRoute(
+                  model: widget.model,
+                ),
+              ],
             ),
           ),
         ),
@@ -151,30 +148,70 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   }
 }
 
-Widget createTab(String tabTitle, String tabImage) {
+Widget createTab(TabController tabController, int tabIndex, IconData tabIcon,
+    String tabTitle, String tabImage) {
+  double leftPadding = tabIndex == 0 ? 0 : 5;
+  double rightPadding = tabIndex == 2 ? 0 : 5;
+
   return Container(
-    width: double.infinity,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.only(
-        topRight: Radius.circular(20.0),
-        topLeft: Radius.circular(20.0),
+    padding: EdgeInsets.only(left: leftPadding, right: rightPadding),
+    alignment: Alignment.bottomCenter,
+    height: 110,
+    child: Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(20.0),
+          topLeft: Radius.circular(20.0),
+        ),
+        image: DecorationImage(
+          image: AssetImage('assets/images/$tabImage.png'),
+          fit: BoxFit.fill,
+        ),
       ),
-      image: DecorationImage(
-        colorFilter: const ColorFilter.mode(Color(0x80FFFFFF), BlendMode.color),
-        image: AssetImage('assets/images/$tabImage.png'),
-        fit: BoxFit.fill,
-      ),
-    ),
-    child: Tab(
-      height: 103,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
         children: [
-          const Icon(Icons.assignment_ind),
-          const SizedBox(
-            width: 8,
+          Container(
+            width: double.infinity,
+            height: tabController.index == tabIndex ? 110 : 95,
+            foregroundDecoration: BoxDecoration(
+              color: tabController.index == tabIndex
+                  ? MyStyles.greyScale6037392F
+                  : MyStyles.greyScale8037392F,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20.0),
+                topLeft: Radius.circular(20.0),
+              ),
+            ),
           ),
-          Text(tabTitle),
+          Container(
+            width: double.infinity,
+            height: tabController.index == tabIndex ? 110 : 95,
+            child: Tab(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    tabIcon,
+                    color: tabController.index == tabIndex
+                        ? Colors.white
+                        : MyStyles.greyScaleD9D9D9,
+                    size: 45,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    tabTitle,
+                    style: MyStyles.kTextStyleH3Bold.copyWith(
+                        color: tabController.index == tabIndex
+                            ? Colors.white
+                            : MyStyles.greyScaleD9D9D9),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     ),
@@ -182,11 +219,9 @@ Widget createTab(String tabTitle, String tabImage) {
 }
 
 class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const DecoratedTabBar(
-      {super.key, required this.tabBar, required this.decoration});
+  const DecoratedTabBar({super.key, required this.tabBar});
 
   final TabBar tabBar;
-  final BoxDecoration decoration;
 
   @override
   Size get preferredSize => tabBar.preferredSize;
@@ -194,11 +229,27 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        Positioned.fill(
-            left: 1.5, right: 1.5, child: Container(decoration: decoration)),
         tabBar,
       ],
     );
   }
+}
+
+List<Widget> _indicators(BuildContext context, int imagesLength, int currentIndex) {
+  double leftPadding = currentIndex == 0 ? 0 : 5;
+  double rightPadding = currentIndex == 2 ? 0 : 5;
+
+  return List<Widget>.generate(imagesLength, (index) {
+    return Container(
+      margin: EdgeInsets.only(left: leftPadding, right: rightPadding,),
+      width: ((MediaQuery.of(context).size.width * 0.8) / 3) - leftPadding - rightPadding,
+      height: 6,
+      decoration: BoxDecoration(
+        color: currentIndex == index ? MyStyles.tripTertiary : Colors.transparent,
+        shape: BoxShape.rectangle,
+      ),
+    );
+  });
 }

@@ -14,37 +14,23 @@ class ScheduleRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Table(
-      border: TableBorder.all(width: 1, color: const Color(0xFFEA9F49)),
+      border: TableBorder.all(width: 1, color: MyStyles.green3),
       columnWidths: const <int, TableColumnWidth>{
-        0: FlexColumnWidth(),
-        1: FlexColumnWidth(),
+        0: FlexColumnWidth(1.0),
+        1: IntrinsicColumnWidth(),
       },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
-        TableRow(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          children: [
-            TableViewColumn.createColumnWithMap(createDownloadButton(), '路線地圖',
-                model.area.map((e) => e.city).toList()),
-          ],
-        ),
-        TableRow(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          children: [
-            TableViewColumn.createColumnWithImage(
-                null, '高度圖', 'assets/images/forest.jpg'),
-          ],
-        ),
+        TableViewColumn.createColumnWithMap(
+            _createDownloadButton(), '路線地圖', model.area),
+        TableViewColumn.createColumnWithImage(
+            null, '高度圖', 'assets/images/forest.jpg'),
       ],
     );
   }
 }
 
-Widget createDownloadButton() {
+Widget _createDownloadButton() {
   return Padding(
     padding: const EdgeInsets.all(8),
     child: SizedBox(
