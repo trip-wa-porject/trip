@@ -20,6 +20,7 @@ jobs:
       - name: Install Dependencies
         working-directory: './frontend'
         run: |
+          flutter upgrade && \
           flutter pub get
       - name: Build the application
         working-directory: './frontend'
