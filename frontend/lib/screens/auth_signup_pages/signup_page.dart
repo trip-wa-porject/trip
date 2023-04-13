@@ -117,7 +117,7 @@ class SignUpPage extends GetView<SignUpController> {
                                             Obx(
                                               () => Visibility(
                                                 visible:
-                                                    controller.steps.value == 0,
+                                                    controller.steps.value == 1,
                                                 child: SizedBox(
                                                   width: 208,
                                                   height: 65,

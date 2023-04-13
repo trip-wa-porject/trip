@@ -33,8 +33,11 @@ class Pay extends GetView<PayController> {
                         maxHeight: double.infinity, maxWidth: 1160),
                     child: Column(
                       children: [
-                        MyBackButton(),
-                        SizedBox(
+                        const SizedBox(
+                          height: 81,
+                        ),
+                        const MyBackButton(),
+                        const SizedBox(
                           height: 52,
                         ),
                         Align(
@@ -52,8 +55,13 @@ class Pay extends GetView<PayController> {
                           () => controller.model.value != null
                               ? SizedBox(
                                   height: 173,
-                                  child: ScheduleCard(
-                                      model: controller.model.value!, index: 0),
+                                  child: IgnorePointer(
+                                    child: ScheduleCard(
+                                      model: controller.model.value!,
+                                      index: 0,
+                                      isShowOnly: true,
+                                    ),
+                                  ),
                                 )
                               : Container(
                                   color:
@@ -65,23 +73,25 @@ class Pay extends GetView<PayController> {
                         SizedBox(
                           height: 60,
                         ),
-                        EasyRichText(
-                          '倒數繳費截止：*71小時59分鐘* ',
-                          patternList: [
-                            EasyRichTextPattern(
-                              targetString: '(\\*)(.*?)(\\*)',
-                              matchBuilder:
-                                  (BuildContext context, RegExpMatch? match) {
-                                return TextSpan(
-                                  text: match?[0]?.replaceAll('*', ''),
-                                  style: MyStyles.kTextStyleH2Bold.copyWith(
-                                    color: MyStyles.redC80000,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                          defaultStyle: MyStyles.kTextStyleH2Bold,
+                        Obx(
+                          () => EasyRichText(
+                            '倒數繳費截止：*${getCountdown(controller.model.value?.information.applyEnd)}* ',
+                            patternList: [
+                              EasyRichTextPattern(
+                                targetString: '(\\*)(.*?)(\\*)',
+                                matchBuilder:
+                                    (BuildContext context, RegExpMatch? match) {
+                                  return TextSpan(
+                                    text: match?[0]?.replaceAll('*', ''),
+                                    style: MyStyles.kTextStyleH2Bold.copyWith(
+                                      color: MyStyles.redC80000,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                            defaultStyle: MyStyles.kTextStyleH2Bold,
+                          ),
                         ),
                         Divider(),
                         EasyRichText(
@@ -205,7 +215,9 @@ class Pay extends GetView<PayController> {
                                 child: MyFilledButton(
                                   label: '確認送出',
                                   style: MyFilledButton.styleOrangeSmallBlack(),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    controller.confirm();
+                                  },
                                 ),
                               ),
                               SizedBox(
@@ -217,7 +229,9 @@ class Pay extends GetView<PayController> {
                                 child: MyFilledButton(
                                   label: '取消報名',
                                   style: MyFilledButton.styleRedSmallWhite(),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    controller.cancel();
+                                  },
                                 ),
                               ),
                             ],
@@ -334,11 +348,15 @@ class Pay extends GetView<PayController> {
                           ),
                         ),
                         //表格
-                        PayTable(
-                          orderData: [
-                            OrderData.sample(),
-                            OrderData.sampleVIP(),
-                          ],
+                        Obx(
+                          () => PayTable(
+                            orderData: [
+                              OrderData.sample(),
+                              ...controller.orders,
+                              if (controller.wantJoinMember.value)
+                                OrderData.sampleVIP(),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -355,4 +373,13 @@ class Pay extends GetView<PayController> {
       ),
     );
   }
+}
+
+String getCountdown(DateTime? dateTime) {
+  if (dateTime == null) {
+    return '320小時40分鐘';
+  }
+  Duration duration = DateTime.now().difference(dateTime);
+
+  return "${duration.inHours}小時${duration.inMinutes % 60}分鐘";
 }

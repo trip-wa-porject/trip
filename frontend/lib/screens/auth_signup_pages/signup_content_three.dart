@@ -16,7 +16,7 @@ class SignUpContentThree extends GetView<SignUpController> {
       child: Column(
         children: [
           Text(
-            '就差一步！\n請透過以下連結前往信箱驗證以完成會員註冊',
+            '就差一步！\n請前往信箱驗證以完成會員註冊',
             style: MyStyles.kTextStyleH3,
             textAlign: TextAlign.center,
           ),

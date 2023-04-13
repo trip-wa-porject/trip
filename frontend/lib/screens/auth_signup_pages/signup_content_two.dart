@@ -26,12 +26,13 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: 'E-mail 帳號*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: 'qq1179988568?gmail.com',
                       hintText: 'abe233@gmail.com',
                       onSave: (value) {
                         controller.formData.email = value;
                       },
                       validator: (value) {
-                        return validateInput(value) ?? validateEmail(value);
+                        return validateEmail(value);
                       },
                     ),
                   ),
@@ -42,13 +43,14 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '密碼*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: 'Aa12345678',
                       hintText: 'abd1234erewrwrwe',
                       helperText: '至少8個字，同時需要包含大小寫和數字',
                       onSave: (value) {
                         controller.formData.password = value;
                       },
                       validator: (value) {
-                        return validateInput(value) ?? validatePassword(value);
+                        return validatePassword(value);
                       },
                     ),
                   ),
@@ -68,7 +70,15 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '中文姓名*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '陳筱珊',
                       hintText: '陳筱珊',
+                      onSave: (value) {
+                        controller.formData.name = value;
+                      },
+                      validator: (value) {
+                        //TODO validate
+                        return validateInput(value);
+                      },
                     ),
                   ),
                 ],
@@ -78,7 +88,15 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '出生年月日*'),
                   Expanded(
                     child: _MyInputField(
-                      hintText: '1980/07/13',
+                      initialValue: '1980-07-13',
+                      hintText: '1980-07-13',
+                      onSave: (value) {
+                        controller.formData.birth = value;
+                      },
+                      validator: (value) {
+                        //TODO validate
+                        return validateDate(value);
+                      },
                     ),
                   ),
                 ],
@@ -88,7 +106,14 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '身分證字號*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: 'A139403924',
                       hintText: 'A139403924',
+                      onSave: (value) {
+                        controller.formData.idno = value;
+                      },
+                      // validator: (value) {
+                      //   return validateTaiwanId(value);
+                      // },
                     ),
                   ),
                 ],
@@ -98,7 +123,15 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '電話*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '0910901884',
                       hintText: ' 0910901884',
+                      onSave: (value) {
+                        controller.formData.mobile = value;
+                      },
+                      validator: (value) {
+                        //TODO
+                        return validateInput(value);
+                      },
                     ),
                   ),
                 ],
@@ -108,7 +141,11 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '地址*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '231新北市新店區民權路6F號No. 50號',
                       hintText: ' 完整地址',
+                      onSave: (value) {
+                        controller.formData.address = value;
+                      },
                     ),
                   ),
                 ],
@@ -126,7 +163,11 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '緊急聯絡人*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '陳筱珊',
                       hintText: '陳筱珊',
+                      onSave: (value) {
+                        controller.formData.emergentContactor = value;
+                      },
                     ),
                   ),
                 ],
@@ -136,7 +177,11 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '聯絡人關係*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '母子',
                       hintText: ' 關係',
+                      onSave: (value) {
+                        controller.formData.contactorRelationship = value;
+                      },
                     ),
                   ),
                 ],
@@ -146,7 +191,11 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '聯絡人電話*'),
                   Expanded(
                     child: _MyInputField(
+                      initialValue: '0910901884',
                       hintText: '0910901884',
+                      onSave: (value) {
+                        controller.formData.emergentContactTel = value;
+                      },
                     ),
                   ),
                 ],
@@ -218,6 +267,7 @@ class _MyInputField extends StatelessWidget {
   const _MyInputField({
     Key? key,
     this.textEditingController,
+    this.initialValue,
     this.helperText,
     this.hintText,
     this.validator,
@@ -225,6 +275,7 @@ class _MyInputField extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController? textEditingController;
+  final String? initialValue;
   final String? hintText;
   final String? helperText;
   final String? Function(String?)? validator;
@@ -234,6 +285,7 @@ class _MyInputField extends StatelessWidget {
     return SizedBox(
       height: 60,
       child: TextFormField(
+        initialValue: initialValue,
         controller: textEditingController,
         decoration: InputDecoration(
             border: const OutlineInputBorder(),

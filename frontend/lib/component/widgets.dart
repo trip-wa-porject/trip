@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../consts.dart';
 
@@ -7,11 +8,16 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 151,
-      height: 57,
-      child: Placeholder(
-        color: Colors.white,
+    return SizedBox(
+      width: 143.22,
+      height: 39.32,
+      child: InkWell(
+        onTap: () {
+          Get.toNamed('${AppLinks.SCHEDUL}');
+        },
+        child: Placeholder(
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -59,8 +65,18 @@ class MyBackButton extends StatelessWidget {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.arrow_back),
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(Icons.arrow_back),
+            ),
+          ),
           Text('back'),
         ],
       ),

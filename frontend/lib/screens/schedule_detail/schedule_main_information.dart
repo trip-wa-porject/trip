@@ -14,10 +14,12 @@ import '../schedule_apply/schedule_apply.dart';
 import 'schedule_detail_controller.dart';
 
 class ScheduleMainInformation extends StatefulWidget {
-  const ScheduleMainInformation({Key? key, required this.model})
+  const ScheduleMainInformation(
+      {Key? key, required this.model, this.alreadyJoined = false})
       : super(key: key);
 
   final ScheduleModel model;
+  final bool alreadyJoined;
 
   @override
   State<ScheduleMainInformation> createState() =>
@@ -247,12 +249,17 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                 height: 65,
                 width: 205,
                 child: MyFilledButton(
-                  label: '立即報名',
+                  label: widget.alreadyJoined ? '訂單資訊' : '立即報名',
                   style: MyFilledButton.style3(),
-                  onPressed: () async {
-                    Get.find<ScheduleManagerController>()
-                        .joinNewEvent(widget.model.id);
-                  },
+                  onPressed: widget.alreadyJoined
+                      ? () async {
+                          Get.find<ScheduleManagerController>()
+                              .goToPayPage(widget.model.id);
+                        }
+                      : () async {
+                          Get.find<ScheduleManagerController>()
+                              .joinNewEvent(widget.model.id, widget.model);
+                        },
                 ),
               ),
             ],

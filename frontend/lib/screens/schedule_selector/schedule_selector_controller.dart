@@ -162,7 +162,7 @@ class ScheduleSelectorController extends GetxController {
   }
 
   goToDetail(ScheduleModel scheduleModel) {
-    Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}/${scheduleModel.id}',
+    Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=${scheduleModel.id}',
         arguments: scheduleModel.toJson());
   }
 
