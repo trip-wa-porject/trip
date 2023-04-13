@@ -38,11 +38,6 @@ jobs:
     steps:
       - name: 📚 Checkout repo
         uses: actions/checkout@v3
-      - name: ⬇️ Download Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: build
-          path: build/web
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
         with:
