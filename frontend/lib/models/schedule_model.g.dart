@@ -38,13 +38,13 @@ Map<String, dynamic> _$ScheduleModelToJson(ScheduleModel instance) =>
       'images': instance.imageUrls,
       'level': instance.level,
       'type': instance.type,
-      'area': instance.area,
+      'area': instance.area.map((e) => e.toJson()).toList(),
       'breif': instance.breif,
       'memberPrice': instance.memberPrice,
       'price': instance.price,
       'applicants': instance.applicants,
       'limitation': instance.limitation,
-      'information': instance.information,
+      'information': instance.information.toJson(),
       'status': instance.status,
     };
 

@@ -35,7 +35,7 @@ part 'schedule_model.g.dart';
     };
  */
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ScheduleModel {
   String id;
 
@@ -206,7 +206,7 @@ class ScheduleModel {
       }
  */
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Area {
   Area(this.city, this.county);
   final String city;
@@ -221,7 +221,7 @@ class Area {
   }
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ScheduleInformation {
   ScheduleInformation({
     required this.applyStart,

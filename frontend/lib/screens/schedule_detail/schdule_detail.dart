@@ -2,30 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_basic.dart';
+import 'package:tripflutter/screens/schedule_detail/schedule_detail_controller.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_main_information.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_route.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_transportation.dart';
 import '../../consts.dart';
 import '../../models/schedule_model.dart';
 
-class ScheduleDetailPage extends GetView {
+class ScheduleDetailPage extends GetView<ScheduleDetailController> {
   const ScheduleDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ScheduleDetailController());
+
     return Scaffold(
       appBar: MyAppBar(),
-      body: ScheduleDetail(
-        model: ScheduleModel.sample(),
+      body: Obx(
+        () => controller.model.value == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ScheduleDetail(
+                model: controller.model.value!,
+                alreadyJoin: controller.userAlreadyJoin(),
+              ),
       ),
     );
   }
 }
 
 class ScheduleDetail extends StatefulWidget {
-  const ScheduleDetail({Key? key, required this.model}) : super(key: key);
+  const ScheduleDetail(
+      {Key? key, required this.model, this.alreadyJoin = false})
+      : super(key: key);
 
   final ScheduleModel model;
+  final bool alreadyJoin;
 
   @override
   State<ScheduleDetail> createState() => _ScheduleDetailPageState();
@@ -85,6 +98,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
                 SliverToBoxAdapter(
                   child: ScheduleMainInformation(
                     model: widget.model,
+                    alreadyJoined: widget.alreadyJoin,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -117,7 +131,8 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
                           alignment: Alignment.bottomCenter,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: _indicators(context, scheduleTabs.length, _tabController.index),
+                            children: _indicators(context, scheduleTabs.length,
+                                _tabController.index),
                           ),
                         ),
                       ),
@@ -237,17 +252,24 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-List<Widget> _indicators(BuildContext context, int imagesLength, int currentIndex) {
+List<Widget> _indicators(
+    BuildContext context, int imagesLength, int currentIndex) {
   double leftPadding = currentIndex == 0 ? 0 : 5;
   double rightPadding = currentIndex == 2 ? 0 : 5;
 
   return List<Widget>.generate(imagesLength, (index) {
     return Container(
-      margin: EdgeInsets.only(left: leftPadding, right: rightPadding,),
-      width: ((MediaQuery.of(context).size.width * 0.8) / 3) - leftPadding - rightPadding,
+      margin: EdgeInsets.only(
+        left: leftPadding,
+        right: rightPadding,
+      ),
+      width: ((MediaQuery.of(context).size.width * 0.8) / 3) -
+          leftPadding -
+          rightPadding,
       height: 6,
       decoration: BoxDecoration(
-        color: currentIndex == index ? MyStyles.tripTertiary : Colors.transparent,
+        color:
+            currentIndex == index ? MyStyles.tripTertiary : Colors.transparent,
         shape: BoxShape.rectangle,
       ),
     );

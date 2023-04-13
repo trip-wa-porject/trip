@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
 
@@ -161,12 +162,8 @@ class ScheduleSelectorController extends GetxController {
   }
 
   goToDetail(ScheduleModel scheduleModel) {
-    Get.to(() => ScheduleDetailPage());
-    // Get.to(
-    //   () => ScheduleDetail(
-    //     model: scheduleModel,
-    //   ),
-    // );
+    Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=${scheduleModel.id}',
+        arguments: scheduleModel.toJson());
   }
 
   searchBarListener() {}

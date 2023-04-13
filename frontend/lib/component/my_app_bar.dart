@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripflutter/modules/auth_service.dart';
 
 import '../consts.dart';
 import 'widgets.dart';
@@ -8,11 +10,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuthService authService = Get.put(FirebaseAuthService());
     TextStyle appBarTextStyle =
         MyStyles.kTextStyleH4.copyWith(color: Colors.white);
     SizedBox appBarSpacer = const SizedBox(width: 24.0);
 
     return AppBar(
+      leading: SizedBox(),
       backgroundColor: MyStyles.tripTertiary,
       title: Center(
         child: ConstrainedBox(
@@ -56,13 +60,26 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     style: appBarTextStyle,
                   ),
                   appBarSpacer,
-                  FilledButton(
-                    onPressed: () {},
-                    child: Text('登入'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: MyStyles.tripNeutral,
-                      foregroundColor: MyStyles.tripTertiary,
-                    ),
+                  Obx(
+                    () => authService.user.value == null
+                        ? FilledButton(
+                            onPressed: () {},
+                            child: Text('登入'),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: MyStyles.tripNeutral,
+                              foregroundColor: MyStyles.tripTertiary,
+                            ),
+                          )
+                        : FilledButton(
+                            onPressed: () {
+                              authService.signOut();
+                            },
+                            child: Text('${authService.user.value!.email} 登出'),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: MyStyles.tripNeutral,
+                              foregroundColor: MyStyles.tripTertiary,
+                            ),
+                          ),
                   ),
                 ],
               ),
@@ -70,10 +87,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      toolbarHeight: 120,
+      toolbarHeight: 60,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(120);
+  Size get preferredSize => const Size.fromHeight(60);
 }

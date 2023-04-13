@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:tripflutter/component/footer.dart';
+import 'package:tripflutter/component/widgets.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
@@ -39,17 +40,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
         child: Stack(
           children: [
             //背景圖片
-            SizedBox(
-              height: 470,
-              width: double.infinity,
-              child: Image.asset(
-                'assets/images/main_bg.png',
-                height: 470,
-                fit: BoxFit.cover,
-                color: MyStyles.greyScale000000.withOpacity(.5),
-                colorBlendMode: BlendMode.overlay,
-              ),
-            ),
+            const BgImage(),
             Align(
               alignment: Alignment.center,
               child: SizedBox(

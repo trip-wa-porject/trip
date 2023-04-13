@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
+import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
@@ -43,11 +44,16 @@ Map<int, TextStyle> intToStatusStyle = {
 };
 
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key, required this.model, required this.index})
+  const ScheduleCard(
+      {Key? key,
+      required this.model,
+      required this.index,
+      this.isShowOnly = false})
       : super(key: key);
 
   final ScheduleModel model;
   final int index;
+  final bool isShowOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +233,7 @@ class ScheduleCard extends StatelessWidget {
           ),
         ),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             _customButton('了解更多', () {
               Get.find<ScheduleSelectorController>().goToDetail(model);
@@ -235,9 +241,14 @@ class ScheduleCard extends StatelessWidget {
             SizedBox(
               width: 8,
             ),
-            _customButton('立即預訂', () async {
-              await Get.dialog(const ScheduleApply());
-            }),
+            _customButton(
+                '立即預訂',
+                isShowOnly
+                    ? null
+                    : () async {
+                        Get.find<ScheduleManagerController>()
+                            .joinNewEvent(model.id, model);
+                      }),
           ],
         )
       ],
