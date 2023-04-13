@@ -29,10 +29,12 @@ jobs:
 
       - name: build
         working-directory: frontend
-        run: flutter build web --web-renderer html
+        run: flutter build web
         with:
           name: build
           path: build/web
+
+      - uses: peaceiris/actions-gh-pages@v3
 
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
