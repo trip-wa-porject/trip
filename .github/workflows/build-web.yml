@@ -27,16 +27,12 @@ jobs:
         working-directory: frontend
         run: flutter config --enable-web
 
-      - name: 'Build Web App'
+      - name: build
         working-directory: frontend
-        run: flutter build web
-
-      - name: deploy
-        working-directory: frontend
-        uses: peaceiris/actions-gh-pages@v3
+        run: flutter build web --web-renderer html
         with:
-          github_token: ${{ secrets.TOKEN }}
-          publish_dir: ./build/web
+          name: build
+          path: build/web
 
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
