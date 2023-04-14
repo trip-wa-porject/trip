@@ -13,5 +13,3 @@ add_default_data:
 	cd _backend && \
 	npm i && \
 	npm run addFakeData
-
-# 1//0ew70PxTWf-JRCgYIARAAGA4SNwF-L9Ir1e8UEjfP72dPkOxvJIzhMP-Aeh-cgeWrqJaus1N56HIPdJZhqN8k2Aosx_EDG7ZSc7A
