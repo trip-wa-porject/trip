@@ -1,3 +1,5 @@
-import { searchTripsOnCall } from './apis/trip'
+import { searchTrips, searchTrip } from './apis';
+import { createUser, getUserInfo } from './apis';
 
-export const searchTrips = searchTripsOnCall
+export { searchTrips, searchTrip };
+export { createUser, getUserInfo };
