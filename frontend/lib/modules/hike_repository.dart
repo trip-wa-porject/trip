@@ -10,7 +10,7 @@ class BackendRepository implements GeneralRepository {
       Map<String, dynamic> args) async {
     try {
       final result = await FirebaseFunctions.instance
-          .httpsCallable('searchTripsOnCall')
+          .httpsCallable('searchTrips')
           .call(args);
       List data = result.data;
       return List<Map<String, dynamic>>.from(data);

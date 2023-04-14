@@ -1,21 +1,21 @@
 // level 跟 status 可以規定嚴格一點
 
 export interface Trip {
-  id: string
+  tripId: string
   title: string
   startDate: number
   endDate: number
   area: {
     city: string
     county: string
-  }
+  }[]
   type: string
   level: 'A' | 'B' | 'C'
   roadImage: string
   price: number
   memberPrice: number
   url: string
-  applicants: number
+  applicants: string[]
   limitation: number
   images: string[]
   information: {
@@ -35,6 +35,7 @@ export interface Trip {
     arriveSite: string
   }
   status: number
+  registerUsers: string[]
 }
 
 export interface TripFilter {

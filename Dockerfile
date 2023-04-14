@@ -17,16 +17,14 @@ ARG FIREBASE_TOKEN
 
 ENV FIREBASE_TOKEN=${FIREBASE_TOKEN}
 
-COPY .firebaserc .firebaserc
-COPY firebase.json firebase.json
-COPY firestore.indexes.json firestore.indexes.json
-COPY firestore.rules firestore.rules 
-COPY _backend/ ./
+COPY / ./
 
-RUN npm install
+RUN cd functions && \
+    npm install && \ 
+    npx tsc 
 
 RUN apk --no-cache add openjdk11-jre bash && \
     npm install -g firebase-tools && \
-    firebase use wa-project-mountain --token=$FIREBASE_TOKEN
+    cd ..
 
-CMD ["firebase", "emulators:start", "--project=wa-project-mountain-dev"]    
+CMD ["firebase", "emulators:start", "--project=wa-project-mountain-dev"]   
