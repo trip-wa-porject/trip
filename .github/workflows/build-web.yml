@@ -25,15 +25,15 @@ jobs:
           flutter upgrade && \
           flutter pub get
 
+      - name: Build the application
+        working-directory: './frontend'
+        run: flutter build web --release --web-renderer html
+
       - name: Store static file
         uses: actions/upload-artifact@master
         with:
           name: build-flutter
           path: frontend/build/web
-
-      - name: Build the application
-        working-directory: './frontend'
-        run: flutter build web --release --web-renderer html
 
   deploy:
     name: 'Deploy'
