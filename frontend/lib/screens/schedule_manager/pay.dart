@@ -7,6 +7,7 @@ import 'package:tripflutter/screens/schedule_selector/schedule_card.dart';
 
 import '../../component/footer.dart';
 import '../../component/my_app_bar.dart';
+import '../../component/textfield.dart';
 import '../../component/widgets.dart';
 import '../../consts.dart';
 import '../../models/schedule_model.dart';
@@ -149,23 +150,39 @@ class Pay extends GetView<PayController> {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: 23,
+                                    ),
                                     //輸入後五碼
                                     Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text('帳號後五碼：'),
+                                        Text(
+                                          '帳號後五碼：',
+                                          style: payMethodStyle,
+                                        ),
                                         SizedBox(
                                           width: 232,
-                                          child: TextField(),
+                                          child: PayTextField(),
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
                                     //輸入付款金額
                                     Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text('付款金額：'),
+                                        Text(
+                                          '    付款金額：',
+                                          style: payMethodStyle,
+                                        ),
                                         SizedBox(
                                           width: 232,
-                                          child: TextField(),
+                                          child: PayTextField(),
                                         ),
                                       ],
                                     ),
@@ -204,6 +221,9 @@ class Pay extends GetView<PayController> {
                               )
                             ],
                           ),
+                        ),
+                        const SizedBox(
+                          height: 28,
                         ),
                         Center(
                           child: Row(

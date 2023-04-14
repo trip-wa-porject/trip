@@ -27,7 +27,7 @@ class ScheduleManagerController extends GetxController {
     if (user == null || user.isAnonymous) {
       //未登入的user
       final result = await Get.dialog(const LoginDialog(), arguments: eventId);
-      if (result == 'loginSuccess') {
+      if (result is User) {
         User? user = _firebaseAuthService.user.value;
         if (user == null || user.isAnonymous) return;
         await _joinNewEvent(user, eventId, model);

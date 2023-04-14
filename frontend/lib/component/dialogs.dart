@@ -76,18 +76,37 @@ Widget joinMemberDialog() {
                 SizedBox(
                   height: 37,
                 ),
-                Center(
-                  child: SizedBox(
-                    width: 208,
-                    height: 65,
-                    child: MyFilledButton(
-                      label: '確認',
-                      style: MyFilledButton.styleGreenBigWhite(),
-                      onPressed: () {
-                        Get.back(result: check);
-                      },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 208,
+                      height: 65,
+                      child: MyFilledButton(
+                        label: '確認',
+                        style: MyFilledButton.styleGreenBigWhite(),
+                        onPressed: check
+                            ? () {
+                                Get.back(result: check);
+                              }
+                            : null,
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      width: 24,
+                    ),
+                    SizedBox(
+                      width: 208,
+                      height: 65,
+                      child: MyFilledButton(
+                        label: '取消',
+                        style: MyFilledButton.styleRedBigWhite(),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

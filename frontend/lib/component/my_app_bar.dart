@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripflutter/modules/auth_service.dart';
 
 import '../consts.dart';
+import '../screens/auth_login_pages/login_dialog.dart';
 import 'widgets.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -22,7 +23,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             maxWidth: 1160,
-            maxHeight: 57,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,55 +31,109 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               Row(
                 children: [
                   Text(
-                    '關於我們',
+                    '活動行程',
                     style: appBarTextStyle,
                   ),
-                  appBarSpacer,
-                  Text(
-                    '路線資訊',
-                    style: appBarTextStyle,
-                  ),
-                  appBarSpacer,
-                  Text(
-                    '主題活動',
-                    style: appBarTextStyle,
-                  ),
-                  appBarSpacer,
-                  Text(
-                    '登山小學堂',
-                    style: appBarTextStyle,
-                  ),
-                  appBarSpacer,
-                  Text(
-                    '會員專區',
-                    style: appBarTextStyle,
-                  ),
-                  appBarSpacer,
-                  Text(
-                    '註冊',
-                    style: appBarTextStyle,
+                  Obx(
+                    () => authService.user.value == null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              appBarSpacer,
+                              Text(
+                                '註冊',
+                                style: appBarTextStyle,
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                   ),
                   appBarSpacer,
                   Obx(
                     () => authService.user.value == null
                         ? FilledButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final result =
+                                  await Get.dialog(const LoginDialog());
+                            },
                             child: Text('登入'),
                             style: FilledButton.styleFrom(
                               backgroundColor: MyStyles.tripNeutral,
                               foregroundColor: MyStyles.tripTertiary,
                             ),
                           )
-                        : FilledButton(
-                            onPressed: () {
-                              authService.signOut();
-                            },
-                            child: Text('${authService.user.value!.email} 登出'),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: MyStyles.tripNeutral,
-                              foregroundColor: MyStyles.tripTertiary,
+                        : SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.dialog(
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                        top: 60,
+                                      ),
+                                      constraints: BoxConstraints(
+                                        maxWidth: 1240,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: SizedBox(
+                                          width: 70,
+                                          height: 50,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Material(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    authService.signOut();
+                                                    Get.back();
+                                                  },
+                                                  child: Text(
+                                                    '登出',
+                                                    style: MyStyles.kTextStyleH4
+                                                        .copyWith(
+                                                      color: MyStyles
+                                                          .greyScale616161,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  barrierColor: Colors.transparent,
+                                );
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: MyStyles.greyScale9E9E9E,
+                                radius: 15,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
+                    // : FilledButton(
+                    //     onPressed: () {
+                    //       authService.signOut();
+                    //     },
+                    //     child: Text('${authService.user.value!.email} 登出'),
+                    //     style: FilledButton.styleFrom(
+                    //       backgroundColor: MyStyles.tripNeutral,
+                    //       foregroundColor: MyStyles.tripTertiary,
+                    //     ),
+                    //   ),
                   ),
                 ],
               ),
@@ -92,5 +146,5 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(60);
+  Size get preferredSize => const Size.fromHeight(60); //60
 }

@@ -128,6 +128,17 @@ class MyFilledButton extends StatelessWidget {
   }
 
   //橘色 黑字
+  static ButtonStyle styleOrangeBigBlack() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.primary,
+      foregroundColor: MyStyles.greyScale000000,
+      textStyle: MyStyles.kTextStyleH3Bold,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+    );
+  }
+
+  //橘色 黑字
   static ButtonStyle styleOrangeSmallBlack() {
     return FilledButton.styleFrom(
       backgroundColor: MyStyles.primary,
@@ -156,6 +167,21 @@ class MyFilledButton extends StatelessWidget {
         vertical: 9,
         horizontal: 14,
       ),
+    );
+  }
+
+  //紅底 白字
+  static ButtonStyle styleRedBigWhite() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.redC80000,
+      foregroundColor: Colors.white,
+      textStyle: MyStyles.kTextStyleH3,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      // padding: const EdgeInsets.symmetric(
+      //   vertical: 15,
+      //   horizontal: 79.5,
+      // ),
     );
   }
 
