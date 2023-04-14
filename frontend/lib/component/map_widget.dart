@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_place/google_place.dart';
-
+import 'package:gpx/gpx.dart';
 import '../models/schedule_model.dart';
 
 class MapWidget extends StatefulWidget {
@@ -14,54 +15,99 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapState extends State<MapWidget> {
+  String googleAPiKey = 'AIzaSyAR4ABOvlLdPyaC4T_nyRHXVpCJPVSeOMU';
   late GoogleMapController mapController;
 
-  final Map<String, Marker> _markers = {};
+  /// PolyLine Point List
+  List<LatLng> points = List.empty();
+  /// Start Position
+  final double _originLatitude = 25.16171788826669,
+      _originLongitude = 121.68912739863931;
 
-  //center 設定台灣玉山？
-  final LatLng _center = const LatLng(25.0474428, 121.5170955);
+  Map<MarkerId, Marker> markers = {};
+  Map<PolylineId, Polyline> polyLines = {};
 
-  Future<void> _onMapCreated(GoogleMapController controller) async {
-    mapController = controller;
-    var googlePlace = GooglePlace('AIzaSyAR4ABOvlLdPyaC4T_nyRHXVpCJPVSeOMU');
-    var response = await googlePlace.search.getTextSearch(widget.keywordList[0].city);
-    final results = response!.results;
-
-    setState(() {
-      _markers.clear();
-      if (results != null) {
-        // for (final result in results) {
-        final marker = Marker(
-          markerId: MarkerId(results[0].name!),
-          position: LatLng(results[0].geometry!.location!.lat!,
-              results[0].geometry!.location!.lng!),
-          infoWindow: InfoWindow(
-              title: results[0].name, snippet: results[0].formattedAddress),
-        );
-        _markers[results[0].name!] = marker;
-        // }
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    loadGpxPointsData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.green[700],
-      ),
-      home: Scaffold(
-        body: GoogleMap(
-          mapType: MapType.none,
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 15.0,
-          ),
-          markers: _markers.values.toSet(),
-        ),
-      ),
+    return SafeArea(
+      child: Scaffold(
+          body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+            target: LatLng(_originLatitude, _originLongitude), zoom: 10),
+        myLocationEnabled: true,
+        tiltGesturesEnabled: true,
+        compassEnabled: true,
+        scrollGesturesEnabled: true,
+        zoomGesturesEnabled: true,
+        onMapCreated: onMapCreated,
+        markers: Set<Marker>.of(markers.values),
+        polylines: Set<Polyline>.of(polyLines.values),
+      )),
     );
+  }
+
+  void onMapCreated(GoogleMapController controller) async {
+    mapController = controller;
+  }
+
+  void loadGpxPointsData() async {
+    String gpxData =
+    await DefaultAssetBundle.of(context).loadString('/gpx.txt');
+    Gpx gpx = GpxReader().fromString(gpxData);
+    for (var track in gpx.trks) {
+      for (var segment in track.trksegs) {
+        points = segment.trkpts
+            .map((point) => LatLng(point.lat!, point.lon!))
+            .toList();
+      }
+    }
+    addOriginMarker();
+    addPolyLine();
+  }
+
+  void addOriginMarker() {
+    /// origin marker
+    addMarker(LatLng(points[0].latitude, points[0].longitude), "origin",
+        BitmapDescriptor.defaultMarker);
+
+    /// destination marker
+    addMarker(
+        LatLng(points[points.length - 1].latitude,
+            points[points.length - 1].longitude),
+        "destination",
+        BitmapDescriptor.defaultMarkerWithHue(90));
+  }
+
+  void addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
+    MarkerId markerId = MarkerId(id);
+    Marker marker =
+        Marker(markerId: markerId, icon: descriptor, position: position);
+    markers[markerId] = marker;
+  }
+
+  void addPolyLine() {
+    Polyline polyline = Polyline(
+        polylineId: const PolylineId("poly"),
+        width: 3,
+        color: Colors.red,
+        points: points);
+    polyLines[const PolylineId("poly")] = polyline;
+
+    /// Update Map
+    setState(() {});
+
+    /// Zoom to Start Position
+    Timer(const Duration(milliseconds: 1000), () async {
+      await mapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(points[0].latitude, points[0].longitude),
+              zoom: 12)));
+    });
   }
 }

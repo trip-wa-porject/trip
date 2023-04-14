@@ -1,27 +1,52 @@
-import { https, logger } from 'firebase-functions';
-import type { User } from '../@types';
-import { db } from '../auth';
+import { https, logger } from 'firebase-functions'
+import type { User } from '../@types'
+import { db } from '../auth'
+import { HttpsError } from 'firebase-functions/v1/auth'
 
-const ref = db.collection('users');
+const ref = db.collection('users')
 
-export const createUser = https.onCall(async (data: Omit<User, 'id'>) => {
+const checkUserExists = async (info: Pick<User, 'idno' | 'email'>) => {
   try {
-    const doc = await ref.add(data);
-    return { id: doc.id };
+    const IdChecker = await ref.where('idno', '==', info.idno).get()
+
+    const EmailChecker = await ref.where('email', '==', info.email).get()
+
+    return IdChecker.empty && EmailChecker.empty ? false : true
   } catch {
-    logger.info(`create User failed`);
-    return {};
+    return false
   }
-});
+}
 
-export const getUserInfo = https.onCall(async (data: { id: string }) => {
-  const { id } = data;
+export const createUser = https.onCall(async (data: User) => {
+  const keys = Object.keys(data)
+  if (!['idno', 'email'].every((e) => keys.includes(e))) {
+    throw new HttpsError('invalid-argument', 'Not enough information')
+  }
 
-  const result = await ref.doc(id).get();
+  const { idno, email } = data
+
+  const userChecker = await checkUserExists({ idno, email })
+  if (userChecker) {
+    throw new HttpsError('already-exists', 'This idno or emial already exist')
+  }
+
+  try {
+    const doc = await ref.add(data)
+    return { userId: doc.id }
+  } catch {
+    logger.info(`create User failed`)
+    throw new HttpsError('unknown', 'Server error')
+  }
+})
+
+export const getUserInfo = https.onCall(async (data: { userId: string }) => {
+  const { userId } = data
+
+  const result = await ref.doc(userId).get()
 
   if (result.exists) {
-    return result.data();
+    return result.data()
   }
 
-  return Promise.reject(Error(`No such user ID ${id}`));
-});
+  throw new HttpsError('not-found', "This user doesn't exist")
+})
