@@ -6,6 +6,11 @@ import 'package:tripflutter/models/schedule_model.dart';
 import '../../component/tableViewColumn.dart';
 import '../../consts.dart';
 
+import 'dart:convert' show utf8;
+
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' show AnchorElement;
+
 class ScheduleRoute extends StatelessWidget {
   const ScheduleRoute({Key? key, required this.model}) : super(key: key);
 
@@ -23,8 +28,6 @@ class ScheduleRoute extends StatelessWidget {
       children: [
         TableViewColumn.createColumnWithMap(
             _createDownloadButton(), '路線地圖', model.area),
-        TableViewColumn.createColumnWithImage(
-            null, '高度圖', 'assets/images/forest.jpg'),
       ],
     );
   }
@@ -38,6 +41,7 @@ Widget _createDownloadButton() {
       height: 40,
       child: TextButton(
         onPressed: () async {
+          downloadGpxTextFile('', 'test.gpx');
           await Get.dialog(const PopupDownload());
         },
         style: ButtonStyle(
@@ -57,4 +61,13 @@ Widget _createDownloadButton() {
       ),
     ),
   );
+}
+
+void downloadGpxTextFile(String text, String filename) {
+  AnchorElement()
+    ..href =
+        '${Uri.dataFromString(text, mimeType: 'text/plain', encoding: utf8)}'
+    ..download = filename
+    ..style.display = 'none'
+    ..click();
 }
