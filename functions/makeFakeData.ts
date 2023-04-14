@@ -1,14 +1,14 @@
-import { db } from './auth'
-import trips from './data/test_trips.json'
+import { db } from './auth';
+import trips from './data/test_trips.json';
 
-const batch = db.batch()
+const batch = db.batch();
 
 trips.forEach((e) => {
-  const current_trip = db.collection('dev_trip').doc(e.id.toString())
+  const current_trip = db.collection('trips').doc(e.id.toString());
 
   const areas = e.area.map((v) => {
-    return { city: v.substring(0, 3), county: v.substring(3, 6) }
-  })
+    return { city: v.substring(0, 3), county: v.substring(3, 6) };
+  });
 
   batch.set(current_trip, {
     title: e.title,
@@ -43,15 +43,15 @@ trips.forEach((e) => {
       arriveSite: e.information.arriveSite,
     },
     status: e.status,
-  })
-})
+  });
+});
 
 batch
   .commit()
   .then(() => {
-    console.log('batch update success')
+    console.log('batch update success');
   })
   .catch((e) => {
-    console.log(e)
-    console.log('batch update failed')
-  })
+    console.log(e);
+    console.log('batch update failed');
+  });

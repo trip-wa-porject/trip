@@ -20,11 +20,11 @@ ENV FIREBASE_TOKEN=${FIREBASE_TOKEN}
 COPY / ./
 
 RUN cd functions && \
-    npm install
+    npm install && \ 
+    npx tsc 
 
 RUN apk --no-cache add openjdk11-jre bash && \
     npm install -g firebase-tools && \
     cd ..
-    # firebase use wa-project-mountain --token=$FIREBASE_TOKEN
 
 CMD ["firebase", "emulators:start", "--project=wa-project-mountain-dev"]   

@@ -1,12 +1,8 @@
-import { https, logger } from 'firebase-functions'
-import type { Trip, TripFilter } from '../@types'
-import { db } from '../auth'
-import filter from './utils'
-
-const searchTripsOnCall = https.onCall(async (data) => {
-  logger.warn('********************************88')
-  return await searchTrips(data)
-})
+import { https, logger } from 'firebase-functions';
+import type { Trip, TripFilter } from '../@types';
+import { db } from '../auth';
+import filter from './utils';
+// import { HttpsError } from 'firebase-functions/v1/auth';
 
 const regions = [
   '南投縣',
@@ -27,50 +23,69 @@ const regions = [
   '屏東縣',
   '宜蘭縣',
   '澎湖縣',
-]
+];
 
-const levels = ['A', 'B', 'C']
+const levels = ['A', 'B', 'C'];
 
-const types = ['高山步道', '郊山步道', '中級山步道']
+const types = ['高山步道', '郊山步道', '中級山步道'];
 
-const searchTrips = async (data: Partial<TripFilter>) => {
-  const result: Trip[] = []
+const ref = db.collection('trips');
 
-  logger.info({ structuredData: true, data: data })
-
+const searchTripsFromFireStore = async (
+  data: Partial<TripFilter>
+): Promise<Trip[]> => {
   const filters = {
-    startDate: new Date().getTime(),
-    endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).getTime(),
     level: levels,
     type: types,
     region: regions,
     ...data,
-  }
+  };
 
-  return db
-    .collection('trips')
-    .orderBy('startDate')
+  const result: Trip[] = [];
+
+  await ref
     .get()
-    .then((snapshot) =>
+    .then((snapshot) => {
       snapshot.forEach((doc) => {
-        const rec = doc.data()
+        const rec = doc.data();
 
-        result.push({
-          ...rec,
-          id: doc.id,
-        } as Trip)
+        const passfilter = filter(filters, rec as Trip);
 
-        const passfilter = filter(filters, rec as Trip)
         if (passfilter) {
           result.push({
             ...rec,
             id: doc.id,
-          } as Trip)
+          } as Trip);
         }
-      })
-    )
+      });
+    })
     .then(() => result)
-    .catch(() => [])
-}
+    .catch(() => []);
 
-export { searchTripsOnCall }
+  return result;
+};
+
+const searchSpecificTrop = async (id: string): Promise<Trip> => {
+  const result = await ref.doc(id).get();
+
+  if (result.exists) {
+    return { ...(result.data() as Trip), id };
+  }
+
+  return Promise.reject(Error(`No such info: trip ID ${id}`));
+};
+
+export const searchTrip = https.onCall(async (data: { id: string }) => {
+  try {
+    const result = await searchSpecificTrop(data.id);
+    return result;
+  } catch {
+    // Throw error here
+    return {};
+  }
+});
+
+export const searchTrips = https.onCall(async (data) => {
+  const result = await searchTripsFromFireStore(data);
+  return result;
+});

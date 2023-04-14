@@ -1,3 +1,5 @@
-import { Trip, TripFilter } from './trip'
+import { Trip, TripFilter } from './trip';
+import { User } from './user';
 
-export { Trip, TripFilter }
+export { Trip, TripFilter };
+export { User };
