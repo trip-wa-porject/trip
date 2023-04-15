@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/api_test_page/api_test.dart';
 
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
@@ -17,9 +19,14 @@ class Footer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.facebook,
-              color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Get.toNamed('${AppLinks.TEST}');
+              },
+              child: const Icon(
+                Icons.facebook,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(
               height: 16.0,

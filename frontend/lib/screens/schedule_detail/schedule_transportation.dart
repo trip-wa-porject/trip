@@ -32,7 +32,7 @@ class ScheduleTransportation extends StatelessWidget {
       children: [
         TableViewColumn.createColumn('集合地點', model.information.gatherPlace),
         TableViewColumn.createColumn('集合時間',
-            DateFormat('MM/dd kk:mm').format(model.information.gatherTime)),
+            DateFormat('MM/dd kk:mm').format(model.information.gatherTime!)),
         TableViewColumn.createColumn(
             '交通方式', model.information.transportationWay),
         TableViewColumn.createColumn('下車地點', model.information.gatherPlace),

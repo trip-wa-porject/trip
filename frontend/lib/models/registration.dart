@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+
+import '../utils/utils.dart';
 part 'registration.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -42,14 +44,4 @@ class Registration {
   }
 
   Map<String, dynamic> toJson() => _$RegistrationToJson(this);
-}
-
-DateTime? dateTimeFromTimestamp(int? timestamp) {
-  return timestamp == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(timestamp);
-}
-
-int? timestampFromDateTimeFromTimestamp(DateTime? date) {
-  return date?.millisecond;
 }

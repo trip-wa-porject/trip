@@ -8,10 +8,10 @@ part of 'schedule_model.dart';
 
 ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) =>
     ScheduleModel(
-      id: json['id'] as String,
+      id: json['tripId'] as String,
       title: json['title'] as String,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
+      startDate: dateTimeFromTimestamp(json['startDate'] as int?),
+      endDate: dateTimeFromTimestamp(json['endDate'] as int?),
       imageUrls:
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       level: json['level'] as String,
@@ -22,7 +22,10 @@ ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) =>
       breif: json['breif'] as String,
       memberPrice: json['memberPrice'] as int,
       price: json['price'] as int,
-      applicants: json['applicants'] as int,
+      applicants: (json['applicants'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
       limitation: json['limitation'] as int,
       information: ScheduleInformation.fromJson(
           json['information'] as Map<String, dynamic>),
@@ -31,10 +34,10 @@ ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ScheduleModelToJson(ScheduleModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'tripId': instance.id,
       'title': instance.title,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
+      'startDate': timestampFromDateTimeFromTimestamp(instance.startDate),
+      'endDate': timestampFromDateTimeFromTimestamp(instance.endDate),
       'images': instance.imageUrls,
       'level': instance.level,
       'type': instance.type,
@@ -60,15 +63,15 @@ Map<String, dynamic> _$AreaToJson(Area instance) => <String, dynamic>{
 
 ScheduleInformation _$ScheduleInformationFromJson(Map<String, dynamic> json) =>
     ScheduleInformation(
-      applyStart: DateTime.parse(json['applyStart'] as String),
-      applyEnd: DateTime.parse(json['applyEnd'] as String),
+      applyStart: dateTimeFromTimestamp(json['applyStart'] as int?),
+      applyEnd: dateTimeFromTimestamp(json['applyEnd'] as int?),
       applyWay: json['applyWay'] as String,
       gatherPlace: json['gatherPlace'] as String,
-      gatherTime: DateTime.parse(json['gatherTime'] as String),
+      gatherTime: dateTimeFromTimestamp(json['gatherTime'] as int?),
       transportationWay: json['transportationWay'] as String,
       transportationInfo: json['transportationInfo'] as String,
       preDepartureMeetingDate:
-          DateTime.parse(json['preDepartureMeetingDate'] as String),
+          dateTimeFromTimestamp(json['preDepartureMeetingDate'] as int?),
       preDepartureMeetingPlace: json['preDepartureMeetingPlace'] as String,
       memo: json['memo'] as String,
       leader: json['leader'] as String,
@@ -80,15 +83,15 @@ ScheduleInformation _$ScheduleInformationFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ScheduleInformationToJson(
         ScheduleInformation instance) =>
     <String, dynamic>{
-      'applyStart': instance.applyStart.toIso8601String(),
-      'applyEnd': instance.applyEnd.toIso8601String(),
+      'applyStart': timestampFromDateTimeFromTimestamp(instance.applyStart),
+      'applyEnd': timestampFromDateTimeFromTimestamp(instance.applyEnd),
       'applyWay': instance.applyWay,
       'gatherPlace': instance.gatherPlace,
-      'gatherTime': instance.gatherTime.toIso8601String(),
+      'gatherTime': timestampFromDateTimeFromTimestamp(instance.gatherTime),
       'transportationWay': instance.transportationWay,
       'transportationInfo': instance.transportationInfo,
       'preDepartureMeetingDate':
-          instance.preDepartureMeetingDate.toIso8601String(),
+          timestampFromDateTimeFromTimestamp(instance.preDepartureMeetingDate),
       'preDepartureMeetingPlace': instance.preDepartureMeetingPlace,
       'memo': instance.memo,
       'leader': instance.leader,

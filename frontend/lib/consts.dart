@@ -137,4 +137,5 @@ class AppLinks {
   static const String PAY = '/pay';
   static const String SCHEDUL = '/schedule';
   static const String DETAIL = '/detail';
+  static const String TEST = "/test";
 }

@@ -28,13 +28,13 @@ class ScheduleBasic extends StatelessWidget {
         TableViewColumn.createColumn(
             '活動日期',
             DateFormatUtils.getDateWithFullDateTemplate(
-                model.startDate, model.endDate)),
+                model.startDate!, model.endDate!)),
         TableViewColumn.createColumn(
             '報名期間',
             DateFormatUtils.getDateWithFullDateTemplate(
-                model.information.applyStart, model.information.applyEnd)),
+                model.information.applyStart!, model.information.applyEnd!)),
         TableViewColumn.createColumnWithApplicantsRichText(
-            '名額限制', model.limitation, model.applicants),
+            '名額限制', model.limitation, model.applicants.length),
       ],
     );
   }

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/api_test_page/api_test.dart';
 import 'component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_manager/pay.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
@@ -94,6 +95,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: AppLinks.LOGIN,
           page: () => const LoginPage(),
+        ),
+        GetPage(
+          name: AppLinks.TEST,
+          page: () => const ApiTestsPage(),
         ),
       ],
     );
