@@ -12,8 +12,8 @@ trips.forEach((e) => {
 
   batch.set(current_trip, {
     title: e.title,
-    startDate: e.startDate + 3 * 30 * 24 * 60 * 60 * 1000,
-    endDate: e.endDate + 3 * 30 * 24 * 60 * 60 * 1000,
+    startDate: e.startDate * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
+    endDate: e.endDate * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
     area: areas,
     type: e.type,
     level: e.level,
@@ -25,6 +25,7 @@ trips.forEach((e) => {
     url: e.url,
     limitation: e.limitation,
     images: e.images,
+    applicants: [],
     information: {
       applyStart:
         e.information.applyStart * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,

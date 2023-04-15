@@ -70,17 +70,34 @@ const TripAddRegisterUser = async (data: {
   const tripData = trip.data() as Trip
 
   if (
-    Array.isArray(tripData?.registerUsers) &&
-    tripData?.registerUsers?.includes(userId)
+    Array.isArray(tripData?.applicants) &&
+    tripData?.applicants?.includes(userId)
   ) {
     return Promise.reject('This User is already register')
   }
 
-  const oldData = Array.isArray(tripData?.registerUsers)
-    ? [...tripData?.registerUsers]
+  const oldData = Array.isArray(tripData?.applicants)
+    ? [...tripData?.applicants]
     : []
 
   return ref.doc(tripId).update({ registerUsers: [...oldData, userId] })
+}
+
+const filterTrips = async (data: { tripIds: string[] }) => {
+  const results: Trip[] = []
+
+  await Promise.all(
+    data.tripIds.map((id) => {
+      db.collection('trips')
+        .doc(id)
+        .get()
+        .then((e) => {
+          results.push({ ...(e.data() as Trip), tripId: id })
+        })
+    })
+  )
+
+  return results
 }
 
 export const createRegister = https.onCall(async (data: Register) => {
@@ -104,7 +121,7 @@ export const createRegister = https.onCall(async (data: Register) => {
     const [doc, user, trip] = await Promise.all([
       addRegister,
       tripAddUser,
-      userAddTrip,
+      userAddTrip
     ])
 
     return { registerId: doc.id }
@@ -141,6 +158,32 @@ export const updateRegister = https.onCall(
       return { status: true }
     } catch {
       return {}
+    }
+  }
+)
+
+export const getUserRegisters = https.onCall(
+  async (data: { userId: string }) => {
+    const keys = Object.keys(data)
+    if (!['userId'].every((e) => keys.includes(e))) {
+      throw new HttpsError('invalid-argument', 'Not enough information')
+    }
+
+    const { userId } = data
+    const userChecker = await db.collection('users').doc(userId).get()
+
+    if (!userChecker.exists) {
+      throw new HttpsError('not-found', 'User not found')
+    }
+
+    const userRegisters = (userChecker.data() as User)?.registerTrips ?? []
+
+    try {
+      const results = await filterTrips({ tripIds: userRegisters })
+
+      return results
+    } catch {
+      return []
     }
   }
 )

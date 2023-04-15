@@ -35,7 +35,6 @@ export interface Trip {
     arriveSite: string
   }
   status: number
-  registerUsers: string[]
 }
 
 export interface TripFilter {
