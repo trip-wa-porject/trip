@@ -2,12 +2,19 @@ import 'package:get/get.dart';
 import 'package:tripflutter/component/dialogs.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_manager/pay_table.dart';
+import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 
+import '../../models/registration.dart';
 import '../../models/schedule_model.dart';
+import '../../modules/auth_service.dart';
 import '../../modules/hike_repository.dart';
 
 class PayController extends GetxController {
   Rxn<ScheduleModel> model = Rxn<ScheduleModel>();
+  Rxn<Registration> registrationModel = Rxn<Registration>();
+  final FirebaseAuthService _firebaseAuthService =
+      Get.find<FirebaseAuthService>();
+
   RxList<OrderData> orders = RxList([]);
   final BackendRepository repository = BackendRepository();
 
@@ -57,14 +64,36 @@ class PayController extends GetxController {
       }
     } finally {
       if (model.value != null) {
-        ScheduleModel _model = model.value!;
-        OrderData orderData = OrderData(
-          id: _model.id,
-          detail: _model.title,
-          price: _model.price.toString(),
-        );
-        orders.add(orderData);
+        String? userId = _firebaseAuthService.user.value?.uid;
+        if (userId != null) {
+          ScheduleModel _model = model.value!;
+
+          List<Map<String, dynamic>> data =
+              await repository.getUserAllTrips(userId);
+          List<Registration> registers =
+              data.map((e) => Registration.fromJson(e)).toList();
+          Registration? r = registers
+              .firstWhereOrNull((element) => element.tripId == model.value!.id);
+          registrationModel.value = r;
+          if (r != null) {
+            OrderData orderData = OrderData(
+              id: r.tripId,
+              detail: _model.title,
+              price: _model.price.toString(),
+            );
+            orders.add(orderData);
+          }
+        }
       }
+      // if (model.value != null) {
+      //   ScheduleModel _model = model.value!;
+      //   OrderData orderData = OrderData(
+      //     id: _model.id,
+      //     detail: _model.title,
+      //     price: _model.price.toString(),
+      //   );
+      //   orders.add(orderData);
+      // }
     }
   }
 

@@ -77,7 +77,7 @@ class ScheduleCard extends StatelessWidget {
                 top: 16.0,
                 bottom: 18,
               ),
-              child: _rightSideInfo(_model.startDate, _model.endDate,
+              child: _rightSideInfo(_model.startDate!, _model.endDate!,
                   _model.area.map((e) => e.toString()).toList(), _model.title),
             ),
           ),
@@ -190,7 +190,7 @@ class ScheduleCard extends StatelessWidget {
   Widget _rightSideBook(int price) {
     int _status = 0;
 
-    int count = model.limitation - model.applicants;
+    int count = model.limitation - model.applicants.length;
     if (count > 9) {
       _status = 0;
     } else if (count > 0) {

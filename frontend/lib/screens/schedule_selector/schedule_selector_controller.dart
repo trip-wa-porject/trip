@@ -156,7 +156,7 @@ class ScheduleSelectorController extends GetxController {
 
   //has seat
   bool filter(ScheduleModel model) {
-    int count = model.limitation - model.applicants;
+    int count = model.limitation - model.applicants.length;
     if (count > 0) return true;
     return false;
   }

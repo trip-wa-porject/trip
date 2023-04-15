@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+
+import '../utils/utils.dart';
 part 'user_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class UserModel {
   String? idno; //	身份證號	base64
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'userId')
   String? userId; //	使用者 ID
   String? email; //	信箱帳號
   String? name; //	使用者姓名	base64
@@ -18,26 +20,41 @@ class UserModel {
 
   @JsonKey(name: 'member')
   int? membership; //	會員狀態	分成 訪客 ＆ 正式會員
-  String? createDate; //	註冊日期
-  String? updateDate; //	更新日期
+
+  @JsonKey(defaultValue: [])
+  List<String> registerTrips;
+
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  DateTime? createDate; //	註冊日期
+
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  DateTime? updateDate; //	更新日期
+
+  @JsonKey(defaultValue: <String, dynamic>{})
   Map? agreements; //	閱讀條款統一狀態	Map{}
 
   UserModel(
-      this.idno,
-      this.userId,
-      this.email,
-      this.name,
-      this.mobile,
-      this.emergentContactor,
-      this.emergentContactTel,
-      this.contactorRelationship,
-      this.sexual,
-      this.address,
-      this.birth,
-      this.membership,
-      this.createDate,
-      this.updateDate,
-      this.agreements);
+    this.idno,
+    this.userId,
+    this.email,
+    this.name,
+    this.mobile,
+    this.emergentContactor,
+    this.emergentContactTel,
+    this.contactorRelationship,
+    this.sexual,
+    this.address,
+    this.birth,
+    this.membership,
+    this.createDate,
+    this.updateDate,
+    this.agreements,
+    this.registerTrips,
+  );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return _$UserModelFromJson(json);

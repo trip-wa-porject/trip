@@ -6,6 +6,7 @@ abstract class GeneralRepository {}
 
 class BackendRepository implements GeneralRepository {
   //http://127.0.0.1:5001/wa-project-mountain/us-central1/searchTrips
+  //POST https://us-central1-wa-project-mountain.cloudfunctions.net/searchTrips
   Future<List<Map<String, dynamic>>> fetchTrip(
       Map<String, dynamic> args) async {
     try {
@@ -24,12 +25,12 @@ class BackendRepository implements GeneralRepository {
 
   //addUserOnCall
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/addUser -d '{"id":"123456","email":"amew@gmail.com","name":"陳阿喵","mobile":"0987654321","idno":"A123456789","emergentContactor":"陳旺旺","emergentContactTel":"0987654321","sexual":0,"address":"台北市中山區中山北路","birth":"2006-07-23","contactorRelationship":"pet","member":0}'
-  Future<String> addUser(Map<String, dynamic> args) async {
+  Future<Map<String, dynamic>> addUser(Map<String, dynamic> args) async {
     try {
       final result = await FirebaseFunctions.instance
-          .httpsCallable('addUserOnCall')
+          .httpsCallable('createUser')
           .call(args);
-      String data = result.data;
+      Map<String, dynamic> data = result.data;
       return data;
     } on FirebaseFunctionsException catch (error) {
       print(error.code);
@@ -39,6 +40,7 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  //TODO
   //getUserOnCall
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/getUser -d '{"id":"123456"}'
   Future<List<Map<String, dynamic>>> getUser(Map<String, dynamic> args) async {
@@ -56,6 +58,7 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  //TODO
   //updateUser
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/updateUser -d '{"id":"m2ogLuNPJd12t8BgzV0b","status":"done"}'
   Future<List<Map<String, dynamic>>> updateUser(
@@ -76,13 +79,14 @@ class BackendRepository implements GeneralRepository {
 
   //addRegistration
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/addRegistration -d '{"tripId":"110001","price":5200,"paymentExpireDate":"2023-04-10","paymentInfo":{},"emergentContactor":"陳旺旺","emergentContactTel":"0987654321","sexual":0,"address":"台北市中山區中山北路","birth":"2006-07-23","contactorRelationship":"pet","member":0}'
-  Future<String> addRegistration(Map<String, dynamic> args) async {
+  Future<Map> addRegistration(Map<String, dynamic> args) async {
     try {
       final result = await FirebaseFunctions.instance
-          .httpsCallable('addRegistrationOnCall')
+          .httpsCallable('createRegister')
           .call({
         "userId": args['userId'],
         "tripId": args['tripId'],
+        "status": 0,
         "price": args['price'],
         "paymentExpireDate": args['paymentExpireDate'],
         "paymentInfo": args['paymentInfo'],
@@ -102,7 +106,7 @@ class BackendRepository implements GeneralRepository {
   Future<List<Map<String, dynamic>>> getUserAllTrips(String userId) async {
     try {
       final result = await FirebaseFunctions.instance
-          .httpsCallable('getUserAllTripsOnCall')
+          .httpsCallable('getUserRegisters')
           .call({'userId': userId});
       List data = result.data;
       return List<Map<String, dynamic>>.from(data);
@@ -114,13 +118,25 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  //TODO today
   //updateRegistration
+  /*
+  {
+    userId: string,
+    status: number,
+    paymentInfo: Payment
+}
+   */
   Future<List<Map<String, dynamic>>> updateRegistration(
       Map<String, dynamic> args) async {
     try {
       final result = await FirebaseFunctions.instance
-          .httpsCallable('updateRegistrationOnCall')
-          .call(args);
+          .httpsCallable('updateRegister')
+          .call({
+        'userId': args['userId'],
+        'status': args['status'],
+        'paymentInfo': args['paymentInfo'], //Map
+      });
       List data = result.data;
       return List<Map<String, dynamic>>.from(data);
     } on FirebaseFunctionsException catch (error) {
@@ -140,7 +156,7 @@ class BackendRepository implements GeneralRepository {
           await FirebaseFirestore.instance.collection('trips').doc(id).get();
       if (result.data() == null) return null;
       Map<String, dynamic> map = result.data()!;
-      map['id'] = result.id;
+      map['tripId'] = result.id;
       return map;
       //TODO error handle
     } on FirebaseFunctionsException catch (error) {

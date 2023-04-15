@@ -12,6 +12,23 @@ class SignUpController extends GetxController {
   final Rx<int> steps = Rx<int>(0);
   final RxBool nextStepsBtnStatus = false.obs;
   final BackendRepository repository = BackendRepository();
+
+  init() {
+    steps.value = 0;
+    step0CheckedStates.assignAll([
+      TermsCheckState(0)..isShowed = true,
+      TermsCheckState(1)..checked,
+      TermsCheckState(2)..checked,
+      TermsCheckState(3)..checked,
+    ]);
+
+    step1CheckedStates.assignAll([
+      TermsCheckState(0),
+      TermsCheckState(1),
+      TermsCheckState(2),
+    ]);
+  }
+
   //檢查下一步是否可以按
   checkNextStepStatus() {
     if (steps.value == 0) {
@@ -115,7 +132,8 @@ class SignUpController extends GetxController {
 
   newUserData(FormData formData) async {
     Map<String, dynamic> args = {};
-    final user = UserModel.fromJson(formData.toUserJson());
+    Map<String, dynamic> data = formData.toUserJson();
+    final user = UserModel.fromJson(data);
     user.userId = _firebaseAuthService.user.value?.uid;
     user.membership = 0;
     args = user.toJson();
@@ -180,8 +198,6 @@ class FormData {
         'address': address,
         'birth': birth,
         'member': membership,
-        'createDate': createDate,
-        'updateDate': updateDate,
         'agreements': agreements,
       };
 }

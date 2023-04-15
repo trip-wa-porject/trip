@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/auth_signup_pages/signup_controller.dart';
 
 import '../../modules/auth_service.dart';
 import '../../modules/home_controller.dart';
@@ -70,7 +72,8 @@ class LoginController extends GetxController {
     if (_firebaseAuthService.user.value == null) {
       // await _firebaseAuthService.signInAnonymously();
     }
-    Get.toNamed('/signup', arguments: path);
+
+    Get.toNamed('${AppLinks.SIGNUP}', arguments: path);
   }
 
   forgetPassword() {}

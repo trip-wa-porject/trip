@@ -8,7 +8,7 @@ part of 'user_model.dart';
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       json['idno'] as String?,
-      json['id'] as String?,
+      json['userId'] as String?,
       json['email'] as String?,
       json['name'] as String?,
       json['mobile'] as String?,
@@ -19,14 +19,18 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       json['address'] as String?,
       json['birth'] as String?,
       json['member'] as int?,
-      json['createDate'] as String?,
-      json['updateDate'] as String?,
-      json['agreements'] as Map<String, dynamic>?,
+      dateTimeFromTimestamp(json['createDate'] as int?),
+      dateTimeFromTimestamp(json['updateDate'] as int?),
+      json['agreements'] as Map<String, dynamic>? ?? {},
+      (json['registerTrips'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'idno': instance.idno,
-      'id': instance.userId,
+      'userId': instance.userId,
       'email': instance.email,
       'name': instance.name,
       'mobile': instance.mobile,
@@ -37,7 +41,8 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'address': instance.address,
       'birth': instance.birth,
       'member': instance.membership,
-      'createDate': instance.createDate,
-      'updateDate': instance.updateDate,
+      'registerTrips': instance.registerTrips,
+      'createDate': timestampFromDateTimeFromTimestamp(instance.createDate),
+      'updateDate': timestampFromDateTimeFromTimestamp(instance.updateDate),
       'agreements': instance.agreements,
     };

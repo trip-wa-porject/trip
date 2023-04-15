@@ -76,7 +76,7 @@ class Pay extends GetView<PayController> {
                         ),
                         Obx(
                           () => EasyRichText(
-                            '倒數繳費截止：*${getCountdown(controller.model.value?.information.applyEnd)}* ',
+                            '倒數繳費截止：*${getCountdown(controller.registrationModel.value?.paymentExpireDate)}* ',
                             patternList: [
                               EasyRichTextPattern(
                                 targetString: '(\\*)(.*?)(\\*)',

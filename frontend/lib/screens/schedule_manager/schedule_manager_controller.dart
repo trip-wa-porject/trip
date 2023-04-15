@@ -43,7 +43,7 @@ class ScheduleManagerController extends GetxController {
       "tripId": eventId,
       "price": model.price,
       "paymentExpireDate":
-          DateTime.now().add(Duration(days: 3)).toIso8601String(),
+          DateTime.now().add(Duration(days: 3)).millisecondsSinceEpoch,
       "paymentInfo": {},
     };
 
@@ -73,7 +73,7 @@ class ScheduleManagerController extends GetxController {
 
   @override
   void onInit() {
-    ever(_firebaseAuthService.user, getDataUserJoined);
+    debounce(_firebaseAuthService.user, getDataUserJoined, time: 3.seconds);
     super.onInit();
   }
 }

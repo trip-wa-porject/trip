@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../utils/utils.dart';
+
 part 'schedule_model.g.dart';
 /*
 
@@ -37,16 +39,23 @@ part 'schedule_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ScheduleModel {
+  @JsonKey(name: 'tripId')
   String id;
 
   //title
   final String title;
 
   //start_date
-  final DateTime startDate;
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? startDate;
 
   //end_date
-  final DateTime endDate;
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? endDate;
 
   @JsonKey(name: 'images')
   final List<String> imageUrls;
@@ -70,7 +79,8 @@ class ScheduleModel {
   final int price;
 
   //applicants
-  final int applicants;
+  @JsonKey(defaultValue: [])
+  final List<String> applicants;
 
   //limitation
   final int limitation;
@@ -121,7 +131,7 @@ class ScheduleModel {
           "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
       memberPrice: 5000,
       price: 5200,
-      applicants: 0,
+      applicants: [],
       limitation: 20,
       information: ScheduleInformation(
         applyStart: DateTime(2022, 10, 03),
@@ -145,7 +155,7 @@ class ScheduleModel {
 
   static ScheduleModel sampleFromJson() {
     Map<String, dynamic> map = {
-      "id": "104",
+      "tripId": "104",
       "area": [
         {'city': '新北市', 'county': '土城區'}
       ],
@@ -153,10 +163,10 @@ class ScheduleModel {
       "images": [
         "https://cdntwrunning.biji.co/600_faf2493ca508b44713cfde49f54a92ef.jpg"
       ],
-      "endDate": "2023-04-23",
+      "endDate": 1684731347000,
       "level": "C",
       "memberPrice": 1344,
-      "applicants": 3,
+      "applicants": [],
       "breif":
           "秀霸線包含池有山、品田山、布秀蘭山、巴紗拉雲山、大霸尖山、小霸尖山、伊澤山和加利山。有別於傳統路線，來趟秀霸連走讚嘆這巍峨神聖的稜線。",
       "title": "天上山步道",
@@ -175,13 +185,13 @@ class ScheduleModel {
         "transportationWay": "專車",
         "guides": ["林麗英", "吳泰學", "陳尚融", "林盈吉"],
         "applyWay": "向活動收費組報名,亦開放線上報名",
-        "applyEnd": "2023-03-11",
-        "gatherTime": "2023-04-20T06:00",
-        "preDepartureMeetingDate": "2023-04-20T06:00",
-        "applyStart": "2023-02-26",
+        "applyEnd": 1681966547000,
+        "gatherTime": 1681977347000,
+        "preDepartureMeetingDate": 1681977347000,
+        "applyStart": 1676868947000,
         "transportationInfo": "前一天下午二點集合"
       },
-      "startDate": "2023-04-20",
+      "startDate": 1684558547000,
       "status": 0
     };
     return ScheduleModel.fromJson(map);
@@ -239,9 +249,16 @@ class ScheduleInformation {
     required this.note,
   });
   //apply_start
-  final DateTime applyStart;
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? applyStart;
   //apply_end
-  final DateTime applyEnd;
+
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? applyEnd;
 
   //apply_way
   final String applyWay;
@@ -250,7 +267,10 @@ class ScheduleInformation {
   final String gatherPlace;
 
   //gather_time
-  final DateTime gatherTime;
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? gatherTime;
 
   //transportation_way
   final String transportationWay;
@@ -259,7 +279,10 @@ class ScheduleInformation {
   final String transportationInfo;
 
   //pre_departure_meeting_date
-  final DateTime preDepartureMeetingDate;
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
+  final DateTime? preDepartureMeetingDate;
 
   //pre_departure_meeting_place
   final String preDepartureMeetingPlace;

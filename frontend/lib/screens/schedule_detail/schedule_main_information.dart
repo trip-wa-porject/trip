@@ -65,7 +65,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                   children: [
                     Text(
                       DateFormatUtils.getDateWithFullDateTemplate(
-                          widget.model.startDate, widget.model.endDate),
+                          widget.model.startDate!, widget.model.endDate!),
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                           fontSize: 36, color: MyStyles.greyScale757575),
@@ -77,7 +77,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                     _customTab(
                         true,
                         DateFormatUtils.getTotalDate(
-                            widget.model.startDate, widget.model.endDate)),
+                            widget.model.startDate!, widget.model.endDate!)),
                     const SizedBox(
                       width: 12.0,
                     ),
@@ -237,7 +237,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                       ),
                     ),
                     Text(
-                      '報名期間：${DateFormatUtils.getDateWithDateTemplate(widget.model.information.applyStart, widget.model.information.applyEnd)}',
+                      '報名期間：${DateFormatUtils.getDateWithDateTemplate(widget.model.information.applyStart!, widget.model.information.applyEnd!)}',
                       style: MyStyles.kTextStyleH4
                           .copyWith(color: MyStyles.greyScale757575),
                       // textScaleFactor: ScaleSize.textScaleFactor(context),
