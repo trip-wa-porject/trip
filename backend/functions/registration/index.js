@@ -48,7 +48,7 @@ exports.updateRegistrationOnCall = functions.https.onCall(async (data, context) 
 
 async function addRegistration(data) {
   let registration = await getRegistration(data.userId, data.tripId);
-  console.log('registration already exist', registration.length);
+  console.log('existed registration', registration.length);
   
   if (registration.length > 0) {
     return null;
@@ -122,8 +122,6 @@ async function notify(registrationId) {
   .then(snapshot => snapshot.data());
   
   let content = genContent(registration, trip, user);
-  
-  console.log('notify content', content);
 
   let transporter = nodeMailer.createTransport({
       service: 'gmail',
@@ -150,22 +148,47 @@ async function notify(registrationId) {
           console.error(err);
       }
       
-      console.log(`${registrationId} notified`, res);
+      console.log(`registration ${registrationId} notified`, res);
   });
+}
+
+function formatDate(date) {
+  let day = new Date(Date.parse(date));
+  
+  return `${day.getFullYear()} / ${day.getMonth() + 1} / ${day.getDate()}`;
+}
+
+function getWeekday(date) {
+  let weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+  
+  let weekday = new Date(Date.parse(date)).getDay();
+  
+  return weekdays[weekday];
+}
+
+function getTime(date) {
+  let time = new Date(Date.parse(date)).toTimeString();
+  return time.substr(0, 5);
+}
+
+function getLevel(level) {
+  let levels = {'A': '大眾路線（入門）', 'B': '健腳山友（中級）', 'C': '艱難路線（進階）'};
+  
+  return levels[level];
 }
 
 function genContent(registration, trip, user) {
   let name = user.sexual ? `${user.name.substr(0, 1)}先生` : `${user.name.substr(0, 1)}小姐`;
   let paymentId = registration.id;
   let tripTitle = `${trip.title}、正式會員`;
-  let payDate = '2023 / 3 / 10';
+  let payDate = registration.payDate ? formatDate(registration.payDate) : '';
   let price = registration.price;
   let status = registration.status ? '已繳費' : '未繳費';
-  let tripDate = `${trip.startDate} (六) - ${trip.endDate}(一）`;
+  let tripDate = `${formatDate(trip.startDate)} (${getWeekday(trip.startDate)}) - ${formatDate(trip.endDate)}(${getWeekday(trip.endDate)}）`;
   let type = trip.type;
-  let level = trip.level;
+  let level = getLevel(trip.level);
   let gatherPlace = trip.information.gatherPlace;
-  let gatherTime = `${trip.information.gatherTime}（六）9:00`;
+  let gatherTime = `${formatDate(trip.information.gatherTime)}（${getWeekday(trip.information.gatherTime)}）${getTime(trip.information.gatherTime)}`;
   let transportation = trip.information.transportationWay;
   let leader = trip.information.leader;
   let guides = trip.information.guides.join('、');
