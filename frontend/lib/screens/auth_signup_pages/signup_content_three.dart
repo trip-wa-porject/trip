@@ -15,10 +15,39 @@ class SignUpContentThree extends GetView<SignUpController> {
     return Container(
       child: Column(
         children: [
+          // Text(
+          //   '就差一步！\n請前往信箱驗證以完成會員註冊',
+          //   style: MyStyles.kTextStyleH3,
+          //   textAlign: TextAlign.center,
+          // ),
           Text(
-            '就差一步！\n請前往信箱驗證以完成會員註冊',
+            '就差一步！',
             style: MyStyles.kTextStyleH3,
             textAlign: TextAlign.center,
+          ),
+          RichText(
+            textScaleFactor: Get.textScaleFactor,
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: MyStyles.kTextStyleH3.copyWith(
+                color: MyStyles.greyScale000000,
+              ),
+              children: [
+                TextSpan(text: '請透過以下'),
+                TextSpan(
+                  text: '連結',
+                  style: TextStyle(
+                    color: MyStyles.tripTertiary,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      controller.goToMailer();
+                    },
+                ),
+                TextSpan(text: '前往信箱驗證以完成會員註冊'),
+              ],
+            ),
           ),
           Image.asset(
             'assets/images/check.png',

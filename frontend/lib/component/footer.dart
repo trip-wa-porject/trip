@@ -33,7 +33,7 @@ class Footer extends StatelessWidget {
             ),
             Text(
               '新北市山岳協會',
-              style: MyStyles.kTextStyleH4.copyWith(
+              style: MyStyles.kTextStyleBody1.copyWith(
                 color: Colors.white,
               ),
             ),
@@ -52,7 +52,7 @@ class Footer extends StatelessWidget {
 電話｜02-22500059、22501129、22501126 
 留守專機｜0919-309020、0919-309039 
 傳真｜02-22502159''',
-                  style: MyStyles.kTextStyleH4.copyWith(
+                  style: MyStyles.kTextStyleBody1.copyWith(
                     color: Colors.white,
                   ),
                 ),
@@ -60,7 +60,7 @@ class Footer extends StatelessWidget {
                   '''辦公時間｜每星期二、四晚上7:00-9:00
 郵政信箱｜22099 新北市板橋郵政52號信箱 
 地址｜22049 新北市板橋區陽明街76號5樓（離捷運新埔站 5 分鐘路程）''',
-                  style: MyStyles.kTextStyleH4.copyWith(
+                  style: MyStyles.kTextStyleBody1.copyWith(
                     color: Colors.white,
                   ),
                 ),

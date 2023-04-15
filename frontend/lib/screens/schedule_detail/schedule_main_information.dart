@@ -210,7 +210,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RichText(
-                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      textScaleFactor: Get.textScaleFactor,
                       text: TextSpan(
                         text: '非會員 ',
                         style: MyStyles.kTextStyleH2Bold.copyWith(
