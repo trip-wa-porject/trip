@@ -1,5 +1,4 @@
 FROM --platform=linux/amd64 node:16.17.0-alpine
-# https://github.com/AndreySenov/firebase-tools-docker/blob/main/Dockerfile.node10
 
 WORKDIR /app
 
@@ -27,4 +26,4 @@ RUN apk --no-cache add openjdk11-jre bash && \
     npm install -g firebase-tools && \
     cd ..
 
-CMD ["firebase", "emulators:start", "--project=wa-project-mountain-dev"]   
+CMD ["firebase", "emulators:start"]   

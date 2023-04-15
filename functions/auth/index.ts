@@ -9,7 +9,7 @@ if (_needToConnectToEmulator) {
 const app = firebase.initializeApp(
   _needToConnectToEmulator
     ? {
-        projectId: 'wa-project-mountain-dev'
+        projectId: 'wa-project-mountain'
       }
     : {
         credential: firebase.credential.applicationDefault()
