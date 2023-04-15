@@ -21,8 +21,8 @@ class OrderData {
       date: '待確認',
       price: '2400',
       payState: '待確認',
-      payMethod: '匯款或無存摺存款',
-      lastNumbers: '98989',
+      payMethod: '',
+      lastNumbers: '',
       emailState: '尚未通知',
     );
   }
@@ -34,8 +34,8 @@ class OrderData {
       date: '待確認',
       price: '600',
       payState: '待確認',
-      payMethod: '匯款或無存摺存款',
-      lastNumbers: '98989',
+      payMethod: '',
+      lastNumbers: '',
       emailState: '尚未通知',
     );
   }
@@ -76,18 +76,44 @@ class PayTable extends StatelessWidget {
     BoxDecoration boxDecoration = BoxDecoration(
       border: Border.all(color: MyStyles.tripPrimary, width: 1),
     );
+    int totalPrice = 0;
+    for (var o in orderData) {
+      if (o.price != null) {
+        int price = int.tryParse(o.price!) ?? 0;
+        totalPrice += price;
+      }
+    }
+    bool isContainVIP = orderData.any((element) => element.detail == "正式會員");
+    TextStyle redText = MyStyles.kTextStyleH4.copyWith(
+      fontSize: 19.36,
+      color: MyStyles.redC80000,
+      fontWeight: FontWeight.bold,
+    );
     return Container(
       decoration: boxDecoration,
       child: Column(
         children: [
           Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 13,
+              horizontal: 25,
+            ),
             child: Row(
               children: [
-                Text(" 總金額\$3000"),
-                Text('（報名費用＋會員費用）'),
+                Text(
+                  " 總金額\$${totalPrice}",
+                  style: redText,
+                ),
+                Text('（報名費用${isContainVIP ? '+會員費用' : ''}）'),
                 Spacer(),
-                Text('已確認付款金額：0元'),
-                Text('剩餘金額：3000元'),
+                Text(
+                  '已確認付款金額：0元  ',
+                  style: redText,
+                ),
+                Text(
+                  '剩餘金額：$totalPrice元',
+                  style: redText,
+                ),
               ],
             ),
           ),

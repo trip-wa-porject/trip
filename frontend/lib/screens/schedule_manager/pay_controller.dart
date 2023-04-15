@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tripflutter/component/dialogs.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_manager/pay_table.dart';
@@ -14,6 +16,8 @@ class PayController extends GetxController {
   Rxn<Registration> registrationModel = Rxn<Registration>();
   final FirebaseAuthService _firebaseAuthService =
       Get.find<FirebaseAuthService>();
+  TextEditingController account = TextEditingController();
+  TextEditingController price = TextEditingController();
 
   RxList<OrderData> orders = RxList([]);
   final BackendRepository repository = BackendRepository();
@@ -35,22 +39,56 @@ class PayController extends GetxController {
       joinMemberDialog(),
     );
     if (result == true) {
+      orders.add(OrderData.sampleVIP());
       wantJoinMember.value = true;
     }
   }
 
   //確認送出，付款資訊
   confirm() async {
+    final String _account = account.text;
+    final String _price = price.text;
+    if (_account != '') {
+      List<OrderData> _orders = orders.toList();
+      String payMethod = "";
+      switch (selectedMethod.value) {
+        case 0:
+          payMethod = 'ATM繳款';
+          break;
+        case 1:
+          payMethod = '匯款或無存摺存款';
+
+          break;
+        case 2:
+          payMethod = '信用卡';
+
+          break;
+      }
+      _orders = _orders.map((e) {
+        e.lastNumbers = _account;
+        e.payMethod = payMethod;
+        e.date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        return e;
+      }).toList();
+      orders.assignAll(_orders);
+    }
+
     final result = await Get.dialog(
       joinScheduleSuccess(),
     );
     if (result == '查看更多活動') {
-      Get.to('${AppLinks.SCHEDUL}');
+      Get.toNamed('${AppLinks.SCHEDUL}');
     }
   }
 
   //取消報名
-  cancel() {}
+  cancel() async {
+    final result = await Get.dialog(
+      cancelSchedule(),
+    );
+    //TODO cancel schedule
+    // Get.back();
+  }
 
   getData() async {
     try {

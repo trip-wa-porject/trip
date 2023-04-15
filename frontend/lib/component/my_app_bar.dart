@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/modules/auth_service.dart';
 
 import '../consts.dart';
@@ -30,9 +31,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               const Logo(),
               Row(
                 children: [
-                  Text(
-                    '活動行程',
-                    style: appBarTextStyle,
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed('${AppLinks.SCHEDUL}');
+                    },
+                    child: Text(
+                      '活動行程',
+                      style: appBarTextStyle,
+                    ),
                   ),
                   Obx(
                     () => authService.user.value == null
@@ -40,9 +46,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               appBarSpacer,
-                              Text(
-                                '註冊',
-                                style: appBarTextStyle,
+                              InkWell(
+                                onTap: () {
+                                  Get.toNamed('${AppLinks.SIGNUP}');
+                                },
+                                child: Text(
+                                  '註冊',
+                                  style: appBarTextStyle,
+                                ),
                               ),
                             ],
                           )
@@ -51,16 +62,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   appBarSpacer,
                   Obx(
                     () => authService.user.value == null
-                        ? FilledButton(
+                        ? MyFilledButton(
+                            label: '登入',
                             onPressed: () async {
                               final result =
                                   await Get.dialog(const LoginDialog());
                             },
-                            child: Text('登入'),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: MyStyles.tripNeutral,
-                              foregroundColor: MyStyles.tripTertiary,
-                            ),
+                            style: MyFilledButton.styleWhiteSmallGreen(),
                           )
                         : SizedBox(
                             width: 30,

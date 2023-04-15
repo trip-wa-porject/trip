@@ -68,6 +68,17 @@ class MyFilledButton extends StatelessWidget {
   final void Function()? onPressed;
 
   //綠色 白字 搜尋
+  static ButtonStyle styleWhiteSmallGreen() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.tripNeutral,
+      foregroundColor: MyStyles.greyScale757575,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+    );
+  }
+
+  //綠色 白字 搜尋
   static ButtonStyle style1() {
     return FilledButton.styleFrom(
       backgroundColor: MyStyles.tripTertiary,

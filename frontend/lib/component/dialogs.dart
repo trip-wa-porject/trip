@@ -201,3 +201,57 @@ joinScheduleSuccess() {
     ),
   );
 }
+
+cancelSchedule() {
+  return Center(
+    child: SizedBox(
+      width: 451,
+      height: 385,
+      child: StatefulBuilder(
+        builder: (context, StateSetter setState) {
+          return Material(
+            borderRadius: BorderRadius.circular(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: 147,
+                    height: 147,
+                    child: FittedBox(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: MyStyles.yellow3,
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  '取消報名成功',
+                  style: MyStyles.kTextStyleH3.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: MyStyles.greyScale616161,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  width: 208,
+                  height: 65,
+                  child: MyFilledButton(
+                    label: '確認',
+                    style: MyFilledButton.styleGreenBigWhite2(),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
