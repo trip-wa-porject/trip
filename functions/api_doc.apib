@@ -1,0 +1,25 @@
+FORMAT: 1A
+
+HOST: https//aglio.practice
+
+# Group 文章
+
+## Create Post
+### Create Post [POST]
++ Request (application/json)
+    + Body
+
+            {
+                "title": "test",
+                "content": "This is a test post."
+            }
+
+- Response 200 (application/json)
+    - Body
+
+            {
+                "id": 1,
+                "title": "test",
+                "content": "This is a test post.",
+                "created_at": "2020/11/11"
+            }
