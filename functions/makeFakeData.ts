@@ -25,6 +25,7 @@ trips.forEach((e) => {
     url: e.url,
     limitation: e.limitation,
     images: e.images,
+    applicants: [],
     information: {
       applyStart:
         e.information.applyStart * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,

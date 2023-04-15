@@ -17,13 +17,15 @@ const checkUserExists = async (info: Pick<User, 'idno' | 'email'>) => {
   }
 }
 
-export const createUser = https.onCall(async (data: User) => {
+type UserWithId = User & { userId: string }
+
+export const createUser = https.onCall(async (data: UserWithId) => {
   const keys = Object.keys(data)
-  if (!['idno', 'email'].every((e) => keys.includes(e))) {
+  if (!['idno', 'email', 'userId'].every((e) => keys.includes(e))) {
     throw new HttpsError('invalid-argument', 'Not enough information')
   }
 
-  const { idno, email } = data
+  const { idno, email, userId } = data
 
   const userChecker = await checkUserExists({ idno, email })
   if (userChecker) {
@@ -31,8 +33,9 @@ export const createUser = https.onCall(async (data: User) => {
   }
 
   try {
-    const doc = await ref.add(data)
-    return { userId: doc.id }
+    const doc = await ref.doc(userId).set(data)
+
+    return { userId: userId }
   } catch {
     logger.info(`create User failed`)
     throw new HttpsError('unknown', 'Server error')
