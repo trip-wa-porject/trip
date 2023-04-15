@@ -5,7 +5,8 @@
   "scripts": {
     "start": "tsc && NODE_ENV=development node libs/index.js",
     "lint": "eslint . --ext .ts",
-    "addFakeData": "tsc && NODE_ENV=development node libs/makeFakeData.js"
+    "addFakeData": "tsc && NODE_ENV=development node libs/makeFakeData.js",
+    "renderApiDocs": "aglio -i docs/wa-project-api.apib -o docs/index.html"
   },
   "main": "libs/index.js",
   "author": "WeiChen Lin",
@@ -20,6 +21,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "aglio": "^2.3.0",
     "dotenv": "^16.0.3",
     "firebase": "^9.19.1",
     "firebase-admin": "^11.6.0",
