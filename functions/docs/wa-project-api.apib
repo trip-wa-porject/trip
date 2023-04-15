@@ -1,0 +1,236 @@
+FORMAT: 1A
+HOST: https://us-central1-wa-project-mountain.cloudfunctions.net
+
+# wa-project
+
+This is for wa-project-mountain api documentation
+
+## searchTrips [/searchTrips]
+
+### List All Trips [POST]
+
++ Response 200 (application/json)
+
+        [
+            {
+                  tripId: string
+                  title: string
+                  startDate: number
+                  endDate: number
+                  area: {
+                    city: string
+                    county: string
+                  }[]
+                  type: string
+                  level: 'A' | 'B' | 'C'
+                  roadImage: string
+                  price: number
+                  memberPrice: number
+                  url: string
+                  applicants: string[]
+                  limitation: number
+                  images: string[]
+                  information: {
+                        applyStart: number
+                        applyEnd: number
+                        applyWay: string
+                        gatherPlace: string
+                        gatherTime: number
+                        transportationWay: string
+                        transportationInfo: string
+                        preDepartureMeetingDate: number
+                        preDepartureMeetingPlace: string
+                        memo: string
+                        leader: string
+                        guides: string[]
+                        note: string
+                        arriveSite: string
+                  }
+                  status: number
+            }
+        ]
+        
+## searchTrip [/searchTrip]
+
+### Get one Trip [POST]
+
++ Request (application/json)
+
+        {
+            tripId: string
+        }
+
++ Response 200 (application/json)
+
+        [
+            {
+                  tripId: string
+                  title: string
+                  startDate: number
+                  endDate: number
+                  area: {
+                    city: string
+                    county: string
+                  }[]
+                  type: string
+                  level: 'A' | 'B' | 'C'
+                  roadImage: string
+                  price: number
+                  memberPrice: number
+                  url: string
+                  applicants: string[]
+                  limitation: number
+                  images: string[]
+                  information: {
+                        applyStart: number
+                        applyEnd: number
+                        applyWay: string
+                        gatherPlace: string
+                        gatherTime: number
+                        transportationWay: string
+                        transportationInfo: string
+                        preDepartureMeetingDate: number
+                        preDepartureMeetingPlace: string
+                        memo: string
+                        leader: string
+                        guides: string[]
+                        note: string
+                        arriveSite: string
+                  }
+                  status: number
+            }
+        ]
+
++ Response 401 (application/json)
+
+        {
+            message: 'This trip doesn't exist'
+        }
+
+## createUser [/createUser]
+
+### Create a user [POST]
+
++ Request (application/json)
+
+        {
+          idno: string
+          card_id: string
+          email: string
+          name: string
+          mobile: string
+          emergentContactor: string
+          emergentContactTel: string
+          contactorRelationship: string
+          sexual: number
+          address: string
+          birth: string
+          member: number
+          createDate: number
+          updateDate: number
+          registerTrips: string[]
+          agreements: {}
+        }
++ Response 200 (application/json) 
+
+        {
+            userId: string
+        }
+
++ Response 401 (application/json) 
+
+        {
+            message: 'Not enough information'
+        }
+        
++ Response 409 (application/json) 
+
+        {
+            message: 'This idno or emial already exist'
+        }
+
+## getUserInfo [/getUserInfo]
+
+### get one user info [POST]
+
++ Request 200 (application/json)
+
+        {
+            userId: string
+        }
+
++ Response 200 (application/json)
+
+        {
+          idno: string
+          card_id: string
+          email: string
+          name: string
+          mobile: string
+          emergentContactor: string
+          emergentContactTel: string
+          contactorRelationship: string
+          sexual: number
+          address: string
+          birth: string
+          member: number
+          createDate: number
+          updateDate: number
+          agreements: {}
+        }
+
++ Response 409 (application/json) 
+
+        {
+            message: "This user doesn't exist"
+        }
+        
+## createRegister [/createRegister]
+
+### create a register [POST]
+
++ Request 200 (application/json)
+
+        {
+            userId: string,
+            tripId: string,
+            status: number
+        }
+
++ Response 200 (application/json)
+
+        { 
+            registerId: string 
+        }
+
++ Response 409 (application/json) 
+
+        {
+            message: "This trip or user doesn't exist"
+        }
+        
+## updateRegister [/updateRegister]
+
+### update a register [POST]
+
++ Request 200 (application/json)
+
+        {
+            userId: string,
+            status: number,
+            paymentInfo: Payment
+        }
+
++ Response 200 (application/json)
+
+        { 
+            status: boolean 
+        }
+
++ Response 409 (application/json) 
+
+        {
+            message: "This trip or user doesn't exist"
+        }
+
+           
