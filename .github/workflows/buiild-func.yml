@@ -7,6 +7,12 @@ on:
     paths:
       - functions/**
 
+  pull_request:
+    branches:
+      - 'fix-func'
+    paths:
+      - functions/**
+
 jobs:
   build:
     name: build
