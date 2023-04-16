@@ -11,16 +11,17 @@ const cert = {
   token_uri: 'https://oauth2.googleapis.com/token',
   auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
   client_x509_cert_url:
-    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com'
+    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com',
 }
 
 const app = firebase.initializeApp(
   false
     ? {
-        projectId: 'wa-project-mountain'
+        projectId: 'wa-project-mountain',
       }
     : {
-        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert)))
+        // for typescript hint
+        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert))),
       }
 )
 
