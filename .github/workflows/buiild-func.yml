@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: build-functions
-          path: functions/build/libs
+          path: functions/libs
 
   deploy:
     name: 'Deploy'
