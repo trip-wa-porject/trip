@@ -18,8 +18,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install
-      - run: npx tsc
+
+      - name: install dependencies
+        working-directory: './frontend'
+        run: |
+          npm install && \
+          npx tsc
 
       - name: Store functions
         uses: actions/upload-artifact@master
