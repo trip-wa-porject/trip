@@ -5,7 +5,7 @@
   "scripts": {
     "start": "tsc && NODE_ENV=development node libs/index.js",
     "lint": "eslint . --ext .ts",
-    "addFakeData": "tsc && NODE_ENV=development node libs/makeFakeData.js",
+    "addFakeData": "tsc && node libs/makeFakeData.js",
     "renderApiDocs": "aglio -i docs/wa-project-api.apib -o docs/index.html"
   },
   "main": "libs/index.js",

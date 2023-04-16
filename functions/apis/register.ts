@@ -83,19 +83,16 @@ const TripAddRegisterUser = async (data: {
   return ref.doc(tripId).update({ registerUsers: [...oldData, userId] })
 }
 
-const filterTrips = async (data: { tripIds: string[] }) => {
-  const results: Trip[] = []
+const filterRegisters = async (userId: string) => {
+  const results: Register[] = []
 
-  await Promise.all(
-    data.tripIds.map((id) => {
-      db.collection('trips')
-        .doc(id)
-        .get()
-        .then((e) => {
-          results.push({ ...(e.data() as Trip), tripId: id })
-        })
-    })
-  )
+  await ref
+    .where('userId', '==', userId)
+    .get()
+    .then((snapshot) =>
+      snapshot.forEach((e) => results.push(e.data() as Register))
+    )
+    .catch()
 
   return results
 }
@@ -114,7 +111,13 @@ export const createRegister = https.onCall(async (data: Register) => {
   }
 
   try {
-    const addRegister = ref.add(data)
+    const addRegister = ref.add({
+      ...data,
+      paymentExpireDate: new Date().getTime() + 86400000,
+      createDate: new Date().getTime(),
+      updateDate: new Date().getTime(),
+      paymentInfo: {}
+    })
     const tripAddUser = TripAddRegisterUser(data)
     const userAddTrip = UserAddRegisterTrip(data)
 
@@ -173,13 +176,24 @@ export const getUserRegisters = https.onCall(
     const userChecker = await db.collection('users').doc(userId).get()
 
     if (!userChecker.exists) {
+      //404
       throw new HttpsError('not-found', 'User not found')
     }
-
-    const userRegisters = (userChecker.data() as User)?.registerTrips ?? []
+    const userRegisters = await filterRegisters(userId)
+    logger.info(userRegisters)
 
     try {
-      const results = await filterTrips({ tripIds: userRegisters })
+      const results = await Promise.all(
+        userRegisters.map(async (e) => {
+          const tripInfo = await db.collection('trips').doc(e.tripId).get()
+
+          if (tripInfo.exists) {
+            return { ...e, tripInfo: tripInfo.data() }
+          } else {
+            return e
+          }
+        })
+      )
 
       return results
     } catch {

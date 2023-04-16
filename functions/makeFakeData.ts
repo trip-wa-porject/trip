@@ -1,5 +1,5 @@
 import { db } from './auth'
-import trips from './data/all_data.json'
+import trips from './data/test_trips.json'
 
 const batch = db.batch()
 
@@ -32,11 +32,13 @@ trips.forEach((e) => {
       applyEnd: e.information.applyEnd * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
       applyWay: e.information.applyWay,
       gatherPlace: e.information.gatherPlace,
-      gatherTime: e.information.gatherTime + 3 * 30 * 24 * 60 * 60 * 1000,
+      gatherTime:
+        e.information.gatherTime * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
       transportationWay: e.information.transportationWay,
       transportationInfo: e.information.transportationInfo,
       preDepartureMeetingDate:
-        e.information.preDepartureMeetingDate + 3 * 30 * 24 * 60 * 60 * 1000,
+        e.information.preDepartureMeetingDate * 1000 +
+        3 * 30 * 24 * 60 * 60 * 1000,
       preDepartureMeetingPlace: e.information.preDepartureMeetingPlace,
       memo: e.information.memo,
       leader: e.information.leader,

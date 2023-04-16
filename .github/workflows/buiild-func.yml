@@ -1,0 +1,54 @@
+name: Deploy functions
+
+on:
+  push:
+    branches:
+      - 'fix-func'
+    # paths:
+    #   - functions/**
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: install dependencies
+        working-directory: './functions'
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: |
+          npm install && \
+          npx tsc
+
+      - name: Store functions
+        uses: actions/upload-artifact@master
+        with:
+          name: build-functions
+          path: functions/libs
+
+  deploy:
+    name: 'Deploy'
+    runs-on: ubuntu-latest
+    needs: 'build'
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-functions
+          path: functions/libs
+
+      - name: Deploy to Firebase Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
