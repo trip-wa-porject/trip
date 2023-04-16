@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-deploy:
-    name: build
+    name: build and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
@@ -19,20 +19,26 @@ jobs:
         with:
           node-version: 16
 
-      - name: install dependencies
-        working-directory: './functions'
+      - name: test env
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         run: |
-          npm install && \
-          npx tsc
+          echo $SERVICE_ACCOUNT_KEY
 
-      - name: Deploy to Firebase Functions
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      # - name: install dependencies
+      #   working-directory: './functions'
+      #   env:
+      #     SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      #   run: |
+      #     npm install && \
+      #     npx tsc
+
+      # - name: Deploy to Firebase Functions
+      #   uses: w9jds/firebase-action@master
+      #   with:
+      #     args: deploy --only functions
+      #   env:
+      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   # deploy:
   #   name: 'Deploy'
