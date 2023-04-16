@@ -44,7 +44,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build-functions
-          path: functions/build/libs
+          path: functions/libs
 
       - name: Deploy to Firebase Functions
         uses: w9jds/firebase-action@master

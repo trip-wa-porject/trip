@@ -3,7 +3,7 @@ name: Deploy Flutter Web
 on:
   push:
     branches:
-      - 'fix-func'
+      - 'dev'
 
 jobs:
   build:
