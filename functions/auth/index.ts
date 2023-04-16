@@ -1,4 +1,7 @@
 import * as firebase from 'firebase-admin'
+import { config } from 'dotenv'
+
+config()
 
 const cert = {
   type: 'service_account',

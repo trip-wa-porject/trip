@@ -19,26 +19,19 @@ jobs:
         with:
           node-version: 16
 
-      - name: test env
-        env:
-          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      - name: install dependencies
+        working-directory: './functions'
         run: |
-          echo $SERVICE_ACCOUNT_KEY
+          echo SERVICE_ACCOUNT_KEY=${{ secrets.SERVICE_ACCOUNT_KEY }} > .env && \
+          npm install && \
+          npx tsc
 
-      # - name: install dependencies
-      #   working-directory: './functions'
-      #   env:
-      #     SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-      #   run: |
-      #     npm install && \
-      #     npx tsc
-
-      # - name: Deploy to Firebase Functions
-      #   uses: w9jds/firebase-action@master
-      #   with:
-      #     args: deploy --only functions
-      #   env:
-      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to Firebase Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   # deploy:
   #   name: 'Deploy'
