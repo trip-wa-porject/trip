@@ -20,7 +20,7 @@ jobs:
           node-version: 16
 
       - name: install dependencies
-        working-directory: './frontend'
+        working-directory: './functions'
         run: |
           npm install && \
           npx tsc
