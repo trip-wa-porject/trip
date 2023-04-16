@@ -7,7 +7,7 @@ build_emulators_image:
 	.
 
 run_emulators_image:
-	docker run -v $(current_mk_absdir):/app --rm -p 4000:4000 -p 8080:8080 -p 5001:5001 -p 3000:3000 trip-emulators:base
+	docker run -v $(current_mk_absdir):/app --rm -p 4000:4000 -p 8080:8080 -p 5001:5001 trip-emulators:dev
 
 add_default_data:
 	cd _backend && \

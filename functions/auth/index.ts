@@ -1,18 +1,19 @@
 import * as firebase from 'firebase-admin'
+import cert from './credential.json'
 
-const _needToConnectToEmulator = process.env.NODE_ENV === 'development'
+// const _needToConnectToEmulator = process.env.NODE_ENV === 'development'
 
-if (_needToConnectToEmulator) {
-  process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
-}
+// if (true) {
+//   process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
+// }
 
 const app = firebase.initializeApp(
-  _needToConnectToEmulator
+  false
     ? {
         projectId: 'wa-project-mountain'
       }
     : {
-        credential: firebase.credential.applicationDefault()
+        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert)))
       }
 )
 

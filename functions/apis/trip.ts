@@ -1,4 +1,4 @@
-import { https, logger } from 'firebase-functions'
+import { https } from 'firebase-functions'
 import type { Trip, TripFilter } from '../@types'
 import { db } from '../auth'
 import filter from './utils'
