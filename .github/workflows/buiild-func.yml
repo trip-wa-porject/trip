@@ -8,7 +8,7 @@ on:
     #   - functions/**
 
 jobs:
-  build_&_deploy:
+  build-deploy:
     name: build
     runs-on: ubuntu-latest
     steps:
