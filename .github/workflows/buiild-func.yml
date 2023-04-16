@@ -21,6 +21,8 @@ jobs:
 
       - name: install dependencies
         working-directory: './functions'
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         run: |
           npm install && \
           npx tsc

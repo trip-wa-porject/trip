@@ -3,7 +3,7 @@ name: Deploy Flutter Web
 on:
   push:
     branches:
-      - 'dev'
+      - 'fix-func'
 
 jobs:
   build:
@@ -27,7 +27,9 @@ jobs:
 
       - name: Build the application
         working-directory: './frontend'
-        run: flutter build web --release --web-renderer html
+        env:
+          FLUTTER_APIKEY: ${{ secrets.FLUTTER_APIKEY }}
+        run: flutter build web --dart-define FLUTTER_APIKEY=$FLUTTER_APIKEY --release --web-renderer html
 
       - name: Store static file
         uses: actions/upload-artifact@master
