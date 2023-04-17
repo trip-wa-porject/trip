@@ -1,35 +1,22 @@
 {
   "functions": {
-    "source": "functions",
+    "source": "backend/functions",
     "runtime": "nodejs16"
   },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": {
-    "public": "frontend/build/web",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
   "emulators": {
     "functions": {
-      "port": 5001,
-      "host": "0.0.0.0"
+      "port": 5001
     },
     "firestore": {
-      "port": 8080,
-      "host": "0.0.0.0"
+      "port": 8088
     },
     "ui": {
       "enabled": true,
-      "port": 4000,
-      "host": "0.0.0.0"
+      "port": 4000
     },
     "singleProjectMode": true
   }
