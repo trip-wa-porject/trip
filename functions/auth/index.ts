@@ -14,17 +14,19 @@ const cert = {
   token_uri: 'https://oauth2.googleapis.com/token',
   auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
   client_x509_cert_url:
-    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com',
+    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com'
 }
 
+process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
+
 const app = firebase.initializeApp(
-  false
+  true
     ? {
-        projectId: 'wa-project-mountain',
+        projectId: 'wa-project-mountain'
       }
     : {
         // for typescript hint
-        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert))),
+        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert)))
       }
 )
 

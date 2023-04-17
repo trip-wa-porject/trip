@@ -34,10 +34,24 @@ const ref = db.collection('trips')
 const searchTripsFromFireStore = async (
   data: Partial<TripFilter>
 ): Promise<Trip[]> => {
+  const filterKeys = [
+    'startDate',
+    'endDate',
+    'levels',
+    'types',
+    'regions',
+    'price_intervals',
+    'day_interval'
+  ]
+
+  if (Object.keys(data).every((e) => filterKeys.includes(e))) {
+    throw new HttpsError('invalid-argument', 'invalid search keyss')
+  }
+
   const filters = {
-    level: levels,
-    type: types,
-    region: regions,
+    levels,
+    types,
+    regions,
     ...data
   }
 
@@ -65,7 +79,7 @@ const searchTripsFromFireStore = async (
   return result
 }
 
-const searchSpecificTrop = async (tripId: string): Promise<Trip> => {
+const searchSpecificTrip = async (tripId: string): Promise<Trip> => {
   const result = await ref.doc(tripId).get()
 
   if (result.exists) {
@@ -76,15 +90,23 @@ const searchSpecificTrop = async (tripId: string): Promise<Trip> => {
 }
 
 export const searchTrip = https.onCall(async (data: { tripId: string }) => {
+  if (!data?.tripId) {
+    throw new HttpsError('invalid-argument', 'must containes tripId for search')
+  }
+
+  if (typeof data?.tripId !== 'string') {
+    throw new HttpsError('invalid-argument', 'type of tripId illegal')
+  }
+
   try {
-    const result = await searchSpecificTrop(data.tripId)
+    const result = await searchSpecificTrip(data.tripId)
     return result
   } catch {
     throw new HttpsError('not-found', "This trip doesn't exist")
   }
 })
 
-export const searchTrips = https.onCall(async (data) => {
+export const searchTrips = https.onCall(async (data: TripFilter) => {
   const result = await searchTripsFromFireStore(data)
   return result
 })

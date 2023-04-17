@@ -7,9 +7,9 @@ const ref = db.collection('users')
 
 const checkUserExists = async (info: Pick<User, 'idno' | 'email'>) => {
   try {
-    const IdChecker = await ref.where('idno', '==', info.idno).get()
+    const IdChecker = await ref.where('idno', '==', info.idno)?.get()
 
-    const EmailChecker = await ref.where('email', '==', info.email).get()
+    const EmailChecker = await ref.where('email', '==', info.email)?.get()
 
     return IdChecker.empty && EmailChecker.empty ? false : true
   } catch {
@@ -20,16 +20,40 @@ const checkUserExists = async (info: Pick<User, 'idno' | 'email'>) => {
 type UserWithId = User & { userId: string }
 
 export const createUser = https.onCall(async (data: UserWithId) => {
-  const keys = Object.keys(data)
-  if (!['idno', 'email', 'userId'].every((e) => keys.includes(e))) {
-    throw new HttpsError('invalid-argument', 'Not enough information')
+  const keys = [
+    'idno',
+    'email',
+    'userId',
+    'name',
+    'mobile',
+    'emergentContactor',
+    'emergentContactTel',
+    'contactorRelationship',
+    'sexual',
+    'address',
+    'birth',
+    'member'
+  ]
+
+  const checker = Object.keys(data).filter((e) => !keys.includes(e))
+
+  if (checker.length > 0) {
+    throw new HttpsError(
+      'invalid-argument',
+      `These keys need complemnet : ${checker.join(',')}`
+    )
   }
 
   const { idno, email, userId } = data
 
+  const userIdChecker = await ref.doc(userId)?.get()
+  if (!userIdChecker?.exists) {
+    throw new HttpsError('already-exists', 'This userId already exist')
+  }
+
   const userChecker = await checkUserExists({ idno, email })
   if (userChecker) {
-    throw new HttpsError('already-exists', 'This idno or emial already exist')
+    throw new HttpsError('already-exists', 'This idno or email already exist')
   }
 
   try {
