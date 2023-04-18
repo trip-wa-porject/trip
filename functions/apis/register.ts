@@ -101,7 +101,7 @@ const filterRegisters = async (userId: string) => {
 
 export const createRegister = https.onCall(async (data: Register) => {
   const keys = Object.keys(data)
-  if (!['tripId', 'userId', 'status'].every((e) => keys.includes(e))) {
+  if (!['tripId', 'userId'].every((e) => keys.includes(e))) {
     throw new HttpsError('invalid-argument', 'Not enough information')
   }
 
@@ -205,7 +205,7 @@ export const updateRegister = https.onCall(
     try {
       const _ = await checker.ref.update({ status, paymentInfo })
 
-      return { status: true }
+      return 'ok'
     } catch {
       return {}
     }
@@ -223,11 +223,10 @@ export const getUserRegisters = https.onCall(
     const userChecker = await db.collection('users').doc(userId).get()
 
     if (!userChecker.exists) {
-      //404
       throw new HttpsError('not-found', 'User not found')
     }
+
     const userRegisters = await filterRegisters(userId)
-    logger.info(userRegisters)
 
     try {
       const results = await Promise.all(
@@ -236,13 +235,11 @@ export const getUserRegisters = https.onCall(
 
           if (tripInfo.exists) {
             return { ...e, tripInfo: tripInfo.data() }
-          } else {
-            return e
           }
         })
       )
 
-      return results
+      return results.filter((e) => e?.tripInfo !== undefined)
     } catch {
       return []
     }
