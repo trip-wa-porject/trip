@@ -1,3 +1,9 @@
+現在 run flutter都要指定變數
+
+1. 先
+   export FLUTTER_APIKEY=xxxxxxxxxxxxxxxx
+
+2. 再 flutter run -d chrome --dart-define FLUTTER_APIKEY=$(FLUTTER_APIKEY) --web-renderer html
 
 
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -5,46 +11,115 @@ flutter run --web-renderer html
 flutter run -d chrome --web-renderer html
 flutter build web --release --web-renderer html
 
+
 https://stackoverflow.com/questions/65653801/flutter-web-cant-load-network-image-from-another-domain
 
-//流程
-1. 非會員
-   報名活動->加入會員->閱讀條款->填寫會員資料->收驗證信->驗證email->填寫付款資料->報名成功
-   加入會員->閱讀條款->填寫會員資料->收驗證信->驗證email->首頁-登入狀態? (->瀏覽活動->報名活動->填寫付款資料->報名成功)
-2. 會員
-   報名活動->登入會員->填寫付款資料->報名成功
-   登入會員->報名活動->填寫付款資料->報名成功
+# driftbottlediary
 
-## API 相關資訊
-https://docs.google.com/spreadsheets/d/1yqPApTuxa4K6kX1yaGO2A8trnz7p0czvNKbEgm2ArI0/edit#gid=0
-查詢行程：
+A new Flutter project for drift bottle diary
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/searchTrips -d '{"type":["郊山步道","健行"],"area":["新北市","宜蘭縣"],"keyword":"桶后","level":["A","B"],"startDateFrom":"2023-04-24","startDateTo":"2023-04-25","price":[[3000,5000],[5000,10000]],"days":3}'
+flutter cli
+#flutter_launcher_icons 產生icon，在使用flutter flavor後，再用flavor相應檔案產生icon，注意android圖片會覆蓋，因此要複製備份，最後貼回去
+flutter pub get
+flutter pub run flutter_launcher_icons -f <your config file name here>
+flutter pub run flutter_launcher_icons -f flutter_launcher_icons.yaml
+flutter pub run flutter_launcher_icons -f flutter_launcher_icons-env_dev.yaml
+flutter pub run flutter_launcher_icons -f flutter_launcher_icons-env_prod.yaml
 
-查詢單一會員所有行程：
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/trip-b6ddf/us-central1/getUserAllTrips -d '{"userId":"123456"}'
+#build runner
 
-查詢單筆行程：
+flutter pub run  build_runner build
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/getOneTrip -d '{"id":"m2ogLuNPJd12t8BgzV0b"}'
+#flutter_flavorizr
+flutter pub run flutter_flavorizr
 
-新增會員：
+<meta-data
+android:name="com.google.android.gms.ads.APPLICATION_ID"
+android:value="@string/admob_id"/>
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/addUser -d '{"id":"123456","email":"amew@gmail.com","name":"陳阿喵","mobile":"0987654321","idno":"A123456789","emergentContactor":"陳旺旺","emergentContactTel":"0987654321","sexual":0,"address":"台北市中山區中山北路","birth":"2006-07-23","contactorRelationship":"pet","member":0}'
+[comment]: <> (flutter run --flavor env_dev -t lib/main_env_dev.dart)
 
-取得會員：
+[comment]: <> (flutter run --flavor env_prod -t lib/main_env_prod.dart)
+flutter pub run flutter_flavorizr -p <processor_1>,<processor_2>
+flutter pub run flutter_flavorizr -p assets:download,assets:extract
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/getUser -d '{"id":"123456"}'
+flutter pub run flutter_flavorizr -p android:buildGradle,
+ios:plist
+ios:icons
 
-更新會員資料：
+debug运行（env_dev环境）：flutter run --flavor env_dev -t lib/main-env_dev.dart
+release运行（env_dev环境）：flutter run --release --flavor env_dev -t lib/main-env_dev.dart
+Android打包（env_dev环境）：flutter build apk --flavor env_dev -t lib/main-env_dev.dart
+ios打包（env_dev环境）：flutter build ipa --flavor env_dev -t lib/main-env_dev.dart
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/updateUser -d '{"id":"m2ogLuNPJd12t8BgzV0b","status":"done"}'
+作者：一个即将而立且刚开始奋发图强的IT民工
+链接：https://juejin.cn/post/7050035620499947528
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
-新增報名：
+#使用flavor運行
+flutter run --flavor env_dev -t lib/main_env_dev.dart
+flutter run --release --flavor env_dev -t lib/main_env_dev.dart
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/addRegistration -d '{"tripId":"110001","price":5200,"paymentExpireDate":"2023-04-10","paymentInfo":{},"emergentContactor":"陳旺旺","emergentContactTel":"0987654321","sexual":0,"address":"台北市中山區中山北路","birth":"2006-07-23","contactorRelationship":"pet","member":0}'
+flutter run --flavor env_prod -t lib/main.dart
+flutter run --flavor env_prod -t lib/main_env_prod.dart
+flutter run --release --flavor env_prod -t lib/main.dart
+flutter run --release --flavor env_prod -t lib/main_env_prod.dart
 
-更新報名資訊：
+#使用flavor編譯,打包發佈的東西, version code 或name建議奇數作為開發，偶數作為正式版本
+env
+（env_dev android）: flutter build apk --flavor env_dev -t lib/main_env_dev.dart
+（env_dev iOS）：flutter build ipa --flavor env_dev -t lib/main_env_dev.dart
+prod
+（env_prod android）: flutter build apk --flavor env_prod -t lib/main.dart
+（env_prod android）: flutter build appbundle --flavor env_prod -t lib/main.dart
+（env_prod iOS）：flutter build ipa --flavor env_prod -t lib/main.dart
 
-curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/updateRegistration -d '{"id":"m2ogLuNPJd12t8BgzV0b-","status":0}'
+#打包的時候可以指定版本號碼
+Both the version and the build number can be overridden in
+flutter build ipa by specifying --build-name and --build-number, respectively.
+
+
+#使用flavor 安裝
+
+flutter install --flavor env_dev
+flutter install --flavor env_prod
+
+
+隱私權政策 URL
+https://www.privacypolicies.com/live/801e104a-467c-4bfc-b184-c09edde02314
+
+generated by https://app.privacypolicies.com/download/801e104a-467c-4bfc-b184-c09edde02314
+
+完成開發的第一步，專案設定
+嘗試自己做icon，好難
+學習使用ChatGPT，好神奇
+
+
+#App Store 上架時，必須要至少上傳一張 5.5 英寸（iPhone 6s/7/8 Plus）以及 一張 6.5 英寸（iPhone 14 Pro Max）的螢幕截圖
+6.5 英寸（iPhone 11 Pro Max、iPhone 11、iPhone XS Max、iPhone XR）：纵向分辨率为1242 x 2688 像素；横向分辨率为 2688 x 1242 像素；若 App 在 iPhone 上运行，则此项为必需项。
+
+5.8 英寸（iPhone 11 Pro、iPhone X、iPhone XS）：纵向分辨率为 1125 x 2436像素；横向分辨率为 2436 x 1125 像素；若App 在 iPhone 上运行，且未提供 6.5 英寸截屏，则此项为必需项。
+
+5.5 英寸（iPhone 8 Plus、iPhone 7 Plus、iPhone 6s Plus）：纵向分辨率为 1242 x 2208 像素；横向分辨率为 2208 x 1242 像素；若 App 在 iPhone 上运行，则此项为必需项。
+
+4.7 英寸（第 2 代 iPhone SE、iPhone 8、iPhone 7、iPhone 6s、iPhone1334 x 750 像素；若 App 在 iPhone 上运行，且未提供 5.5 英寸截屏，则此项为必需项。
+
+12.9 英寸（第 4 代和第 3 代 iPad Pro）：纵向分辨率为 2048 x 2732 像素；横向分辨率为2732 x2048 像素；若 App 在 iPad 上 运行，则此项为必需项。
+
+12.9 英寸（第 2 代 iPad Pro）：纵向分辨率为 2048 x 2732 像素；横向分辨率为 2732 x 2048像素；若 App 在 iPad 上运行，则此项为必需项。
+
+11 英寸（iPad Pro）：纵向分辨率为 1668 x 2388 像素；横向分辨率为 2388 x 1668 像素；若 App
+在 iPad 上运行，且未提供适用于 12.9 英寸 iPad Pro（第 2 代）的截屏，则此项为必需项。
+
+10.5 英寸（第 7 代 iPad、iPad Pro、iPad Air）:纵向分辨率为 1668 x 2224 像素；横向分辨率为 2224 x 1668 像素；若 App 在iPad 上运行，且未提供适用于 12.9 英寸 iPad Pro（第 2 代）的截屏，则此项为必需项。
+
+Mac：具有 16:10 宽高比的下列分辨率之一；1280 x 800 像素；1440 x 900 像素；2560 x 1600
+像素；2880 x 1800 像素；对于Mac App 为必需项。
+
+Apple TV：1920 x 1080 像素；3840 x 2160 像素；对于 Apple Watch App，此项为必需项。
+————————————————
+版权声明：本文为CSDN博主「尼伯特」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_36250061/article/details/122483913
+

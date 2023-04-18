@@ -1,4 +1,4 @@
-package com.example.frontend
+package com.waproject.mountain.dev
 
 import io.flutter.embedding.android.FlutterActivity
 
