@@ -5,6 +5,62 @@ import { HttpsError } from 'firebase-functions/v1/auth'
 
 const ref = db.collection('register')
 
+const removeData = async (params: {
+  collection: string
+  docId: string
+  removeKey: string
+  removeId: string
+}) => {
+  const { collection, docId, removeKey, removeId } = params
+
+  const doc = await db.collection(collection).doc(docId).get()
+  if (!doc.exists) return Promise.reject(`${collection} ${docId} is not exist`)
+
+  const data = doc.data() ?? { [removeKey]: [] }
+
+  const targetArray = Array.isArray(data[removeKey]) ? [...data[removeKey]] : []
+
+  await db
+    .collection(collection)
+    .doc(docId)
+    .update({ [removeKey]: targetArray.filter((e) => e !== removeId) })
+
+  return Promise.resolve('ok')
+}
+
+const collectionAddId = async (data: {
+  appendId: string
+  targetId: string
+  collection: string
+  appendKey: string
+}) => {
+  const { appendId, targetId, collection, appendKey } = data
+
+  const ref = db.collection(collection)
+
+  const target = await ref.doc(targetId).get()
+  if (!target.exists) {
+    return Promise.reject(`${collection}: ${targetId} is not exist`)
+  }
+
+  const collection_data = target.data()
+
+  if (
+    Array.isArray(collection_data?.[appendKey]) &&
+    collection_data?.[appendKey]?.includes(appendId)
+  ) {
+    return Promise.reject(`${collection}: ${targetId} is already register`)
+  }
+
+  const oldData = Array.isArray(collection_data?.[appendKey])
+    ? [...collection_data?.[appendKey]]
+    : []
+
+  await ref.doc(targetId).update({ [appendKey]: [...oldData, appendId] })
+
+  return Promise.resolve('ok')
+}
+
 const checkUserAndTripExists = async (info: {
   tripId: string
   userId: string
@@ -12,75 +68,21 @@ const checkUserAndTripExists = async (info: {
   const { tripId, userId } = info
   try {
     const tripChecker = await db.collection('trips').doc(tripId).get()
-
     const userChecker = await db.collection('users').doc(userId).get()
 
     if (tripChecker.exists && userChecker.exists) {
-      return true
+      const userInfo = userChecker.data() as User
+      const tripInfo = tripChecker.data() as Trip
+
+      return {
+        price: userInfo.member === 0 ? tripInfo.price : tripInfo.memberPrice,
+      }
     } else {
       return false
     }
   } catch {
     return false
   }
-}
-
-const UserAddRegisterTrip = async (data: {
-  userId: string
-  tripId: string
-}) => {
-  const { userId, tripId } = data
-
-  const ref = db.collection('users')
-
-  const user = await ref.doc(userId).get()
-  if (!user.exists) {
-    return Promise.reject('This User not exist')
-  }
-
-  const userData = user.data() as User
-
-  if (
-    Array.isArray(userData?.registerTrips) &&
-    userData?.registerTrips?.includes(tripId)
-  ) {
-    return Promise.reject('This Trip is already register')
-  }
-
-  const oldData = Array.isArray(userData?.registerTrips)
-    ? [...userData?.registerTrips]
-    : []
-
-  return ref.doc(userId).update({ registerTrips: [...oldData, tripId] })
-}
-
-const TripAddRegisterUser = async (data: {
-  userId: string
-  tripId: string
-}) => {
-  const { userId, tripId } = data
-
-  const ref = db.collection('trips')
-
-  const trip = await ref.doc(tripId).get()
-  if (!trip.exists) {
-    return Promise.reject('This Trip not exist')
-  }
-
-  const tripData = trip.data() as Trip
-
-  if (
-    Array.isArray(tripData?.applicants) &&
-    tripData?.applicants?.includes(userId)
-  ) {
-    return Promise.reject('This User is already register')
-  }
-
-  const oldData = Array.isArray(tripData?.applicants)
-    ? [...tripData?.applicants]
-    : []
-
-  return ref.doc(tripId).update({ registerUsers: [...oldData, userId] })
 }
 
 const filterRegisters = async (userId: string) => {
@@ -103,7 +105,7 @@ export const createRegister = https.onCall(async (data: Register) => {
     throw new HttpsError('invalid-argument', 'Not enough information')
   }
 
-  const { tripId, userId } = data
+  const { tripId, userId, status } = data
 
   const checker = await checkUserAndTripExists({ tripId, userId })
   if (!checker) {
@@ -111,26 +113,71 @@ export const createRegister = https.onCall(async (data: Register) => {
   }
 
   try {
-    const addRegister = ref.add({
-      ...data,
-      paymentExpireDate: new Date().getTime() + 86400000,
-      createDate: new Date().getTime(),
-      updateDate: new Date().getTime(),
-      paymentInfo: {}
-    })
-    const tripAddUser = TripAddRegisterUser(data)
-    const userAddTrip = UserAddRegisterTrip(data)
+    const promiseHandler: (() => Promise<string>)[] = []
 
-    const [doc, user, trip] = await Promise.all([
-      addRegister,
-      tripAddUser,
-      userAddTrip
-    ])
+    const arr = [
+      {
+        appendId: userId,
+        targetId: tripId,
+        collection: 'trips',
+        appendKey: 'applicants',
+      },
+      {
+        appendId: tripId,
+        targetId: userId,
+        collection: 'users',
+        appendKey: 'registerTrips',
+      },
+    ]
 
-    return { registerId: doc.id }
+    await Promise.all(
+      arr.map((e) =>
+        collectionAddId(e).then(() => {
+          promiseHandler.push(() =>
+            removeData({
+              collection: e.collection,
+              docId: e.targetId,
+              removeKey: e.appendKey,
+              removeId: e.appendId,
+            })
+          )
+        })
+      )
+    )
+
+    if (promiseHandler.length !== arr.length) {
+      for (let i = 0; i < arr.length; i++) {
+        await promiseHandler[i]()
+      }
+      throw new HttpsError('unknown', 'Server error')
+    }
+
+    const now = new Date()
+
+    try {
+      const addRegister = await ref.add({
+        ...data,
+        status: status,
+        paymentExpireDate: now.getTime() + 432000000,
+        price: checker.price,
+        createDate: now.getTime(),
+        updateDate: now.getTime(),
+        paymentInfo: {},
+        sendMail: 0,
+        sendMailTime: null,
+      })
+      return { registerId: addRegister?.id }
+    } catch {
+      if (promiseHandler.length !== arr.length) {
+        for (let i = 0; i < arr.length; i++) {
+          await promiseHandler[i]()
+        }
+      }
+      throw new HttpsError('unknown', 'Server error')
+    }
   } catch (e) {
-    logger.info(`create User failed`, e)
-    return {}
+    logger.info(`create register failed`, e)
+    throw new HttpsError('unknown', 'Server error')
   }
 })
 

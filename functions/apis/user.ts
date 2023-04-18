@@ -7,9 +7,9 @@ const ref = db.collection('users')
 
 const checkUserExists = async (info: Pick<User, 'idno' | 'email'>) => {
   try {
-    const IdChecker = await ref.where('idno', '==', info.idno)?.get()
+    const IdChecker = await ref.where('idno', '==', info.idno).get()
 
-    const EmailChecker = await ref.where('email', '==', info.email)?.get()
+    const EmailChecker = await ref.where('email', '==', info.email).get()
 
     return IdChecker.empty && EmailChecker.empty ? false : true
   } catch {
@@ -32,24 +32,21 @@ export const createUser = https.onCall(async (data: UserWithId) => {
     'sexual',
     'address',
     'birth',
-    'member'
+    'member',
   ]
 
-  const checker = Object.keys(data).filter((e) => !keys.includes(e))
+  const data_key = Object.keys(data)
 
-  if (checker.length > 0) {
+  const checker = keys.filter((e) => !data_key.includes(e))
+
+  if (checker.length !== 0) {
     throw new HttpsError(
       'invalid-argument',
-      `These keys need complemnet : ${checker.join(',')}`
+      `These keys need complemnet: ${checker.join(', ')}`
     )
   }
 
   const { idno, email, userId } = data
-
-  const userIdChecker = await ref.doc(userId)?.get()
-  if (!userIdChecker?.exists) {
-    throw new HttpsError('already-exists', 'This userId already exist')
-  }
 
   const userChecker = await checkUserExists({ idno, email })
   if (userChecker) {
@@ -57,11 +54,18 @@ export const createUser = https.onCall(async (data: UserWithId) => {
   }
 
   try {
-    const doc = await ref.doc(userId).set(data)
+    const now = new Date()
+
+    await ref.doc(userId).set({
+      ...data,
+      createDate: now.getTime(),
+      updateDate: now.getTime(),
+      agreements: { version_1: [1, 1, 1, 1] },
+      registerTrips: [],
+    })
 
     return { userId: userId }
   } catch {
-    logger.info(`create User failed`)
     throw new HttpsError('unknown', 'Server error')
   }
 })
