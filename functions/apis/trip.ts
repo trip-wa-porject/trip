@@ -22,7 +22,7 @@ const regions = [
   '彰化縣',
   '屏東縣',
   '宜蘭縣',
-  '澎湖縣'
+  '澎湖縣',
 ]
 
 const levels = ['A', 'B', 'C']
@@ -41,10 +41,12 @@ const searchTripsFromFireStore = async (
     'types',
     'regions',
     'price_intervals',
-    'day_interval'
+    'day_interval',
   ]
 
-  if (Object.keys(data).every((e) => filterKeys.includes(e))) {
+  const data_keys = Object.keys(data)
+
+  if (data_keys.length > 0 && data_keys.every((e) => filterKeys.includes(e))) {
     throw new HttpsError('invalid-argument', 'invalid search keyss')
   }
 
@@ -52,7 +54,7 @@ const searchTripsFromFireStore = async (
     levels,
     types,
     regions,
-    ...data
+    ...data,
   }
 
   const result: Trip[] = []
@@ -68,7 +70,7 @@ const searchTripsFromFireStore = async (
         if (passfilter) {
           result.push({
             ...rec,
-            tripId: doc.id
+            tripId: doc.id,
           } as Trip)
         }
       })
