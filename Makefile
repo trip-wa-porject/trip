@@ -11,3 +11,10 @@ add_default_data:
 	cd _backend && \
 	npm i && \
 	npm run addFakeData
+
+
+# export PATH=[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin:$PATH
+# export firebase APIKEY
+run-flutter:
+	cd frontend && \
+	flutter run -d chrome --dart-define FLUTTER_APIKEY=$(FLUTTER_APIKEY) --web-renderer html
