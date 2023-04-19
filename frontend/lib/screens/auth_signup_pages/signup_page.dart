@@ -13,12 +13,27 @@ import 'signup_content_three.dart';
 import 'signup_content_two.dart';
 import 'signup_controller.dart';
 
-class SignUpPage extends GetView<SignUpController> {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  @override
+  void initState() {
+    SignUpController controller = Get.put(SignUpController());
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.init();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Get.put(SignUpController());
+    SignUpController controller = Get.put(SignUpController());
     return Scaffold(
       backgroundColor: Color(0xff686868),
       appBar: MyAppBar(),
@@ -51,6 +66,15 @@ class SignUpPage extends GetView<SignUpController> {
                       ],
                     ),
                   ),
+                ),
+              ),
+              Obx(
+                () => LinearProgressIndicator(
+                  value: (controller.steps.value + 1) / 3,
+                  minHeight: 14,
+                  backgroundColor: MyStyles.green1,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(MyStyles.tripTertiary),
                 ),
               ),
               Center(

@@ -96,7 +96,7 @@ class Pay extends GetView<PayController> {
                         ),
                         Divider(),
                         EasyRichText(
-                          '付款方式選挥(可分多次付款)「收费活動報名後三天内繳納全額費用始完成正式報名手,三天未用者列為候補名單。」',
+                          '付款方式選擇「收费活動報名後三天内繳納全額費用始完成正式報名手,三天未用者列為候補名單。」',
                           patternList: [
                             EasyRichTextPattern(
                               targetString:
@@ -154,21 +154,26 @@ class Pay extends GetView<PayController> {
                                       height: 23,
                                     ),
                                     //輸入後五碼
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          '帳號後五碼：',
-                                          style: payMethodStyle,
-                                        ),
-                                        SizedBox(
-                                          width: 232,
-                                          child: PayTextField(
-                                            controller: controller.account,
-                                          ),
-                                        ),
-                                      ],
+                                    Obx(
+                                      () => controller.selectedMethod.value == 2
+                                          ? SizedBox()
+                                          : Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '帳號後五碼：',
+                                                  style: payMethodStyle,
+                                                ),
+                                                SizedBox(
+                                                  width: 232,
+                                                  child: PayTextField(
+                                                    controller:
+                                                        controller.account,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                     ),
                                     SizedBox(
                                       height: 15,
