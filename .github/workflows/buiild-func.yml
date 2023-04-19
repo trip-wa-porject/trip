@@ -3,9 +3,9 @@ name: Deploy functions
 on:
   push:
     branches:
-      - 'fix-func'
-    # paths:
-    #   - functions/**
+      - 'dev'
+    paths:
+      - functions/**
 
 jobs:
   deploy_func:
