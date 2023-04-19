@@ -40,9 +40,9 @@ export interface Trip {
 export interface TripFilter {
   startDate: number
   endDate: number
-  level: string[]
-  type: string[]
-  region: string[]
-  price_interval: number[]
+  levels: string[]
+  types: string[]
+  regions: string[]
+  price_intervals: number[]
   day_interval: 1 | 2 | 3 | 4
 }

@@ -9,6 +9,69 @@ This is for wa-project-mountain api documentation
 
 ### List All Trips [POST]
 
++ Request (application/json)
+
+        {
+          1. 開始日期
+          // filter all trip > startDate
+          startDate?: number
+          
+          2. 結束日期  
+          // filter all trip < startDate
+          endDate?: number
+          
+          3. 等級
+          //levels = ['A', 'B', 'C']
+          levels?: string[]
+          
+          4. 類型
+          // types = ['高山步道', '郊山步道', '中級山步道']
+          types?: string[]
+          
+          5. 地區
+          // regions = [
+              '南投縣',
+              '台北市',
+              '台中市',
+              '台南市',
+              '高雄市',
+              '台東縣',
+              '雲林縣',
+              '嘉義縣',
+              '新北市',
+              '桃園市',
+              '基隆市',
+              '新竹市',
+              '花蓮縣',
+              '苗栗縣',
+              '彰化縣',
+              '屏東縣',
+              '宜蘭縣',
+              '澎湖縣'
+            ]
+          regions?: string[]
+          
+          6. 價錢區間
+          /*
+          0 -> 0 ~ 3000
+          1 -> 3000 ~ 5000
+          2 -> 5000 ~ 7000
+          3 -> 7000 ~ 10000
+          4 -> 10000 以上
+          */
+          price_intervals?: number[]
+          
+          7. 天數
+          /*
+           1 -> 一天內
+           2 -> 2天內
+           3 -> 3天內
+           4 -> 3天以上
+          */
+          day_interval?: 1 | 2 | 3 | 4
+          
+        }
+
 + Response 200 (application/json)
 
         [
@@ -62,8 +125,7 @@ This is for wa-project-mountain api documentation
 
 + Response 200 (application/json)
 
-        [
-            {
+        {
                   tripId: string
                   title: string
                   startDate: number
@@ -99,12 +161,30 @@ This is for wa-project-mountain api documentation
                   }
                   status: number
             }
-        ]
 
++ Response 400 (application/json)
+        
+        // Not contains tripId
+        
+        "error": {
+            "message": "must containes tripId for search",
+            "status": "INVALID_ARGUMENT"
+        }
+        
 + Response 401 (application/json)
 
-        {
-            message: 'This trip doesn't exist'
+        // typeof tripId illegal
+        "error": {
+            "message": "type of tripId illegal",
+            "status": "INVALID_ARGUMENT"
+        }
+        
++ Response 404 (application/json)
+
+        // trip doesn't exist
+        "error": {
+            "message": "This trip doesn't exist",
+            "status": "NOT_FOUND"
         }
 
 ## createUser [/createUser]
@@ -113,9 +193,10 @@ This is for wa-project-mountain api documentation
 
 + Request (application/json)
 
+        // UI 上所有都是必填
         {
+          userId: string
           idno: string
-          card_id: string
           email: string
           name: string
           mobile: string
@@ -126,10 +207,7 @@ This is for wa-project-mountain api documentation
           address: string
           birth: string
           member: number
-          createDate: number
-          updateDate: number
-          registerTrips: string[]
-          agreements: {}
+          agreements?: {}
         }
 + Response 200 (application/json) 
 
@@ -137,17 +215,21 @@ This is for wa-project-mountain api documentation
             userId: string
         }
 
-+ Response 401 (application/json) 
++ Response 400 (application/json) 
 
+        
+        // invalid-argument -> data not enough
         {
-            message: 'Not enough information'
+            message: 'These keys need complemnet: ${checker.join(', ')}'
         }
         
 + Response 409 (application/json) 
-
+        
+        // idno or email duplicated
         {
             message: 'This idno or emial already exist'
         }
+        
 
 ## getUserInfo [/getUserInfo]
 
@@ -162,8 +244,8 @@ This is for wa-project-mountain api documentation
 + Response 200 (application/json)
 
         {
+          userId: string
           idno: string
-          card_id: string
           email: string
           name: string
           mobile: string
@@ -174,9 +256,10 @@ This is for wa-project-mountain api documentation
           address: string
           birth: string
           member: number
-          createDate: number
-          updateDate: number
-          agreements: {}
+          createDate: number,
+          updateDate: number,
+          agreements: { version_1: [1, 1, 1, 1] },
+          registerTrips: []
         }
 
 + Response 409 (application/json) 
@@ -194,7 +277,6 @@ This is for wa-project-mountain api documentation
         {
             userId: string,
             tripId: string,
-            status: number
         }
 
 + Response 200 (application/json)
@@ -203,11 +285,26 @@ This is for wa-project-mountain api documentation
             registerId: string 
         }
 
++ Response 400 (application/json) 
+
+        
+        // invalid-argument -> data not enough
+        {
+            message: 'lack of tripId or userId'
+        }
+
 + Response 409 (application/json) 
 
         {
             message: "This trip or user doesn't exist"
         }
+
++ Response 500 (application/json) 
+
+        {
+            message: "Server Error"
+        }
+
         
 ## updateRegister [/updateRegister]
 
@@ -224,13 +321,60 @@ This is for wa-project-mountain api documentation
 + Response 200 (application/json)
 
         { 
-            status: boolean 
+            status: 'ok' 
+        }
+
++ Response 400 (application/json) 
+
+        
+        // invalid-argument -> data not enough
+        {
+            message: 'lack of userId, status, paymentInfo'
         }
 
 + Response 409 (application/json) 
 
         {
-            message: "This trip or user doesn't exist"
+            message: "This register doesn't exist"
+        }
+        
+## getUserRegister [/getUserRegister]
+
+### Get user's registers [POST]
+
++ Request 200 (application/json)
+
+        {
+            userId: string,
+        }
+
++ Response 200 (application/json)
+
+        [
+            {
+                tripInfo: Trip
+                tripId: string
+                userId: string
+                paymentExpireDate: number
+                paymentInfo: Payment
+                status: number
+                createDate: number
+                updateDate: number
+            }
+        ]
+
++ Response 400 (application/json) 
+
+        
+        // invalid-argument -> data not enough
+        {
+            message: 'lack of userId'
+        }
+
++ Response 409 (application/json) 
+
+        {
+            message: "This User doesn't exist"
         }
 
            

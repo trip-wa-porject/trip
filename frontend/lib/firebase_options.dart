@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBjYnMBPSi1VVDHb674Q9g3DhkzdKtf0I4',
+    apiKey: String.fromEnvironment('FLUTTER_APIKEY'),
     appId: '1:139433871572:web:716b01764abafab78e9341',
     messagingSenderId: '139433871572',
     projectId: 'wa-project-mountain',

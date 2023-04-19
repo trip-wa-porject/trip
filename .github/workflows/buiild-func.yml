@@ -1,0 +1,34 @@
+name: Deploy functions
+
+on:
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - functions/**
+
+jobs:
+  deploy_func:
+    name: build and deploy funcs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: install dependencies
+        working-directory: './functions'
+        run: |
+          echo SERVICE_ACCOUNT_KEY="${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
+          npm install && \
+          npx tsc
+
+      - name: Deploy to Firebase Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
