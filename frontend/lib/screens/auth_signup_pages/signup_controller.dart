@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/models/user_model.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../modules/auth_service.dart';
 
@@ -14,6 +15,7 @@ class SignUpController extends GetxController {
   final BackendRepository repository = BackendRepository();
 
   init() {
+    print('SignUp Page init');
     steps.value = 0;
     step0CheckedStates.assignAll([
       TermsCheckState(0)..isShowed = true,
@@ -111,6 +113,15 @@ class SignUpController extends GetxController {
     }
     step0CheckedStates[tapIndex].isShowed = true;
     step0CheckedStates.refresh();
+  }
+
+  //step2
+  goToMailer() async {
+    try {
+      await launchUrlString('https://mail.google.com/mail');
+    } catch (e) {
+      print(e);
+    }
   }
 
   //註冊

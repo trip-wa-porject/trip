@@ -1,7 +1,9 @@
 import { db } from './auth'
-import trips from './data/all_data.json'
+import trips from './data/test_trips.json'
 
 const batch = db.batch()
+
+const fakeUsers = new Array(15).fill(1)
 
 trips.forEach((e) => {
   const current_trip = db.collection('trips').doc(e.id.toString())
@@ -32,19 +34,43 @@ trips.forEach((e) => {
       applyEnd: e.information.applyEnd * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
       applyWay: e.information.applyWay,
       gatherPlace: e.information.gatherPlace,
-      gatherTime: e.information.gatherTime + 3 * 30 * 24 * 60 * 60 * 1000,
+      gatherTime:
+        e.information.gatherTime * 1000 + 3 * 30 * 24 * 60 * 60 * 1000,
       transportationWay: e.information.transportationWay,
       transportationInfo: e.information.transportationInfo,
       preDepartureMeetingDate:
-        e.information.preDepartureMeetingDate + 3 * 30 * 24 * 60 * 60 * 1000,
+        e.information.preDepartureMeetingDate * 1000 +
+        3 * 30 * 24 * 60 * 60 * 1000,
       preDepartureMeetingPlace: e.information.preDepartureMeetingPlace,
       memo: e.information.memo,
       leader: e.information.leader,
       guides: e.information.guides,
       note: e.information.note,
-      arriveSite: e.information.arriveSite
+      arriveSite: e.information.arriveSite,
     },
-    status: e.status
+    status: e.status,
+  })
+})
+
+fakeUsers.forEach((e, index) => {
+  const current_user = db.collection('users').doc(`fake_user_${index}`)
+  const now = new Date()
+  batch.set(current_user, {
+    idno: `F12345554${index}`,
+    email: `test_email_${index}@test.com`,
+    name: `test_name_${index}`,
+    mobile: `092312451${index}`,
+    emergentContactor: `test_emergentContactor_${index}`,
+    emergentContactTel: `094421251${index}`,
+    contactorRelationship: `test_relation_${index}`,
+    sexual: index % 2,
+    address: `test_address_${index}`,
+    birth: `2023/04/${index}`,
+    member: index % 2,
+    createDate: now.getTime(),
+    updateDate: now.getTime(),
+    registerTrips: [],
+    agreements: { version_1: [1, 1, 1, 1] },
   })
 })
 
