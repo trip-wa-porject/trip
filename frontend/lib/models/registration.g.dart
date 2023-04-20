@@ -10,9 +10,7 @@ Registration _$RegistrationFromJson(Map<String, dynamic> json) => Registration(
       json['tripId'] as String?,
       json['userId'] as String?,
       json['price'] as int?,
-      json['paymentExpireDate'] == null
-          ? null
-          : DateTime.parse(json['paymentExpireDate'] as String),
+      dateTimeFromTimestamp(json['paymentExpireDate'] as int?),
       json['paymentInfo'] as Map<String, dynamic>?,
       json['status'] as int?,
       dateTimeFromTimestamp(json['createDate'] as int?),
@@ -24,7 +22,8 @@ Map<String, dynamic> _$RegistrationToJson(Registration instance) =>
       'tripId': instance.tripId,
       'userId': instance.userId,
       'price': instance.price,
-      'paymentExpireDate': instance.paymentExpireDate?.toIso8601String(),
+      'paymentExpireDate':
+          timestampFromDateTimeFromTimestamp(instance.paymentExpireDate),
       'paymentInfo': instance.paymentInfo,
       'status': instance.status,
       'createDate': timestampFromDateTimeFromTimestamp(instance.createDate),

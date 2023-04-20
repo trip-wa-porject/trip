@@ -15,6 +15,9 @@ class Registration {
   final int? price;
 
   //付款期限截止日
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
   final DateTime? paymentExpireDate;
 
   //付款方式

@@ -30,7 +30,7 @@ class Pay extends GetView<PayController> {
                 child: LayoutBuilder(builder: (context, constrains) {
                   TextStyle payMethodStyle = MyStyles.kTextStyleH4;
                   return Container(
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                         maxHeight: double.infinity, maxWidth: 1160),
                     child: Column(
                       children: [
@@ -49,7 +49,7 @@ class Pay extends GetView<PayController> {
                                 .copyWith(color: MyStyles.tripTertiary),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                         Obx(
@@ -71,7 +71,40 @@ class Pay extends GetView<PayController> {
                                   height: 180,
                                 ),
                         ),
-                        SizedBox(
+                        const SizedBox(
+                          height: 60,
+                        ),
+                        //付款狀態
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: EasyRichText(
+                            '● 付款狀態（臨時會員）',
+                            defaultStyle: MyStyles.kTextStyleH3Bold,
+                            patternList: [
+                              EasyRichTextPattern(
+                                targetString: '（臨時會員）',
+                                style: MyStyles.kTextStyleH3Bold.copyWith(
+                                  color: MyStyles.tripTertiary,
+                                ),
+                              ),
+                              EasyRichTextPattern(
+                                targetString: '●',
+                                style: MyStyles.kTextStyleBody1.copyWith(
+                                  color: MyStyles.tripTertiary,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        //表格
+                        Obx(
+                          () => PayTable(
+                            orderData: [
+                              ...controller.orders,
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
                           height: 60,
                         ),
                         Obx(
@@ -94,7 +127,7 @@ class Pay extends GetView<PayController> {
                             defaultStyle: MyStyles.kTextStyleH2Bold,
                           ),
                         ),
-                        Divider(),
+                        const Divider(),
                         EasyRichText(
                           '付款方式選擇「收费活動報名後三天内繳納全額費用始完成正式報名手,三天未用者列為候補名單。」',
                           patternList: [
@@ -150,7 +183,7 @@ class Pay extends GetView<PayController> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 23,
                                     ),
                                     //輸入後五碼
@@ -175,7 +208,7 @@ class Pay extends GetView<PayController> {
                                               ],
                                             ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     //輸入付款金額
@@ -194,6 +227,111 @@ class Pay extends GetView<PayController> {
                                           ),
                                         ),
                                       ],
+                                    ),
+                                    //VIP
+                                    Obx(
+                                      () => controller.orders.any((element) =>
+                                              element.detail == '正式會員')
+                                          ? SizedBox()
+                                          : Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/vip.png',
+                                                    width: 46.69,
+                                                    height: 33.5,
+                                                  ),
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            3.6),
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 14,
+                                                        horizontal: 10,
+                                                      ),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        border: Border(
+                                                          left: BorderSide(
+                                                            width: 15,
+                                                            color: MyStyles
+                                                                .tripPrimary,
+                                                          ),
+                                                          top: BorderSide(
+                                                            width: 2,
+                                                            color: MyStyles
+                                                                .tripPrimary,
+                                                          ),
+                                                          right: BorderSide(
+                                                            width: 2,
+                                                            color: MyStyles
+                                                                .tripPrimary,
+                                                          ),
+                                                          bottom: BorderSide(
+                                                            width: 2,
+                                                            color: MyStyles
+                                                                .tripPrimary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                '加入VIP會員即可有優惠',
+                                                                style: MyStyles
+                                                                    .kTextStyleH3Bold
+                                                                    .copyWith(
+                                                                  color: MyStyles
+                                                                      .redC80000,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                '點擊了解VIP會員',
+                                                                style: MyStyles
+                                                                    .kTextStyleSubtitle1Bold
+                                                                    .copyWith(
+                                                                  color: MyStyles
+                                                                      .greyScale616161,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            width: 14,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 90,
+                                                            height: 59,
+                                                            child:
+                                                                MyFilledButton(
+                                                              label: '即刻加入',
+                                                              style: MyFilledButton
+                                                                  .styleRedSmallWhite(),
+                                                              onPressed: () {
+                                                                controller
+                                                                    .joinMember();
+                                                              },
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),
@@ -217,7 +355,7 @@ class Pay extends GetView<PayController> {
                                         color: MyStyles.tripTertiary,
                                       ),
                                     ),
-                                    Text(
+                                    const Text(
                                       "銀行：第一銀行 敦南分行",
                                       style: MyStyles.kTextStyleH4,
                                     ),
@@ -234,169 +372,42 @@ class Pay extends GetView<PayController> {
                         const SizedBox(
                           height: 28,
                         ),
-                        Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 86,
-                                height: 38,
-                                child: MyFilledButton(
-                                  label: '確認送出',
-                                  style: MyFilledButton.styleOrangeSmallBlack(),
-                                  onPressed: () {
-                                    controller.confirm();
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              SizedBox(
-                                width: 86,
-                                height: 38,
-                                child: MyFilledButton(
-                                  label: '取消報名',
-                                  style: MyFilledButton.styleRedSmallWhite(),
-                                  onPressed: () {
-                                    controller.cancel();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //VIP
-                        Obx(
-                          () => controller.orders
-                                  .any((element) => element.detail == '正式會員')
-                              ? SizedBox()
-                              : Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/vip.png',
-                                        width: 46.69,
-                                        height: 33.5,
-                                      ),
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(3.6),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 14,
-                                            horizontal: 10,
-                                          ),
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              left: BorderSide(
-                                                width: 15,
-                                                color: MyStyles.tripPrimary,
-                                              ),
-                                              top: BorderSide(
-                                                width: 2,
-                                                color: MyStyles.tripPrimary,
-                                              ),
-                                              right: BorderSide(
-                                                width: 2,
-                                                color: MyStyles.tripPrimary,
-                                              ),
-                                              bottom: BorderSide(
-                                                width: 2,
-                                                color: MyStyles.tripPrimary,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '加入VIP會員即可有優惠',
-                                                    style: MyStyles
-                                                        .kTextStyleH3Bold
-                                                        .copyWith(
-                                                      color: MyStyles.redC80000,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '點擊了解VIP會員',
-                                                    style: MyStyles
-                                                        .kTextStyleSubtitle1Bold
-                                                        .copyWith(
-                                                      color: MyStyles
-                                                          .greyScale616161,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                width: 14,
-                                              ),
-                                              SizedBox(
-                                                width: 90,
-                                                height: 59,
-                                                child: MyFilledButton(
-                                                  label: '即刻加入',
-                                                  style: MyFilledButton
-                                                      .styleRedSmallWhite(),
-                                                  onPressed: () {
-                                                    controller.joinMember();
-                                                  },
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30.0),
-                          child: Divider(),
-                        ),
-                        //付款狀態
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: EasyRichText(
-                            '● 付款狀態（臨時會員）',
-                            defaultStyle: MyStyles.kTextStyleH3Bold,
-                            patternList: [
-                              EasyRichTextPattern(
-                                targetString: '（臨時會員）',
-                                style: MyStyles.kTextStyleH3Bold.copyWith(
-                                  color: MyStyles.tripTertiary,
-                                ),
-                              ),
-                              EasyRichTextPattern(
-                                targetString: '●',
-                                style: MyStyles.kTextStyleBody1.copyWith(
-                                  color: MyStyles.tripTertiary,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        //表格
-                        Obx(
-                          () => PayTable(
-                            orderData: [
-                              ...controller.orders,
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   );
                 }),
+              ),
+              Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 86,
+                      height: 38,
+                      child: MyFilledButton(
+                        label: '確認送出',
+                        style: MyFilledButton.styleOrangeSmallBlack(),
+                        onPressed: () {
+                          controller.confirm();
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    SizedBox(
+                      width: 86,
+                      height: 38,
+                      child: MyFilledButton(
+                        label: '取消報名',
+                        style: MyFilledButton.styleRedSmallWhite(),
+                        onPressed: () {
+                          controller.cancel();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 120.0),
@@ -414,7 +425,7 @@ String getCountdown(DateTime? dateTime) {
   if (dateTime == null) {
     return '320小時40分鐘';
   }
-  Duration duration = DateTime.now().difference(dateTime);
+  Duration duration = dateTime.difference(DateTime.now());
 
   return "${duration.inHours}小時${duration.inMinutes % 60}分鐘";
 }
