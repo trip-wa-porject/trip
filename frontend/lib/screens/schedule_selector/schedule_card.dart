@@ -6,9 +6,6 @@ import 'package:tripflutter/screens/schedule_selector/schedule_selector_controll
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
-import 'dart:math' as math;
-
-import '../schedule_apply/schedule_apply.dart';
 
 Map<int, String> intToDate = {
   1: '一',
