@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
@@ -10,8 +9,6 @@ import 'package:tripflutter/utils/level_format_utils.dart';
 
 import '../../models/schedule_model.dart';
 import '../../utils/date_format_utils.dart';
-import '../schedule_apply/schedule_apply.dart';
-import 'schedule_detail_controller.dart';
 
 class ScheduleMainInformation extends StatefulWidget {
   const ScheduleMainInformation(
