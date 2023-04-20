@@ -66,10 +66,12 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                                 kSearchBarBottomPadding,
                             right: 4,
                             child: Center(
-                              child: SizedBox(
-                                height: kScheduleOptionsHeight,
-                                width: kCardWidth + 8.0,
-                                child: ScheduleOptions(),
+                              child: FittedBox(
+                                child: SizedBox(
+                                  height: kScheduleOptionsHeight,
+                                  width: kCardWidth + 8.0,
+                                  child: ScheduleOptions(),
+                                ),
                               ),
                             ),
                           ),
@@ -126,12 +128,15 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                                 itemCount: controller.scheduleList.length,
                                 itemBuilder: (c, index) {
                                   return Center(
-                                    child: SizedBox(
-                                      height: kCardHeight,
-                                      width: kCardWidth + 8.0,
-                                      child: ScheduleCard(
-                                        model: controller.scheduleList[index],
-                                        index: index + 1,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: SizedBox(
+                                        height: kCardHeight,
+                                        width: kCardWidth + 8.0,
+                                        child: ScheduleCard(
+                                          model: controller.scheduleList[index],
+                                          index: index + 1,
+                                        ),
                                       ),
                                     ),
                                   );

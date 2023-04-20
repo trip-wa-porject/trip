@@ -13,6 +13,7 @@ class SignUpController extends GetxController {
   final Rx<int> steps = Rx<int>(0);
   final RxBool nextStepsBtnStatus = false.obs;
   final BackendRepository repository = BackendRepository();
+  final ScrollController scrollController = ScrollController();
 
   init() {
     print('SignUp Page init');
@@ -60,6 +61,7 @@ class SignUpController extends GetxController {
     }
     if (steps.value < 2) {
       steps.value = steps.value + 1;
+      scrollController.jumpTo(140);
     }
     checkNextStepStatus();
   }
@@ -163,6 +165,12 @@ class SignUpController extends GetxController {
     dynamic arg = Get.arguments;
     eventId = arg;
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }
 
