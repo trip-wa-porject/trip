@@ -63,9 +63,9 @@ class ScheduleOptionDateSelector extends StatelessWidget {
         dropdownSearchData: DropdownSearchData(
           //好醜
           searchInnerWidget: CalendarDatePicker(
-            initialDate: startDate ?? DateTime.now(),
-            firstDate: startDate ?? (isClockwise ? DateTime.now() : DateTime(1923)),
-            lastDate: lastDate ?? (isClockwise ? DateTime(2099) : DateTime.now()),
+            initialDate: DateTime.now(),
+            firstDate: isClockwise ? DateTime.now() : DateTime(1923),
+            lastDate: isClockwise ? DateTime(2099) : DateTime.now(),
             onDateChanged: (DateTime dateTime) {
               if (onDateChangeCallback != null) {
                 onDateChangeCallback!(dateTime);
@@ -80,7 +80,7 @@ class ScheduleOptionDateSelector extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: hintPadding,
-                  child: Text('${selectedDate?.month}月${selectedDate?.day}日'),
+                  child: Text('${selectedDate?.year}年${selectedDate?.month}月${selectedDate?.day}日'),
                 ))
             : Align(
                 alignment: Alignment.centerLeft,
