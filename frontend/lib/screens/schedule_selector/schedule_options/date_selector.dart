@@ -9,6 +9,8 @@ class ScheduleOptionDateSelector extends StatelessWidget {
     this.selectedDate,
     this.startDate,
     this.lastDate,
+    required this.isClockwise,
+    required this.borderColor,
     this.onDateChangeCallback,
     this.width = 100,
   }) : super(key: key);
@@ -19,6 +21,8 @@ class ScheduleOptionDateSelector extends StatelessWidget {
   final DateTime? selectedDate;
   final DateTime? startDate;
   final DateTime? lastDate;
+  final bool isClockwise;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,7 @@ class ScheduleOptionDateSelector extends StatelessWidget {
     ButtonStyleData buttonStyleData = ButtonStyleData(
       decoration: BoxDecoration(
         color: Colors.white,
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(4.0),
       ),
       height: 40,
@@ -46,7 +51,7 @@ class ScheduleOptionDateSelector extends StatelessWidget {
     IconStyleData iconStyleData = const IconStyleData(
       icon: Padding(
         padding: EdgeInsets.all(8.0),
-        child: Icon(Icons.keyboard_arrow_up),
+        child: Icon(Icons.keyboard_arrow_down),
       ),
       iconDisabledColor: MyStyles.greyScale757575,
       iconEnabledColor: MyStyles.greyScale757575,
@@ -59,8 +64,8 @@ class ScheduleOptionDateSelector extends StatelessWidget {
           //好醜
           searchInnerWidget: CalendarDatePicker(
             initialDate: startDate ?? DateTime.now(),
-            firstDate: startDate ?? DateTime.now(),
-            lastDate: lastDate ?? DateTime(2099),
+            firstDate: startDate ?? (isClockwise ? DateTime.now() : DateTime(1923)),
+            lastDate: lastDate ?? (isClockwise ? DateTime(2099) : DateTime.now()),
             onDateChanged: (DateTime dateTime) {
               if (onDateChangeCallback != null) {
                 onDateChangeCallback!(dateTime);
