@@ -385,7 +385,6 @@ class _MyInputField extends StatelessWidget {
                     vertical: 8,
                     horizontal: 16,
                   ),
-                  fillColor: Colors.deepPurpleAccent,
                   suffixIcon: isVisible ? IconButton(
                       onPressed: () => setState(() {
                         obscureText = !obscureText;
