@@ -1,16 +1,42 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/models/user_model.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
 
+import '../../models/zipcode_model.dart';
 import '../../modules/auth_service.dart';
+
+import 'package:flutter/services.dart'; // is required
 
 class SignUpController extends GetxController {
   final FirebaseAuthService _firebaseAuthService =
       Get.find<FirebaseAuthService>();
   final Rx<int> steps = Rx<int>(0);
   final RxBool nextStepsBtnStatus = false.obs;
+
+  //身分證字號
+  final RxString idNoSexual = '生理性別'.obs;
+
+  //縣市區郵遞區號 Data
+  List<ZipCodeModel> zipCodeList = [];
+  int cityIndex = 0;
+
+  //縣市選項
+  List<ZipCodeModel> cityOptions = <ZipCodeModel>[];
+  RxList<String> citySelectOptions = <String>[].obs;
+
+  //區選項
+  RxList<District> districtOptions = <District>[].obs;
+  RxList<String> districtSelectOptions = <String>[].obs;
+
+  //郵遞區號選項
+  RxString zipOptions = '郵遞區號'.obs;
+
+  Rxn<DateTime> birthdayDateTime = Rxn<DateTime>();
+  RxList<RelationOption> relationOptions = <RelationOption>[].obs;
   final BackendRepository repository = BackendRepository();
 
   init() {
@@ -145,10 +171,73 @@ class SignUpController extends GetxController {
         "${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=$eventId"); //TODO change later
   }
 
+  saveIdNoSexual(String idNumber) {
+    idNoSexual.value = idNumber[1] == '1' ? '生理男' : '生理女';
+    idNoSexual.refresh();
+  }
+
+  selectCityOption(List<String> options) {
+    //取得 City Index
+    List<String> cityOptionList =
+        cityOptions.map((entry) => entry.name).toList();
+    cityIndex = cityOptionList.indexOf(options[0]);
+
+    //更新 District 選項
+    districtOptions.clear();
+    for (var district in zipCodeList[cityIndex].districts) {
+      districtOptions.add(district);
+    }
+    districtOptions.refresh();
+
+    //顯示取得的城市選項
+    citySelectOptions.assignAll(options);
+    citySelectOptions.refresh();
+  }
+
+  selectDistrictOption(List<String> options) {
+    //取得 City Index
+    List<String> districtOptionList =
+    districtOptions.map((entry) => entry.name).toList();
+    int districtIndex = districtOptionList.indexOf(options[0]);
+
+    //顯示郵遞區號
+    zipOptions.value = cityOptions[cityIndex].districts[districtIndex].zip;
+    zipOptions.refresh();
+
+    //顯示取得的區選項
+    districtSelectOptions.assignAll(options);
+    districtSelectOptions.refresh();
+  }
+
+  selectRelationOption(List<RelationOption> options) {
+    relationOptions.assignAll(options);
+    relationOptions.refresh();
+  }
+
+  selectBirthdayDate(DateTime dateTime) {
+    birthdayDateTime.value = dateTime;
+  }
+
+  retrieveZipCode() async {
+    final String response = await rootBundle.loadString('/zip_code.json');
+    var zipcode = json.decode(response);
+    zipCodeList = ZipCodeModelResponse.fromJson(zipcode).list;
+
+    for (var zip in zipcode) {
+      ZipCodeModel zipCodeModel = ZipCodeModel.fromJson(zip);
+      cityOptions.add(zipCodeModel);
+    }
+
+    for (var district in zipCodeList[0].districts) {
+      districtOptions.add(district);
+    }
+  }
+
   String? eventId;
 
   @override
   void onInit() {
+    retrieveZipCode();
     dynamic arg = Get.arguments;
     eventId = arg;
     super.onInit();
@@ -159,6 +248,7 @@ class TermsCheckState {
   final int index;
   bool checked = false;
   bool isShowed = false;
+
   TermsCheckState(this.index);
 }
 
@@ -174,7 +264,7 @@ class FormData {
   String? contactorRelationship; //	緊急聯絡人關係
   int? sexual; //	性別
   String? address; //	地址
-  String? birth; //	出生日期
+  DateTime? birth; //	出生日期
   int? membership; //	會員狀態	分成 訪客 ＆ 正式會員
   String? createDate; //	註冊日期
   String? updateDate; //	更新日期
@@ -194,10 +284,29 @@ class FormData {
         'emergentContactor': emergentContactor,
         'emergentContactTel': emergentContactTel,
         'contactorRelationship': contactorRelationship,
-        'sexual': idno![1] == '0' ? 0 : 1,
+        'sexual': idno![1] == '1' ? 0 : 1,
         'address': address,
         'birth': birth,
         'member': membership,
         'agreements': agreements,
       };
+}
+
+//聯絡人關係
+enum RelationOption {
+  Father('父親'),
+  Couple('夫妻'),
+  Mother('母親'),
+  Brother('兄弟'),
+  Sister('姐妹'),
+  Friend('朋友'),
+  Relative('親戚'),
+  Else('其他');
+
+  const RelationOption(this.showedString);
+
+  final String showedString;
+
+  @override
+  String toString() => showedString;
 }

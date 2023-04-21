@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/consts.dart';
 
+import '../schedule_selector/schedule_options/check_box_group.dart';
+import '../schedule_selector/schedule_options/date_selector.dart';
 import 'consts.dart';
-import 'signup_controller.dart';
 import 'utils.dart';
+import 'package:tripflutter/screens/auth_signup_pages/signup_controller.dart';
 
 class SignUpContentTwo extends GetView<SignUpController> {
   SignUpContentTwo({Key? key}) : super(key: key);
@@ -26,8 +28,8 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: 'E-mail 帳號*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: 'qq1179988568?gmail.com',
-                      hintText: 'abe233@gmail.com',
+                      initialValue: '',
+                      hintText: 'abc@mail.com',
                       onSave: (value) {
                         controller.formData.email = value;
                       },
@@ -43,12 +45,13 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '密碼*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: 'Aa12345678',
-                      hintText: 'abd1234erewrwrwe',
+                      initialValue: '',
+                      hintText: '密碼',
                       helperText: '至少8個字，同時需要包含大小寫和數字',
                       onSave: (value) {
                         controller.formData.password = value;
                       },
+                      obscureText: true,
                       validator: (value) {
                         return validatePassword(value);
                       },
@@ -70,33 +73,36 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '中文姓名*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: '陳筱珊',
-                      hintText: '陳筱珊',
+                      initialValue: '',
+                      hintText: '姓名',
                       onSave: (value) {
                         controller.formData.name = value;
                       },
                       validator: (value) {
-                        //TODO validate
-                        return validateInput(value);
+                        return validateUserName(value);
                       },
                     ),
                   ),
                 ],
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _MyInputTitle(title: '出生年月日*'),
-                  Expanded(
-                    child: _MyInputField(
-                      initialValue: '1980-07-13',
-                      hintText: '1980-07-13',
-                      onSave: (value) {
-                        controller.formData.birth = value;
-                      },
-                      validator: (value) {
-                        //TODO validate
-                        return validateDate(value);
-                      },
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Obx(
+                      () => ScheduleOptionDateSelector(
+                        title: "出生日期",
+                        width: 320,
+                        selectedDate: controller.birthdayDateTime.value,
+                        lastDate: controller.birthdayDateTime.value,
+                        isClockwise: false,
+                        borderColor: MyStyles.greyScale9E9E9E,
+                        onDateChangeCallback: (DateTime dateTime) {
+                          controller.selectBirthdayDate(dateTime);
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -106,15 +112,23 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '身分證字號*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: 'A139403924',
-                      hintText: 'A139403924',
+                      initialValue: '',
+                      hintText: '身分證字號',
                       onSave: (value) {
                         controller.formData.idno = value;
                       },
-                      // validator: (value) {
-                      //   return validateTaiwanId(value);
-                      // },
+                      onChanged: (value) {
+                        controller.saveIdNoSexual(value!);
+                      },
+                      validator: (value) {
+                        return validateTaiwanId(value);
+                      },
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, bottom: 25.0),
+                    child: Obx(
+                        () => _customTextField(controller.idNoSexual.value)),
                   ),
                 ],
               ),
@@ -123,14 +137,13 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '電話*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: '0910901884',
-                      hintText: ' 0910901884',
+                      initialValue: '',
+                      hintText: ' 0912345678',
                       onSave: (value) {
                         controller.formData.mobile = value;
                       },
                       validator: (value) {
-                        //TODO
-                        return validateInput(value);
+                        return validatePhoneNumber(value);
                       },
                     ),
                   ),
@@ -140,12 +153,67 @@ class SignUpContentTwo extends GetView<SignUpController> {
                 children: [
                   _MyInputTitle(title: '地址*'),
                   Expanded(
-                    child: _MyInputField(
-                      initialValue: '231新北市新店區民權路6F號No. 50號',
-                      hintText: ' 完整地址',
-                      onSave: (value) {
-                        controller.formData.address = value;
-                      },
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Obx(() =>
+                                _customTextField(controller.zipOptions.value)),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            Obx(
+                              () => ScheduleOptionCheckSelector<String>(
+                                title: "縣市",
+                                width: 99,
+                                allItems: controller.cityOptions
+                                    .map((entry) => entry.name)
+                                    .toList(),
+                                selectedItems:
+                                    controller.citySelectOptions.toList(),
+                                borderColor: MyStyles.greyScale9E9E9E,
+                                mode: CheckBoxOptionMode.single,
+                                onChangeCallback: (value) {
+                                  controller.selectCityOption(value);
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            Obx(
+                              () => ScheduleOptionCheckSelector<String>(
+                                title: "區",
+                                width: 99,
+                                allItems: controller.districtOptions.value
+                                    .map((entry) => entry.name)
+                                    .toList(),
+                                selectedItems:
+                                    controller.districtSelectOptions.toList(),
+                                borderColor: MyStyles.greyScale9E9E9E,
+                                mode: CheckBoxOptionMode.single,
+                                onChangeCallback: (value) {
+                                  controller.selectDistrictOption(value);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        _MyInputField(
+                          initialValue: '',
+                          hintText: ' 地址',
+                          onSave: (value) {
+                            controller.formData.address =
+                                controller.zipOptions.value +
+                                    controller.citySelectOptions.value[0] +
+                                    controller.districtSelectOptions.value[0] +
+                                    value!;
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -163,10 +231,13 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '緊急聯絡人*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: '陳筱珊',
-                      hintText: '陳筱珊',
+                      initialValue: '',
+                      hintText: '緊急聯絡人姓名',
                       onSave: (value) {
                         controller.formData.emergentContactor = value;
+                      },
+                      validator: (value) {
+                        return validateUserName(value);
                       },
                     ),
                   ),
@@ -175,13 +246,20 @@ class SignUpContentTwo extends GetView<SignUpController> {
               Row(
                 children: [
                   _MyInputTitle(title: '聯絡人關係*'),
-                  Expanded(
-                    child: _MyInputField(
-                      initialValue: '母子',
-                      hintText: ' 關係',
-                      onSave: (value) {
-                        controller.formData.contactorRelationship = value;
-                      },
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Obx(
+                      () => ScheduleOptionCheckSelector<RelationOption>(
+                        title: "關係",
+                        width: 113,
+                        allItems: RelationOption.values,
+                        selectedItems: controller.relationOptions.toList(),
+                        borderColor: MyStyles.greyScale9E9E9E,
+                        mode: CheckBoxOptionMode.single,
+                        onChangeCallback: (value) {
+                          controller.selectRelationOption(value);
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -191,10 +269,13 @@ class SignUpContentTwo extends GetView<SignUpController> {
                   _MyInputTitle(title: '聯絡人電話*'),
                   Expanded(
                     child: _MyInputField(
-                      initialValue: '0910901884',
-                      hintText: '0910901884',
+                      initialValue: '',
+                      hintText: '0912345678',
                       onSave: (value) {
                         controller.formData.emergentContactTel = value;
+                      },
+                      validator: (value) {
+                        return validatePhoneNumber(value);
                       },
                     ),
                   ),
@@ -238,6 +319,7 @@ class _MyInputTitle extends StatelessWidget {
   const _MyInputTitle({Key? key, required this.title}) : super(key: key);
 
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -245,7 +327,7 @@ class _MyInputTitle extends StatelessWidget {
       width: 98,
       padding: const EdgeInsets.only(bottom: 25),
       child: EasyRichText(
-        '$title',
+        title,
         textAlign: TextAlign.end,
         defaultStyle: MyStyles.kTextStyleSubtitle1,
         maxLines: 1,
@@ -264,41 +346,72 @@ class _MyInputTitle extends StatelessWidget {
 }
 
 class _MyInputField extends StatelessWidget {
-  const _MyInputField({
+  _MyInputField({
     Key? key,
     this.textEditingController,
     this.initialValue,
     this.helperText,
     this.hintText,
+    this.obscureText = false,
     this.validator,
     this.onSave,
+    this.onChanged,
   }) : super(key: key);
 
   final TextEditingController? textEditingController;
   final String? initialValue;
   final String? hintText;
   final String? helperText;
+  bool obscureText;
+  bool isVisible = false;
   final String? Function(String?)? validator;
   final void Function(String?)? onSave;
+  final void Function(String?)? onChanged;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60,
-      child: TextFormField(
-        initialValue: initialValue,
-        controller: textEditingController,
-        decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 16,
+    isVisible = obscureText;
+    return StatefulBuilder(
+        builder: (context, setState) {
+          return SizedBox(
+            height: 60,
+            child: TextFormField(
+              initialValue: initialValue,
+              controller: textEditingController,
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                  fillColor: Colors.deepPurpleAccent,
+                  suffixIcon: isVisible ? IconButton(
+                      onPressed: () => setState(() {
+                        obscureText = !obscureText;
+                      }),
+                      icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined)) : null,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                    const BorderSide(color: MyStyles.greyScale9E9E9E, width: 1.0),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    const BorderSide(color: MyStyles.greyScale757575, width: 1.0),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  helperText: helperText ?? '',
+                  hintText: hintText),
+              onSaved: onSave,
+              obscureText: obscureText,
+              obscuringCharacter: '*',
+              cursorColor: MyStyles.greyScale9E9E9E,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: validator,
             ),
-            helperText: helperText ?? '',
-            hintText: hintText),
-        onSaved: onSave,
-        validator: validator,
-      ),
-    );
+          );
+        });
   }
 }
 
@@ -341,7 +454,7 @@ class InputCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           ...(children.map((e) {
@@ -350,11 +463,31 @@ class InputCard extends StatelessWidget {
               child: e,
             );
           }).toList()),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
         ],
       ),
     );
   }
+}
+
+Widget _customTextField(String label) {
+  return SizedBox(
+    child: Container(
+      // margin: const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 0),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8, top: 8),
+      decoration: BoxDecoration(
+          border: Border.all(color: MyStyles.greyScaleF4F4F4),
+          borderRadius: BorderRadius.circular(5.0),
+          color: MyStyles.greyScaleF4F4F4),
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: MyStyles.kTextStyleBody1.copyWith(color: Colors.black),
+        ),
+      ),
+    ),
+  );
 }
