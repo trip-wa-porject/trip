@@ -49,9 +49,9 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
       ),
     );
 
-    IconStyleData iconStyleData = IconStyleData(
+    IconStyleData iconStyleData = const IconStyleData(
       icon: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
         child: Icon(Icons.keyboard_arrow_down),
       ),
       iconDisabledColor: MyStyles.greyScale757575,
@@ -67,8 +67,8 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
           child: Padding(
             padding: hintPadding,
             child: Text(
-              '${title}',
-              style: TextStyle(
+              title,
+              style: const TextStyle(
                 fontSize: 14,
                 color: MyStyles.greyScale757575,
               ),
@@ -109,14 +109,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
                     //     const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       children: [
-                        _isSelected
-                            ? const Icon(
-                                Icons.check_box_rounded,
-                                color: MyStyles.tripTertiary,
-                              )
-                            : const Icon(
-                                Icons.check_box_outline_blank,
-                              ),
+                        getSelectedItemIcon(mode, _isSelected),
                         const SizedBox(width: 8),
                         Text(
                           item.toString(),
@@ -159,5 +152,31 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
         iconStyleData: iconStyleData,
       ),
     );
+  }
+}
+
+Widget getSelectedItemIcon(CheckBoxOptionMode mode, bool isSelected) {
+  if (mode == CheckBoxOptionMode.single) {
+    if (isSelected) {
+      return const Icon(
+        Icons.radio_button_checked,
+        color: MyStyles.tripTertiary,
+      );
+    } else {
+      return const Icon(
+        Icons.radio_button_off,
+      );
+    }
+  } else {
+    if (isSelected) {
+      return const Icon(
+        Icons.check_box_rounded,
+        color: MyStyles.tripTertiary,
+      );
+    } else {
+      return const Icon(
+        Icons.check_box_outline_blank,
+      );
+    }
   }
 }
