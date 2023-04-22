@@ -229,11 +229,11 @@ enum AreaOption {
 }
 
 enum PriceOption {
-  +  Range1(r"NT$ 0 - NT$3,000", 0),
-  +  Range2(r'NT$ 3,000 - NT$5,000', 1),
-  +  Range3(r'NT$ 5,000 - NT$7,000', 2),
-  +  Range4(r'NT$ 7,000 - NT$10,000', 3),
-  +  Range5(r'NT$ 10,000以上', 4);
+  Range1(r"NT$ 0 - NT$3,000", 0),
+  Range2(r'NT$ 3,000 - NT$5,000', 1),
+  Range3(r'NT$ 5,000 - NT$7,000', 2),
+  Range4(r'NT$ 7,000 - NT$10,000', 3),
+  Range5(r'NT$ 10,000以上', 4);
 
   const PriceOption(this.showedString, this.value);
   final String showedString;
