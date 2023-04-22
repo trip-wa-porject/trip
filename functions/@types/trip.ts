@@ -38,6 +38,7 @@ export interface Trip {
 }
 
 export interface TripFilter {
+  keyword: string
   startDate: number
   endDate: number
   levels: string[]
