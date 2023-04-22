@@ -84,19 +84,19 @@ class ScheduleSelectorController extends GetxController {
       DateTime? endDate = selectedEndDateTime.value;
       if (startDate != null) {
         querys.addAll({
-          "startDateFrom": "${DateFormat('yyyy-MM-dd').format(startDate)}",
+          "startDate": startDate.millisecondsSinceEpoch,
         });
       }
       if (endDate != null) {
         querys.addAll({
-          "startDateTo": "${DateFormat('yyyy-MM-dd').format(endDate)}",
+          "endDate": endDate.millisecondsSinceEpoch,
         });
       }
       List<String> selectedLevels =
           levelOptions.toList().map((e) => e.queryString).toList();
       if (selectedLevels.isNotEmpty) {
         querys.addAll({
-          "level": selectedLevels,
+          "levels": selectedLevels,
         });
       }
 
@@ -111,22 +111,21 @@ class ScheduleSelectorController extends GetxController {
           areaOptions.toList().map((e) => e.showedString).toList();
       if (selectedAreas.isNotEmpty) {
         querys.addAll({
-          "area": selectedAreas,
+          "regions": selectedAreas,
         });
       }
 
       List<int> selectedDays = dayOptions.toList().map((e) => e.value).toList();
       if (selectedDays.isNotEmpty) {
         querys.addAll({
-          "days": selectedDays.first, //TODO修改為複選
+          "day_interval": selectedDays.first, //TODO修改為複選
         });
       }
 
-      List<List<int>> selectedPrices =
-          priceOptions.toList().map((e) => e.range).toList();
+      List<int> selectedPrices = priceOptions.toList().map((e) => e.value).toList();
       if (selectedPrices.isNotEmpty) {
         querys.addAll({
-          "price": selectedPrices.first, //TODO修改為複選
+          "price_intervals": selectedPrices,
         });
       }
 
@@ -230,18 +229,15 @@ enum AreaOption {
 }
 
 enum PriceOption {
-  Range1(r"NT$ 0 - NT$3,000", 0, 3000),
-  Range2(r'NT$ 3,000 - NT$5,000', 3000, 5000),
-  Range3(r'NT$ 5,000 - NT$7,000', 5000, 7000),
-  Range4(r'NT$ 7,000 - NT$10,000', 7000, 10000),
-  Range5(r'NT$ 10,000以上', 10000, 100000);
+  +  Range1(r"NT$ 0 - NT$3,000", 0),
+  +  Range2(r'NT$ 3,000 - NT$5,000', 1),
+  +  Range3(r'NT$ 5,000 - NT$7,000', 2),
+  +  Range4(r'NT$ 7,000 - NT$10,000', 3),
+  +  Range5(r'NT$ 10,000以上', 4);
 
-  const PriceOption(this.showedString, this.start, this.end);
+  const PriceOption(this.showedString, this.value);
   final String showedString;
-  final int start;
-  final int end;
-
-  List<int> get range => [start, end];
+  final int value;
 
   @override
   String toString() => showedString;
