@@ -232,7 +232,7 @@ class SignUpController extends GetxController {
   }
 
   retrieveZipCode() async {
-    final String response = await rootBundle.loadString('/zip_code.json');
+    final String response = await rootBundle.loadString('assets/zip_code.json');
     var zipcode = json.decode(response);
     zipCodeList = ZipCodeModelResponse.fromJson(zipcode).list;
 
