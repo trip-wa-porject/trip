@@ -47,4 +47,16 @@ class Registration {
   }
 
   Map<String, dynamic> toJson() => _$RegistrationToJson(this);
+
+  static Registration sample() {
+    return Registration(
+        '808080',
+        'userId',
+        1234,
+        DateTime.now().add(Duration(days: 3)),
+        {},
+        0,
+        DateTime.now().subtract(Duration(minutes: 10)),
+        DateTime.now());
+  }
 }

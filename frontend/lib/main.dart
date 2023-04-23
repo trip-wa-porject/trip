@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/api_test_page/api_test.dart';
+import 'package:tripflutter/screens/home_page/home_page.dart';
+import 'package:tripflutter/screens/schedule_manager/schedule_manager_page.dart';
 import 'component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_manager/pay.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
@@ -18,6 +20,7 @@ import 'modules/auth_service.dart';
 import 'modules/home_controller.dart';
 import 'screens/auth_login_pages/login_page.dart';
 import 'screens/auth_signup_pages/signup_page.dart';
+import 'screens/gpx_page/gpx_page.dart';
 import 'screens/schedule_detail/schdule_detail.dart';
 import 'screens/schedule_selector/schedule_selector.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -66,8 +69,12 @@ class MyApp extends StatelessWidget {
           ThemeData(brightness: Brightness.light).textTheme,
         ),
       ),
-      initialRoute: AppLinks.SCHEDUL,
+      initialRoute: GetPlatform.isWeb ? AppLinks.SCHEDUL : AppLinks.HOME,
       getPages: [
+        GetPage(
+          name: AppLinks.HOME,
+          page: () => const HomePage(), //app home page
+        ),
         GetPage(
           name: AppLinks.SIGNUP,
           page: () => const SignUpPage(),
@@ -90,11 +97,19 @@ class MyApp extends StatelessWidget {
                     middlewares: [PayMiddleware()],
                   ),
                 ]),
+            GetPage(
+              name: AppLinks.MANAGEMENT,
+              page: () => ScheduleManagerPage(),
+            ),
           ],
         ),
         GetPage(
           name: AppLinks.LOGIN,
           page: () => const LoginPage(),
+        ),
+        GetPage(
+          name: AppLinks.GPX,
+          page: () => const GpxPage(),
         ),
         GetPage(
           name: AppLinks.TEST,
