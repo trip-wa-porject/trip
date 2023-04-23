@@ -58,7 +58,7 @@ class _MapState extends State<MapWidget> {
 
   void loadGpxPointsData() async {
     String gpxData =
-    await DefaultAssetBundle.of(context).loadString('/gpx.txt');
+    await DefaultAssetBundle.of(context).loadString('assets/gpx.txt');
     Gpx gpx = GpxReader().fromString(gpxData);
     for (var track in gpx.trks) {
       for (var segment in track.trksegs) {
