@@ -3,15 +3,15 @@ import type { Trip, TripFilter } from '@types'
 const priceInterval: {
   [key: number]: number[]
 } = {
-  1: [0, 3000],
-  2: [3000, 5000],
-  3: [5000, 7000],
-  4: [7000, 10000],
-  5: [10000]
+  0: [0, 3000],
+  1: [3000, 5000],
+  2: [5000, 7000],
+  3: [7000, 10000],
+  4: [10000],
 }
 
-const checkPriceInterval = (price: number, price_interval: number[]) => {
-  return price_interval.some((e) => {
+const checkPriceInterval = (price: number, price_intervals: number[]) => {
+  return price_intervals.some((e) => {
     if (priceInterval[e].length === 1) {
       return price > priceInterval[e][0]
     } else {
@@ -22,7 +22,7 @@ const checkPriceInterval = (price: number, price_interval: number[]) => {
 
 const checkDayInterval = (difference: number, dayInterval: 1 | 2 | 3 | 4) => {
   if (dayInterval < 4) {
-    return difference <= dayInterval
+    return difference === dayInterval
   } else {
     return difference > 3
   }
@@ -58,12 +58,17 @@ export default function filter(filters: Partial<TripFilter>, data: Trip) {
           : true
       }
       case 'day_interval': {
-        const difference = Math.abs(
+        const difference = Math.ceil(
           (data.endDate - data.startDate) / (24 * 60 * 60 * 1000)
         )
 
         return filters?.day_interval
           ? checkDayInterval(difference, filters.day_interval)
+          : true
+      }
+      case 'keyword': {
+        return filters.keyword
+          ? data.title.indexOf(filters.keyword) !== -1
           : true
       }
       default: {

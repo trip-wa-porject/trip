@@ -105,7 +105,7 @@ export const createRegister = https.onCall(async (data: Register) => {
     throw new HttpsError('invalid-argument', 'Not enough information')
   }
 
-  const { tripId, userId, status } = data
+  const { tripId, userId } = data
 
   const checker = await checkUserAndTripExists({ tripId, userId })
   if (!checker) {
@@ -149,7 +149,7 @@ export const createRegister = https.onCall(async (data: Register) => {
       for (let i = 0; i < arr.length; i++) {
         await promiseHandler[i]()
       }
-      throw new HttpsError('unknown', 'Server error')
+      throw new HttpsError('not-found', 'tripId or userId not found')
     }
 
     const now = new Date()
@@ -157,7 +157,7 @@ export const createRegister = https.onCall(async (data: Register) => {
     try {
       const addRegister = await ref.add({
         ...data,
-        status: status,
+        status: 0,
         paymentExpireDate: now.getTime() + 432000000,
         price: checker.price,
         createDate: now.getTime(),
@@ -196,9 +196,21 @@ export const updateRegister = https.onCall(
 
     const { registerId, status, paymentInfo } = data
 
+    if (status !== 1) {
+      throw new HttpsError('invalid-argument', 'status not allowed')
+    }
+
     const checker = await ref.doc(registerId).get()
     if (!checker.exists) {
       throw new HttpsError('not-found', "Register doesn't exist")
+    }
+
+    const may_update_register = checker.data()
+    if (may_update_register && may_update_register.status !== 0) {
+      throw new HttpsError(
+        'invalid-argument',
+        'register status not allowed to change'
+      )
     }
 
     checker.ref.update({ status, paymentInfo })
@@ -211,6 +223,39 @@ export const updateRegister = https.onCall(
     }
   }
 )
+
+// export const cancelRegister = https.onCall(
+//   async (data: { registerId: string }) => {
+//     const keys = Object.keys(data)
+//     if (keys.length > 1 && !keys.includes('registerId')) {
+//       throw new HttpsError('invalid-argument', 'argument too much or not include enougn information')
+//     }
+
+//     const { registerId } = data
+
+//     const checker = await ref.doc(registerId).get()
+//     if (!checker.exists) {
+//       throw new HttpsError('not-found', "Register doesn't exist")
+//     }
+
+//     const may_update_register = checker.data()
+//     if (may_update_register && may_update_register.status !== ) {
+//       throw new HttpsError(
+//         'invalid-argument',
+//         'register status not allowed to change'
+//       )
+//     }
+
+//     checker.ref.update({ status, paymentInfo })
+//     try {
+//       const _ = await checker.ref.update({ status, paymentInfo })
+
+//       return 'ok'
+//     } catch {
+//       return {}
+//     }
+//   }
+// )
 
 export const getUserRegisters = https.onCall(
   async (data: { userId: string }) => {
