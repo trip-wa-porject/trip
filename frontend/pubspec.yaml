@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
@@ -51,6 +51,7 @@ dependencies:
   gpx: ^2.2.1
   easy_rich_text: ^1.2.0
   url_launcher: ^6.1.10
+  stylish_bottom_bar: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,7 @@ dev_dependencies:
   json_serializable: ^6.6.1
   json_annotation: ^4.8.0
   build_runner: any
+  package_rename: ^1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -108,3 +110,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+package_rename_config:
+  android:
+    app_name: Mountain
+    package_name: com.waproject.mountain.dev
+
+  ios:
+    app_name: Mountain
+    bundle_name: Runner
+    package_name: com.waproject.mountain.dev

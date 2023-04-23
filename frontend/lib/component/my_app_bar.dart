@@ -33,6 +33,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   InkWell(
                     onTap: () {
+                      Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+                    },
+                    child: Text(
+                      '行程管理',
+                      style: appBarTextStyle,
+                    ),
+                  ),
+                  appBarSpacer,
+                  InkWell(
+                    onTap: () {
                       Get.toNamed('${AppLinks.SCHEDUL}');
                     },
                     child: Text(
