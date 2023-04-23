@@ -20,7 +20,7 @@ class SignUpContentThree extends GetView<SignUpController> {
           //   style: MyStyles.kTextStyleH3,
           //   textAlign: TextAlign.center,
           // ),
-          Text(
+          const Text(
             '就差一步！',
             style: MyStyles.kTextStyleH3,
             textAlign: TextAlign.center,
@@ -33,10 +33,10 @@ class SignUpContentThree extends GetView<SignUpController> {
                 color: MyStyles.greyScale000000,
               ),
               children: [
-                TextSpan(text: '請透過以下'),
+                const TextSpan(text: '請透過以下'),
                 TextSpan(
                   text: '連結',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: MyStyles.tripTertiary,
                     decoration: TextDecoration.underline,
                   ),
@@ -45,7 +45,7 @@ class SignUpContentThree extends GetView<SignUpController> {
                       controller.goToMailer();
                     },
                 ),
-                TextSpan(text: '前往信箱驗證以完成會員註冊'),
+                const TextSpan(text: '前往信箱驗證以完成會員註冊'),
               ],
             ),
           ),
@@ -64,7 +64,7 @@ class SignUpContentThree extends GetView<SignUpController> {
                 color: Colors.black54,
               ),
               children: [
-                TextSpan(text: '若您十分鐘內尚未收到驗證信，請點擊'),
+                const TextSpan(text: '若您十分鐘內尚未收到驗證信，請點擊'),
                 TextSpan(
                   text: '重新傳送',
                   style: MyStyles.kTextStyleH3.copyWith(

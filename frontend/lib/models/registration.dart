@@ -15,6 +15,9 @@ class Registration {
   final int? price;
 
   //付款期限截止日
+  @JsonKey(
+      fromJson: dateTimeFromTimestamp,
+      toJson: timestampFromDateTimeFromTimestamp)
   final DateTime? paymentExpireDate;
 
   //付款方式
@@ -44,4 +47,16 @@ class Registration {
   }
 
   Map<String, dynamic> toJson() => _$RegistrationToJson(this);
+
+  static Registration sample() {
+    return Registration(
+        '808080',
+        'userId',
+        1234,
+        DateTime.now().add(Duration(days: 3)),
+        {},
+        0,
+        DateTime.now().subtract(Duration(minutes: 10)),
+        DateTime.now());
+  }
 }

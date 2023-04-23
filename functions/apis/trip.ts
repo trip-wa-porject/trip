@@ -42,12 +42,13 @@ const searchTripsFromFireStore = async (
     'regions',
     'price_intervals',
     'day_interval',
+    'keyword',
   ]
 
   const data_keys = Object.keys(data)
 
   if (data_keys.length > 0 && data_keys.every((e) => filterKeys.includes(e))) {
-    throw new HttpsError('invalid-argument', 'invalid search keyss')
+    throw new HttpsError('invalid-argument', 'invalid search keys')
   }
 
   const filters = {

@@ -35,7 +35,9 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       title: "類型",
                       width: 125,
                       selectedItems: controller.typeOptions.toList(),
+                      borderColor: Colors.transparent,
                       allItems: TypeOption.values,
+                      mode: CheckBoxOptionMode.multiple,
                       onChangeCallback: (List<TypeOption> value) {
                         controller.selectTypeOption(value);
                       },
@@ -51,6 +53,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       allItems: LevelOption.values,
                       mode: CheckBoxOptionMode.multiple,
                       selectedItems: controller.levelOptions.toList(),
+                      borderColor: Colors.transparent,
                       onChangeCallback: (List<LevelOption> value) {
                         controller.selectLevelOption(value);
                       },
@@ -65,6 +68,8 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       width: 120,
                       allItems: AreaOption.values,
                       selectedItems: controller.areaOptions.toList(),
+                      mode: CheckBoxOptionMode.multiple,
+                      borderColor: Colors.transparent,
                       onChangeCallback: (value) {
                         controller.selectAreaOption(value);
                       },
@@ -78,8 +83,9 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       title: "天數",
                       width: 120,
                       allItems: DayOption.values,
-                      mode: CheckBoxOptionMode.multiple,
+                      mode: CheckBoxOptionMode.single,
                       selectedItems: controller.dayOptions.toList(),
+                      borderColor: Colors.transparent,
                       onChangeCallback: (value) {
                         controller.selectDayOption(value);
                       },
@@ -94,6 +100,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       width: 240,
                       allItems: PriceOption.values,
                       selectedItems: controller.priceOptions.toList(),
+                      borderColor: Colors.transparent,
                       mode: CheckBoxOptionMode.multiple,
                       onChangeCallback: (value) {
                         controller.selectPriceOption(value);
@@ -116,6 +123,8 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       width: 360,
                       selectedDate: controller.selectedStartDateTime.value,
                       lastDate: controller.selectedEndDateTime.value,
+                      isClockwise: true,
+                      borderColor: Colors.transparent,
                       onDateChangeCallback: (DateTime dateTime) {
                         controller.selectStartDate(dateTime);
                       },
@@ -130,6 +139,8 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       width: 360,
                       startDate: controller.selectedStartDateTime.value,
                       selectedDate: controller.selectedEndDateTime.value,
+                      isClockwise: true,
+                      borderColor: Colors.transparent,
                       onDateChangeCallback: (DateTime dateTime) {
                         controller.selectEndDate(dateTime);
                       },

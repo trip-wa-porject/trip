@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:tripflutter/utils/date_format_utils.dart';
 
 import '../utils/utils.dart';
 
@@ -108,6 +109,10 @@ class ScheduleModel {
     required this.information,
     required this.status,
   });
+
+  getDateRageString() {
+    return DateFormatUtils.getDateWithFullDateTemplate(startDate!, endDate!);
+  }
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return _$ScheduleModelFromJson(json);

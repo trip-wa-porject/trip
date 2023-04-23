@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -60,10 +57,21 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCJaV8FuAbrRiDePsHBp-gxxFQayT1J2Yw',
-    appId: '1:139433871572:android:b420da8a297f2e668e9341',
+    apiKey: String.fromEnvironment('FLUTTER_APIKEY_ANDROID'),
+    appId: '1:139433871572:android:acf8cd2e94eb074f8e9341',
     messagingSenderId: '139433871572',
     projectId: 'wa-project-mountain',
     storageBucket: 'wa-project-mountain.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: String.fromEnvironment('FLUTTER_APIKEY_IOS'),
+    appId: '1:139433871572:ios:13d655e3cd7c37d08e9341',
+    messagingSenderId: '139433871572',
+    projectId: 'wa-project-mountain',
+    storageBucket: 'wa-project-mountain.appspot.com',
+    iosClientId:
+        '139433871572-gev37mhgvmqdbibl8jknki4l3tjjr974.apps.googleusercontent.com',
+    iosBundleId: 'com.waproject.mountain.dev',
   );
 }

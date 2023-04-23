@@ -11,6 +11,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     required this.allItems,
     required this.onChangeCallback,
     required this.selectedItems,
+    required this.borderColor,
     this.mode = CheckBoxOptionMode.single,
     this.width = 100,
   }) : super(key: key);
@@ -18,6 +19,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
   final String title;
   final List<T> allItems;
   final List<T> selectedItems;
+  final Color borderColor;
   final void Function(List<T>) onChangeCallback;
   final CheckBoxOptionMode mode;
   final double width;
@@ -28,6 +30,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     ButtonStyleData buttonStyleData = ButtonStyleData(
       decoration: BoxDecoration(
         color: Colors.white,
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(4.0),
       ),
       height: 40,
@@ -46,15 +49,16 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
       ),
     );
 
-    IconStyleData iconStyleData = IconStyleData(
+    IconStyleData iconStyleData = const IconStyleData(
       icon: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Icon(Icons.keyboard_arrow_up),
+        padding: EdgeInsets.all(8.0),
+        child: Icon(Icons.keyboard_arrow_down),
       ),
       iconDisabledColor: MyStyles.greyScale757575,
       iconEnabledColor: MyStyles.greyScale757575,
       iconSize: 16,
     );
+
     return DropdownButtonHideUnderline(
       child: CustomizedDropdownButton(
         isExpanded: true,
@@ -63,15 +67,14 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
           child: Padding(
             padding: hintPadding,
             child: Text(
-              '${title}',
-              style: TextStyle(
+              title,
+              style: const TextStyle(
                 fontSize: 14,
                 color: MyStyles.greyScale757575,
               ),
             ),
           ),
         ),
-
         items: allItems.map((item) {
           return DropdownMenuItem<T>(
             value: item,
@@ -79,14 +82,23 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
             enabled: false,
             child: StatefulBuilder(
               builder: (context, menuSetState) {
-                final _isSelected = selectedItems.contains(item);
+                var _isSelected = selectedItems.contains(item);
                 return InkWell(
                   onTap: () {
+                    if (mode == CheckBoxOptionMode.single) {
+                      //每次點選item就清空一次selectedItems List,就會儲存保有選擇單一選項
+                      _isSelected = false;
+                      selectedItems.clear();
+                      //單選時,每確認點擊一個選項就收合menu
+                      Navigator.pop(context);
+                      menuSetState(() => {});
+                    }
+
+                    //新點擊的選項狀態
                     _isSelected
                         ? selectedItems.remove(item)
                         : selectedItems.add(item);
-                    //This rebuilds the StatefulWidget to update the button's text
-                    // setState(() {});
+
                     //This rebuilds the dropdownMenu Widget to update the check mark
                     menuSetState(() {});
                     onChangeCallback(selectedItems);
@@ -97,14 +109,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
                     //     const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       children: [
-                        _isSelected
-                            ? Icon(
-                                Icons.check_box_rounded,
-                                color: MyStyles.tripTertiary,
-                              )
-                            : const Icon(
-                                Icons.check_box_outline_blank,
-                              ),
+                        getSelectedItemIcon(mode, _isSelected),
                         const SizedBox(width: 8),
                         Text(
                           item.toString(),
@@ -147,5 +152,31 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
         iconStyleData: iconStyleData,
       ),
     );
+  }
+}
+
+Widget getSelectedItemIcon(CheckBoxOptionMode mode, bool isSelected) {
+  if (mode == CheckBoxOptionMode.single) {
+    if (isSelected) {
+      return const Icon(
+        Icons.radio_button_checked,
+        color: MyStyles.tripTertiary,
+      );
+    } else {
+      return const Icon(
+        Icons.radio_button_off,
+      );
+    }
+  } else {
+    if (isSelected) {
+      return const Icon(
+        Icons.check_box_rounded,
+        color: MyStyles.tripTertiary,
+      );
+    } else {
+      return const Icon(
+        Icons.check_box_outline_blank,
+      );
+    }
   }
 }

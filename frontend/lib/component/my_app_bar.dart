@@ -28,9 +28,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Logo(),
+              if (MediaQuery.of(context).size.width > 700) const Logo(),
               Row(
                 children: [
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+                    },
+                    child: Text(
+                      '行程管理',
+                      style: appBarTextStyle,
+                    ),
+                  ),
+                  appBarSpacer,
                   InkWell(
                     onTap: () {
                       Get.toNamed('${AppLinks.SCHEDUL}');

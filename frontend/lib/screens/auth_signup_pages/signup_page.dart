@@ -1,5 +1,6 @@
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/component/footer.dart';
@@ -40,6 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Material(
         child: Center(
           child: ListView(
+            controller: controller.scrollController,
             children: [
               BgImage(
                 child: Center(
@@ -68,15 +70,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              Obx(
-                () => LinearProgressIndicator(
-                  value: (controller.steps.value + 1) / 3,
-                  minHeight: 14,
-                  backgroundColor: MyStyles.green1,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(MyStyles.tripTertiary),
-                ),
-              ),
               Center(
                 child: LayoutBuilder(builder: (context, constrains) {
                   return Container(
@@ -101,12 +94,28 @@ class _SignUpPageState extends State<SignUpPage> {
                                       isCurrentStep:
                                           controller.steps.value >= 0,
                                     ),
+                                    Obx(() => MyProgressBar(
+                                          progress: controller
+                                                  .step0CheckedStates
+                                                  .where((p0) =>
+                                                      p0.checked == true)
+                                                  .length /
+                                              4,
+                                        )),
                                     StepContainer(
                                       stepIndex: 1,
                                       title: '填寫會員資料',
                                       isCurrentStep:
                                           controller.steps.value >= 1,
                                     ),
+                                    Obx(() => MyProgressBar(
+                                          progress: controller
+                                                  .step1CheckedStates
+                                                  .where((p0) =>
+                                                      p0.checked == true)
+                                                  .length /
+                                              3,
+                                        )),
                                     StepContainer(
                                       stepIndex: 2,
                                       title: '驗證 E-mail',
@@ -229,7 +238,7 @@ class StepContainer extends StatelessWidget {
     return Container(
       width: 307,
       height: 110,
-      margin: const EdgeInsets.symmetric(vertical: 12.0),
+      // margin: const EdgeInsets.symmetric(vertical: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: isCurrentStep ? MyStyles.tripTertiary : MyStyles.green3,
@@ -282,6 +291,9 @@ class _DropdownTermState extends State<DropdownTerm> {
   @override
   void initState() {
     scrollController.addListener(scrollListener);
+    if (widget.checkState.checked) {
+      checkable = true;
+    }
     super.initState();
   }
 
@@ -371,23 +383,64 @@ class _DropdownTermState extends State<DropdownTerm> {
                 alignment: Alignment.centerRight,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: SizedBox(
-                    width: 77,
-                    child: MyFilledButton(
-                      style: MyFilledButton.style1(),
-                      label: '同意',
-                      onPressed: checkable
-                          ? () {
-                              Get.find<SignUpController>()
-                                  .step0CheckCallback(checkState.index);
-                            }
-                          : null,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '請詳閱內容並點選同意',
+                        style: MyStyles.kTextStyleSubtitle1.copyWith(
+                          color: MyStyles.tripTertiary,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 31.5,
+                      ),
+                      SizedBox(
+                        width: 77,
+                        child: MyFilledButton(
+                          style: MyFilledButton.style1(),
+                          label: '同意',
+                          onPressed: checkable
+                              ? () {
+                                  Get.find<SignUpController>()
+                                      .step0CheckCallback(checkState.index);
+                                }
+                              : null,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MyProgressBar extends StatelessWidget {
+  const MyProgressBar({Key? key, this.progress = 0.5}) : super(key: key);
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      width: 14,
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            MyStyles.tripTertiary,
+            MyStyles.tripTertiary,
+            MyStyles.green1,
+            MyStyles.green1,
+          ],
+          stops: [0, progress, progress, 1],
+        )),
       ),
     );
   }

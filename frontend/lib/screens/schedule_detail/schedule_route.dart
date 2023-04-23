@@ -9,7 +9,7 @@ import '../../consts.dart';
 import 'dart:convert' show utf8;
 
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' show AnchorElement;
+// import 'dart:html' show AnchorElement;
 
 class ScheduleRoute extends StatelessWidget {
   const ScheduleRoute({Key? key, required this.model}) : super(key: key);
@@ -64,10 +64,10 @@ Widget _createDownloadButton() {
 }
 
 void downloadGpxTextFile(String text, String filename) {
-  AnchorElement()
-    ..href =
-        '${Uri.dataFromString(text, mimeType: 'text/plain', encoding: utf8)}'
-    ..download = filename
-    ..style.display = 'none'
-    ..click();
+  // AnchorElement()
+  //   ..href =
+  //       '${Uri.dataFromString(text, mimeType: 'text/plain', encoding: utf8)}'
+  //   ..download = filename
+  //   ..style.display = 'none'
+  //   ..click();
 }

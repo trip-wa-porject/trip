@@ -138,4 +138,7 @@ class AppLinks {
   static const String SCHEDUL = '/schedule';
   static const String DETAIL = '/detail';
   static const String TEST = "/test";
+  static const String MANAGEMENT = '/management';
+  static const String HOME = '/home';
+  static const String GPX = '/gpx';
 }
