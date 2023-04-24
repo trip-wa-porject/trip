@@ -75,7 +75,7 @@ const searchTripsFromFireStore = async (
       snapshot.forEach((doc) => {
         const rec = doc.data()
 
-        const passfilter = filter(filters, rec as Trip)
+        const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
 
         if (passfilter) {
           result.push({

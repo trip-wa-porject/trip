@@ -71,50 +71,57 @@ This is for wa-project-mountain api documentation
           day_interval?: 1 | 2 | 3 | 4
 
           8. 關鍵字 (搜尋 title)
-          keyword: string
+          keyword?: string
+
+          9. 頁數
+          page?: number
           
         }
 
 + Response 200 (application/json)
 
-        [
-            {
-                  tripId: string
-                  title: string
-                  startDate: number
-                  endDate: number
-                  area: {
-                    city: string
-                    county: string
-                  }[]
-                  type: string
-                  level: 'A' | 'B' | 'C'
-                  roadImage: string
-                  price: number
-                  memberPrice: number
-                  url: string
-                  applicants: string[]
-                  limitation: number
-                  images: string[]
-                  information: {
-                        applyStart: number
-                        applyEnd: number
-                        applyWay: string
-                        gatherPlace: string
-                        gatherTime: number
-                        transportationWay: string
-                        transportationInfo: string
-                        preDepartureMeetingDate: number
-                        preDepartureMeetingPlace: string
-                        memo: string
-                        leader: string
-                        guides: string[]
-                        note: string
-                        arriveSite: string
-                  }
-                  status: number
-            }
-        ]
+        {
+                results: [
+                        {
+                                tripId: string
+                                title: string
+                                startDate: number
+                                endDate: number
+                                area: {
+                                city: string
+                                county: string
+                                }[]
+                                type: string
+                                level: 'A' | 'B' | 'C'
+                                roadImage: string
+                                price: number
+                                memberPrice: number
+                                url: string
+                                applicants: string[]
+                                limitation: number
+                                images: string[]
+                                information: {
+                                                applyStart: number
+                                                applyEnd: number
+                                                applyWay: string
+                                                gatherPlace: string
+                                                gatherTime: number
+                                                transportationWay: string
+                                                transportationInfo: string
+                                                preDepartureMeetingDate: number
+                                                preDepartureMeetingPlace: string
+                                                memo: string
+                                                leader: string
+                                                guides: string[]
+                                                note: string
+                                                arriveSite: string
+                                                }
+                                                status: number
+                                                }
+                ],
+                count: number,
+        }
+        
         
 ## searchTrip [/searchTrip]
 
