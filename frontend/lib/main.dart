@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/api_test_page/api_test.dart';
@@ -46,6 +47,7 @@ void main() async {
       print(e);
     }
   }
+  await GetStorage.init();
 
   Get.put(FirebaseAuthService());
   Get.put(HomeController()); //TODO 廢棄

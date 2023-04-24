@@ -5,5 +5,5 @@ DateTime? dateTimeFromTimestamp(int? timestamp) {
 }
 
 int? timestampFromDateTimeFromTimestamp(DateTime? date) {
-  return date?.millisecond;
+  return date?.millisecondsSinceEpoch;
 }

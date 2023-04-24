@@ -18,7 +18,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     SizedBox appBarSpacer = const SizedBox(width: 24.0);
 
     return AppBar(
-      leading: SizedBox(),
+      leading: null,
+      automaticallyImplyLeading: false,
       backgroundColor: MyStyles.tripTertiary,
       title: Center(
         child: ConstrainedBox(
@@ -159,6 +160,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+      actions: null,
       toolbarHeight: 60,
     );
   }

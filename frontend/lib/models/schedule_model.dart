@@ -120,9 +120,9 @@ class ScheduleModel {
 
   Map<String, dynamic> toJson() => _$ScheduleModelToJson(this);
 
-  static ScheduleModel sample() {
+  static ScheduleModel sample({String? id}) {
     return ScheduleModel(
-      id: '1',
+      id: id ?? '1',
       title: "秀霸線",
       startDate: DateTime(2023, 3, 31), //2023-03-31
       endDate: DateTime(2023, 4, 3),

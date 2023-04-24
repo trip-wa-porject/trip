@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/component/footer.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/models/gpx_model.dart';
 import 'package:tripflutter/models/registration.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
@@ -10,239 +11,286 @@ import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller
 import '../../component/my_app_bar.dart';
 import '../../component/widgets.dart';
 
-class ScheduleManagerPage extends GetResponsiveView {
+class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
   ScheduleManagerPage({Key? key}) : super(key: key);
 
   @override
   Widget? phone() {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('活動行程管理'),
-          titleTextStyle: MyStyles.kTextStyleH4.copyWith(
-            color: Colors.white,
-          ),
-          backgroundColor: MyStyles.tripTertiary,
-          bottom: const TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white,
-            indicatorColor: Colors.white,
-            indicatorSize: TabBarIndicatorSize.tab,
-            tabs: [
-              Tab(
-                text: '已報名',
-              ),
-              Tab(
-                text: '繼續報名',
-              ),
-            ],
-          ),
+    controller.setTabController(2);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('活動行程管理'),
+        titleTextStyle: MyStyles.kTextStyleH4.copyWith(
+          color: Colors.white,
         ),
-        body: TabBarView(
-          children: [
-            ListView(
-              children: [
-                ScheduleStatusCard(
-                  model: ScheduleModel.sample(),
-                  registration: Registration.sample(),
-                  tabStatus: TabStatus.register,
-                )
-              ],
+        backgroundColor: MyStyles.tripTertiary,
+        bottom: TabBar(
+          controller: controller.tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white,
+          indicatorColor: Colors.white,
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabs: const [
+            Tab(
+              text: '已報名',
             ),
-            ListView(
-              children: [
-                ScheduleStatusCard(
-                  model: ScheduleModel.sample(),
-                  registration: Registration.sample(),
-                  tabStatus: TabStatus.pay,
-                )
-              ],
+            Tab(
+              text: '繼續報名',
             ),
           ],
         ),
+      ),
+      body: Obx(
+        () {
+          List<Registration> registrations =
+              controller.userJoinedModel.toList();
+          List<GPXModel> downloadedGpx = controller.downloadedGpx.toList();
+          TabStatus status = TabStatus.register;
+          switch (controller.selectedIndex.value) {
+            case 0:
+              registrations =
+                  registrations.where((p0) => p0.status == 1).toList();
+              status = TabStatus.register;
+              break;
+            case 1:
+              registrations =
+                  registrations.where((p0) => p0.status == 0).toList();
+              status = TabStatus.pay;
+              break;
+            case 2:
+              registrations =
+                  registrations.where((p0) => p0.status == 3).toList();
+              status = TabStatus.cancel;
+              break;
+            case 3:
+              registrations =
+                  registrations.where((p0) => p0.status == 3).toList();
+              status = TabStatus.deleted;
+              break;
+            default:
+          }
+
+          //已付款
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: registrations.length,
+            itemBuilder: (ctx, index) {
+              return Center(
+                child: FutureBuilder<ScheduleModel?>(
+                  future:
+                      controller.getOneTripData(registrations[index].tripId),
+                  builder: (ctx, snapshot) {
+                    if (snapshot.hasData && snapshot.data != null) {
+                      return ScheduleStatusCard(
+                        model: snapshot.data!,
+                        registration: registrations[index],
+                        tabStatus: status,
+                        gpxModel: downloadedGpx.firstWhereOrNull((element) =>
+                            element.tripId == registrations[index].tripId),
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
 
   @override
   Widget? desktop() {
+    controller.setTabController(4);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
       appBar: const MyAppBar(),
-      body: DefaultTabController(
-        length: 4,
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 80,
-            ),
-            const Center(child: MyBackButton()),
-            const SizedBox(
-              height: 52,
-            ),
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: kCardWidth),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '活動行程管理',
-                    style: MyStyles.kTextStyleH2Bold
-                        .copyWith(color: MyStyles.tripTertiary),
-                  ),
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          const SizedBox(
+            height: 80,
+          ),
+          const Center(child: MyBackButton()),
+          const SizedBox(
+            height: 52,
+          ),
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: kCardWidth),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '活動行程管理',
+                  style: MyStyles.kTextStyleH2Bold
+                      .copyWith(color: MyStyles.tripTertiary),
                 ),
               ),
             ),
-            const SizedBox(
-              height: 40,
-            ),
-            Center(
-              child: SizedBox(
-                width: 1160,
-                child: Builder(builder: (context) {
-                  double borderWidth = 0.5;
-                  Color borderColor = MyStyles.tripPrimary;
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 244, 244, 244),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                      border:
-                          Border.all(color: borderColor, width: borderWidth),
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          Center(
+            child: SizedBox(
+              width: 1160,
+              child: Builder(builder: (context) {
+                double borderWidth = 0.5;
+                Color borderColor = MyStyles.tripPrimary;
+                return Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 244, 244, 244),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10.0),
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    child: TabBar(
-                      labelPadding: const EdgeInsets.all(0),
-                      labelColor: Colors.black,
-                      unselectedLabelColor: Colors.black,
-                      indicatorWeight: 0,
-                      labelStyle: MyStyles.kTextStyleH3Bold.copyWith(),
-                      unselectedLabelStyle: MyStyles.kTextStyleH3.copyWith(),
-                      indicator: const BoxDecoration(
-                        color: Colors.orange,
-                        backgroundBlendMode: BlendMode.dstOver,
+                    border: Border.all(color: borderColor, width: borderWidth),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: TabBar(
+                    controller: controller.tabController,
+                    labelPadding: const EdgeInsets.all(0),
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.black,
+                    indicatorWeight: 0,
+                    labelStyle: MyStyles.kTextStyleH3Bold.copyWith(),
+                    unselectedLabelStyle: MyStyles.kTextStyleH3.copyWith(),
+                    indicator: const BoxDecoration(
+                      color: Colors.orange,
+                      backgroundBlendMode: BlendMode.dstOver,
+                    ),
+                    tabs: [
+                      Tab(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: borderColor,
+                              width: borderWidth,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                            ),
+                          ),
+                          child: const Center(
+                            child: const Text('已報名'),
+                          ),
+                        ),
                       ),
-                      tabs: [
-                        Tab(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: borderColor,
-                                width: borderWidth,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                              ),
-                            ),
-                            child: const Center(
-                              child: const Text('已報名'),
+                      Tab(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: borderColor,
+                              width: borderWidth,
                             ),
                           ),
-                        ),
-                        Tab(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: borderColor,
-                                width: borderWidth,
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text('繼續報名'),
-                            ),
+                          child: const Center(
+                            child: Text('繼續報名'),
                           ),
                         ),
-                        Tab(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: borderColor,
-                                width: borderWidth,
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text('已取消'),
+                      ),
+                      Tab(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: borderColor,
+                              width: borderWidth,
                             ),
                           ),
-                        ),
-                        Tab(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: borderColor,
-                                width: borderWidth,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text('退票紀錄'),
-                            ),
+                          child: const Center(
+                            child: Text('已取消'),
                           ),
                         ),
-                      ],
+                      ),
+                      Tab(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: borderColor,
+                              width: borderWidth,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: const Center(
+                            child: Text('退票紀錄'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+          const SizedBox(
+            height: 44,
+          ),
+          Obx(
+            () {
+              List<Registration> registrations =
+                  controller.userJoinedModel.toList();
+              TabStatus status = TabStatus.register;
+              switch (controller.selectedIndex.value) {
+                case 0:
+                  registrations =
+                      registrations.where((p0) => p0.status == 1).toList();
+                  status = TabStatus.register;
+                  break;
+                case 1:
+                  registrations =
+                      registrations.where((p0) => p0.status == 0).toList();
+                  status = TabStatus.pay;
+                  break;
+                case 2:
+                  registrations =
+                      registrations.where((p0) => p0.status == 3).toList();
+                  status = TabStatus.cancel;
+                  break;
+                case 3:
+                  registrations =
+                      registrations.where((p0) => p0.status == 3).toList();
+                  status = TabStatus.deleted;
+                  break;
+                default:
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: registrations.length,
+                itemBuilder: (ctx, index) {
+                  return Center(
+                    child: FutureBuilder<ScheduleModel?>(
+                      future: controller
+                          .getOneTripData(registrations[index].tripId),
+                      builder: (ctx, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxWidth: 1160,
+                            ),
+                            child: ScheduleStatusCard(
+                              model: snapshot.data!,
+                              registration: registrations[index],
+                              tabStatus: status,
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      },
                     ),
                   );
-                }),
-              ),
-            ),
-            const SizedBox(
-              height: 44,
-            ),
-            SizedBox(
-              height: 300,
-              child: TabBarView(
-                children: [
-                  Center(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: kCardWidth),
-                        child: ScheduleStatusCard(
-                          model: ScheduleModel.sample(),
-                          registration: Registration.sample(),
-                          tabStatus: TabStatus.register,
-                        )),
-                  ),
-                  Center(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: kCardWidth),
-                        child: ScheduleStatusCard(
-                          model: ScheduleModel.sample(),
-                          registration: Registration.sample(),
-                          tabStatus: TabStatus.pay,
-                        )),
-                  ),
-                  Center(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: kCardWidth),
-                        child: ScheduleStatusCard(
-                          model: ScheduleModel.sample(),
-                          registration: Registration.sample(),
-                          tabStatus: TabStatus.cancel,
-                        )),
-                  ),
-                  Center(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: kCardWidth),
-                        child: ScheduleStatusCard(
-                          model: ScheduleModel.sample(),
-                          registration: Registration.sample(),
-                          tabStatus: TabStatus.deleted,
-                        )),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 110,
-            ),
-            const Footer(),
-          ],
-        ),
+                },
+              );
+            },
+          ),
+          const SizedBox(
+            height: 110,
+          ),
+          const Footer(),
+        ],
       ),
     );
   }
@@ -262,16 +310,19 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
     required this.model,
     required this.registration,
     required this.tabStatus,
+    this.gpxModel,
   }) : super(alwaysUseBuilder: false);
 
   final ScheduleModel model;
   final Registration registration;
+  final GPXModel? gpxModel;
   final TabStatus tabStatus;
+
   @override
   Widget phone() {
     return Card(
       shape: RoundedRectangleBorder(
-        side: BorderSide(
+        side: const BorderSide(
           color: MyStyles.tripPrimary,
         ),
         borderRadius: BorderRadius.circular(10),
@@ -287,39 +338,64 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
               height: 8,
             ),
             Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: MyFilledButton(
-                    label: '查看行程',
-                    style: MyFilledButton.style1(),
-                  ),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: MyFilledButton(
-                    label: '打開GPX',
-                    style: MyFilledButton.style1(),
-                    onPressed: () {
-                      Get.toNamed(AppLinks.GPX);
-                    },
-                  ),
-                ),
-              ],
+              children: tabStatus == TabStatus.register
+                  ? [
+                      Expanded(
+                        flex: 1,
+                        child: MyFilledButton(
+                          label: '查看行程',
+                          style: MyFilledButton.style1(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: gpxModel == null
+                            ? MyFilledButton(
+                                label: '下載GPX',
+                                style: MyFilledButton.style1(),
+                                onPressed: () async {
+                                  await Get.find<ScheduleManagerController>()
+                                      .downloadGPX(model);
+                                },
+                              )
+                            : MyFilledButton(
+                                label: '打開GPX',
+                                style: MyFilledButton.style1(),
+                                onPressed: () {
+                                  Get.toNamed(AppLinks.GPX);
+                                },
+                              ),
+                      ),
+                    ]
+                  : [
+                      Expanded(
+                        flex: 1,
+                        child: MyFilledButton(
+                          label: '查看行程',
+                          style: MyFilledButton.style1(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: MyFilledButton(
+                          label: '前往繳費',
+                          style: MyFilledButton.style1(),
+                          onPressed: () async {},
+                        ),
+                      ),
+                    ],
             ),
           ],
         ),
       ),
     );
   }
-
-  // @override
-  // Widget desktop() => Container(
-  //     child: Icon(Icons.desktop_windows, size: 75),
-  //     color: screen.isTablet ? Colors.red : Colors.indigo);
 
   List<Widget> getButtons(TabStatus status) {
     switch (status) {
@@ -335,6 +411,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '取消報名',
             style: MyOutlinedButton.style1(),
+          ),
+          const SizedBox(
+            width: 8,
           ),
           MyFilledButton(
             label: '繼續付款',
@@ -484,7 +563,6 @@ class PayTableInCard extends StatelessWidget {
 
     Map<String, String> tableColumn = {
       '繳費編號': '80808000808',
-      '參加人': '陳筱珊',
       '票種': 'VIP會員',
       '付款金額': '2400',
       '繳費狀態': '已繳費',
