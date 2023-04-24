@@ -46,3 +46,28 @@ readHTMLFile(
     })
   }
 )
+
+export const sendEmail = https.onCall(
+  async (data: { tripId: string; userId: string }) => {
+    const keys = Object.keys(data)
+    if (!['tripId', 'userId'].every((e) => keys.includes(e))) {
+      throw new HttpsError(
+        'invalid-argument',
+        'must contains tripId and userId'
+      )
+    }
+
+    if (typeof data?.tripId !== 'string' || typeof data?.userId !== 'string') {
+      throw new HttpsError(
+        'invalid-argument',
+        'type of tripId or userId illegal'
+      )
+    }
+
+    try {
+      return
+    } catch {
+      throw new HttpsError('not-found', "This trip doesn't exist")
+    }
+  }
+)
