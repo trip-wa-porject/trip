@@ -43,6 +43,7 @@ const searchTripsFromFireStore = async (
     'price_intervals',
     'day_interval',
     'keyword',
+    'page',
   ]
 
   const data_keys = Object.keys(data)
@@ -55,14 +56,21 @@ const searchTripsFromFireStore = async (
     levels,
     types,
     regions,
+    page: 0,
     ...data,
   }
 
   const result: Trip[] = []
+  let totalCount: number
 
   await ref
+    .orderBy('startDate')
+    .limit(20)
+    .startAfter(filters.page * 20)
     .get()
     .then((snapshot) => {
+      totalCount = snapshot.docs.length
+
       snapshot.forEach((doc) => {
         const rec = doc.data()
 
@@ -76,7 +84,10 @@ const searchTripsFromFireStore = async (
         }
       })
     })
-    .then(() => result)
+    .then(() => ({
+      total: totalCount || 0,
+      results: result,
+    }))
     .catch(() => [])
 
   return result
