@@ -1,4 +1,4 @@
-import { https } from 'firebase-functions'
+import { https, logger } from 'firebase-functions'
 import type { Trip, TripFilter } from '../@types'
 import { db } from '../auth'
 import filter from './utils'
@@ -33,7 +33,7 @@ const ref = db.collection('trips')
 
 const searchTripsFromFireStore = async (
   data: Partial<TripFilter>
-): Promise<Trip[]> => {
+): Promise<{ results: Trip[]; count: number }> => {
   const filterKeys = [
     'startDate',
     'endDate',
@@ -48,7 +48,8 @@ const searchTripsFromFireStore = async (
 
   const data_keys = Object.keys(data)
 
-  if (data_keys.length > 0 && data_keys.every((e) => filterKeys.includes(e))) {
+  if (data_keys.length > 0 && !data_keys.every((e) => filterKeys.includes(e))) {
+    // 400
     throw new HttpsError('invalid-argument', 'invalid search keys')
   }
 
@@ -61,7 +62,7 @@ const searchTripsFromFireStore = async (
   }
 
   const result: Trip[] = []
-  let totalCount: number
+  let totalCount: number = 0
 
   await ref
     .orderBy('startDate')
@@ -84,13 +85,13 @@ const searchTripsFromFireStore = async (
         }
       })
     })
-    .then(() => ({
-      total: totalCount || 0,
-      results: result,
-    }))
+    .then(() => logger.info('search filters', filters))
     .catch(() => [])
 
-  return result
+  return {
+    results: result,
+    count: totalCount,
+  }
 }
 
 const searchSpecificTrip = async (tripId: string): Promise<Trip> => {
