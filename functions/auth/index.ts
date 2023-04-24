@@ -1,4 +1,5 @@
 import * as firebase from 'firebase-admin'
+import { createTransport } from 'nodemailer'
 import { config } from 'dotenv'
 
 config()
@@ -37,4 +38,13 @@ const app = firebase.initializeApp(
 
 const db = app.firestore()
 
-export { db }
+const mailSetting = createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  auth: {
+    user: 'wa.project.mountain@gmail.com',
+    pass: process.env.APP_PASSWORD,
+  },
+})
+
+export { db, mailSetting }

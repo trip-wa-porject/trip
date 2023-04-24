@@ -1,12 +1,18 @@
-import { createTransport } from 'nodemailer'
-import * as fs from 'fs'
-import * as handlebars from 'handlebars'
+import { readFile } from 'fs'
+import { compile } from 'handlebars'
+import { join } from 'path'
+
+import { mailSetting } from '../auth'
+import { https, logger } from 'firebase-functions'
+import type { Register, Payment, User, Trip } from '../@types'
+import { db } from '../auth'
+import { HttpsError } from 'firebase-functions/v1/auth'
 
 const readHTMLFile = function (
   path: string,
   callback: (...params: any) => any
 ) {
-  fs.readFile(path, { encoding: 'utf-8' }, function (err, html) {
+  readFile(path, { encoding: 'utf-8' }, function (err, html) {
     if (err) {
       callback(err)
     } else {
@@ -15,34 +21,28 @@ const readHTMLFile = function (
   })
 }
 
-const mailSetting = createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  auth: {
-    user: 'wa.project.mountain@gmail.com',
-    pass: 'nbauddvprmtlwuuc',
-  },
-})
-
-readHTMLFile(__dirname + '/index.html', function (err, html) {
-  if (err) {
-    console.log('error reading file', err)
-    return
-  }
-  const template = handlebars.compile(html)
-  const replacements = {}
-  const htmlToSend = template(replacements)
-  console.log(htmlToSend)
-  const mailOptions = {
-    from: 'my@email.com',
-    to: 'asdfg09487@gmail.com',
-    subject: 'test subject',
-    html: htmlToSend,
-  }
-
-  mailSetting.sendMail(mailOptions, function (error, response) {
-    if (error) {
-      console.log(error)
+readHTMLFile(
+  join(__dirname, '../../email-template-maker/build_production/index.html'),
+  function (err, html) {
+    if (err) {
+      console.log('error reading file', err)
+      return
     }
-  })
-})
+    const template = compile(html)
+    const replacements = {}
+    const htmlToSend = template(replacements)
+
+    const mailOptions = {
+      from: 'my@email.com',
+      to: 'asdfg09487@gmail.com',
+      subject: 'test subject',
+      html: htmlToSend,
+    }
+
+    mailSetting.sendMail(mailOptions, function (error, response) {
+      if (error) {
+        console.log(error)
+      }
+    })
+  }
+)
