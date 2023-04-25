@@ -15,8 +15,9 @@ class Logo extends StatelessWidget {
         onTap: () {
           Get.toNamed('${AppLinks.SCHEDUL}');
         },
-        child: Placeholder(
-          color: Colors.white,
+        child: Image.asset(
+          'assets/images/logo.png',
+          fit: BoxFit.contain,
         ),
       ),
     );
