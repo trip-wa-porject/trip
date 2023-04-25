@@ -102,10 +102,10 @@ class ScheduleSelectorController extends GetxController {
       }
 
       List<String> selectedTypes =
-          typeOptions.toList().map((e) => '${e.showedString}步道').toList();
+          typeOptions.toList().map((e) => e.value).toList();
       if (selectedTypes.isNotEmpty) {
         querys.addAll({
-          "type": selectedTypes,
+          "types": selectedTypes,
         });
       }
       List<String> selectedAreas =
@@ -283,26 +283,27 @@ enum DayOption {
 
 enum TypeOption {
   //郊山
-  type1('郊山'),
+  type1('郊山', '郊山步道'),
   //中級山
-  type2('中級山'),
+  type2('中級山', '中級山步道'),
   //百岳
-  type3('百岳'),
+  type3('百岳', '百岳'),
   //海外
-  type4('海外'),
+  type4('海外', '海外'),
   //健行
-  type5('健行'),
+  type5('健行', '健行'),
   //攀岩/攀樹
-  type6('攀岩/攀樹'),
+  type6('攀岩/攀樹', '攀岩/攀樹'),
   //溯溪
-  type7('溯溪'),
+  type7('溯溪', '溯溪'),
   //攝影
-  type8('攝影'),
+  type8('攝影', '攝影'),
   //攝影
-  type9('其他');
+  type9('其他', '其他');
 
-  const TypeOption(this.showedString);
+  const TypeOption(this.showedString, this.value);
   final String showedString;
+  final String value;
 
   @override
   String toString() => showedString;
