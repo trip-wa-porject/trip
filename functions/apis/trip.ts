@@ -1,4 +1,4 @@
-import { https } from 'firebase-functions'
+import { https, logger } from 'firebase-functions'
 import type { Trip, TripFilter } from '../@types'
 import { db } from '../auth'
 import filter from './utils'
@@ -33,7 +33,7 @@ const ref = db.collection('trips')
 
 const searchTripsFromFireStore = async (
   data: Partial<TripFilter>
-): Promise<Trip[]> => {
+): Promise<{ results: Trip[]; count: number }> => {
   const filterKeys = [
     'startDate',
     'endDate',
@@ -43,11 +43,13 @@ const searchTripsFromFireStore = async (
     'price_intervals',
     'day_interval',
     'keyword',
+    'page',
   ]
 
   const data_keys = Object.keys(data)
 
-  if (data_keys.length > 0 && data_keys.every((e) => filterKeys.includes(e))) {
+  if (data_keys.length > 0 && !data_keys.every((e) => filterKeys.includes(e))) {
+    // 400
     throw new HttpsError('invalid-argument', 'invalid search keys')
   }
 
@@ -55,18 +57,25 @@ const searchTripsFromFireStore = async (
     levels,
     types,
     regions,
+    page: 0,
     ...data,
   }
 
   const result: Trip[] = []
+  let totalCount: number = 0
 
   await ref
+    .orderBy('startDate')
+    .limit(20)
+    .startAfter(filters.page * 20)
     .get()
     .then((snapshot) => {
+      totalCount = snapshot.docs.length
+
       snapshot.forEach((doc) => {
         const rec = doc.data()
 
-        const passfilter = filter(filters, rec as Trip)
+        const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
 
         if (passfilter) {
           result.push({
@@ -76,10 +85,13 @@ const searchTripsFromFireStore = async (
         }
       })
     })
-    .then(() => result)
+    .then(() => logger.info('search filters', filters))
     .catch(() => [])
 
-  return result
+  return {
+    results: result,
+    count: totalCount,
+  }
 }
 
 const searchSpecificTrip = async (tripId: string): Promise<Trip> => {

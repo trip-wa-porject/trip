@@ -13,6 +13,7 @@ class ScheduleSelectorController extends GetxController {
   FloatingSearchBarController searchController = FloatingSearchBarController();
   TextEditingController searchTextController = TextEditingController();
   RxBool isLoading = false.obs;
+
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
 
   RxList<AreaOption> areaOptions = <AreaOption>[].obs;
@@ -122,7 +123,8 @@ class ScheduleSelectorController extends GetxController {
         });
       }
 
-      List<int> selectedPrices = priceOptions.toList().map((e) => e.value).toList();
+      List<int> selectedPrices =
+          priceOptions.toList().map((e) => e.value).toList();
       if (selectedPrices.isNotEmpty) {
         querys.addAll({
           "price_intervals": selectedPrices,
@@ -137,10 +139,11 @@ class ScheduleSelectorController extends GetxController {
       }
 
       print(querys);
-      List<Map<String, dynamic>> result =
-          await backendRepository.fetchTrip(querys);
+      Map<String, dynamic> result = await backendRepository.fetchTrip(querys);
+
+      List<dynamic> schduleData = result['results'];
       List<ScheduleModel> list =
-          result.map((e) => ScheduleModel.fromJson(e)).toList();
+          schduleData.map((e) => ScheduleModel.fromJson(e)).toList();
       if (hasSeat.value == true) {
         list = list.where(filter).toList();
       }
@@ -168,9 +171,16 @@ class ScheduleSelectorController extends GetxController {
   searchBarListener() {}
 
   @override
-  void onInit() {
+  void onInit() async {
+    Map<String, dynamic> result = await backendRepository.fetchTrip({});
+
+    List<dynamic> schduleData = result['results'];
     List<ScheduleModel> list =
-        List.generate(2, (index) => ScheduleModel.sampleFromJson());
+        schduleData.map((e) => ScheduleModel.fromJson(e)).toList();
+    if (hasSeat.value == true) {
+      list = list.where(filter).toList();
+    }
+
     scheduleList.assignAll(list);
     searchTextController.addListener(searchBarListener);
     super.onInit();

@@ -16,6 +16,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
   Widget build(BuildContext context) {
     Get.put(ScheduleSelectorController());
     double spacerWidth = 16.0;
+
     return Card(
       elevation: 10.0,
       color: MyStyles.secondaryE1D5C9,
@@ -110,7 +111,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8.0,
             ),
             SizedBox(
@@ -149,7 +150,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16.0,
             ),
             SizedBox(

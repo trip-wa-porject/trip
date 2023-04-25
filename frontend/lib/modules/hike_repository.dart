@@ -8,14 +8,13 @@ abstract class GeneralRepository {}
 class BackendRepository implements GeneralRepository {
   //http://127.0.0.1:5001/wa-project-mountain/us-central1/searchTrips
   //POST https://us-central1-wa-project-mountain.cloudfunctions.net/searchTrips
-  Future<List<Map<String, dynamic>>> fetchTrip(
-      Map<String, dynamic> args) async {
+  Future<Map<String, dynamic>> fetchTrip(Map<String, dynamic> args) async {
     try {
       final result = await FirebaseFunctions.instance
           .httpsCallable('searchTrips')
           .call(args);
-      List data = result.data;
-      return List<Map<String, dynamic>>.from(data);
+      Map<String, dynamic> data = result.data;
+      return data;
     } on FirebaseFunctionsException catch (error) {
       print(error.code);
       print(error.details);
