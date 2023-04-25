@@ -33,7 +33,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
         paintHeight = 470 +
             145 +
             controller.scheduleList.length * kCardHeight +
-            225 +
+            360 +
             kFooterHeight;
       }
       return SingleChildScrollView(
@@ -70,7 +70,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                                 child: SizedBox(
                                   height: kScheduleOptionsHeight,
                                   width: kCardWidth + 8.0,
-                                  child: ScheduleOptions(),
+                                  child: const ScheduleOptions(),
                                 ),
                               ),
                             ),
@@ -124,7 +124,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                                 cacheExtent: kCardHeight,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 4.0),
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: controller.scheduleList.length,
                                 itemBuilder: (c, index) {
                                   return Center(

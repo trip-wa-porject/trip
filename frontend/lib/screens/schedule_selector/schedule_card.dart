@@ -21,7 +21,7 @@ Map<String, String> levelToString = {
   'A': '大眾路線（入門',
   'B': '健腳山友（中級）',
   'C': '艱難路線（進階）',
-  'Ｋ': '特殊行程（事前繳費',
+  'K': '特殊行程（事前繳費',
 };
 
 Map<int, String> intToStatus = {
@@ -102,9 +102,8 @@ class ScheduleCard extends StatelessWidget {
           alignment: const Alignment(-.2, 0),
           // image: AssetImage('assets/images/demo.jpeg'), //TODO 使用真實URL
           image: Image.network(
-            imageUrl != null
-                ? imageUrl
-                : "https://www.thepackablelife.com/wp-content/uploads/2020/01/get-paid-to-hike.jpg",
+            imageUrl ??
+                "https://www.thepackablelife.com/wp-content/uploads/2020/01/get-paid-to-hike.jpg",
             errorBuilder: (ctx, o, s) {
               return Image.asset('assets/images/demo.jpeg');
             },
@@ -153,7 +152,7 @@ class ScheduleCard extends StatelessWidget {
           ),
         ),
         Text(
-          "$title",
+          title,
           maxLines: 1,
           style: MyStyles.kTextStyleH3.copyWith(
             color: MyStyles.greyScale000000,
@@ -166,14 +165,14 @@ class ScheduleCard extends StatelessWidget {
             color: MyStyles.greyScale000000,
           ),
         ),
-        SizedBox(),
+        const SizedBox(),
         Row(
           children: [
             _customTab(true, '${timeDelta}天'),
             const SizedBox(
               width: 12.0,
             ),
-            _customTab(false, '${model.type}'),
+            _customTab(false, model.type),
             const SizedBox(
               width: 12.0,
             ),
@@ -206,14 +205,14 @@ class ScheduleCard extends StatelessWidget {
                 color: MyStyles.greyScale424242,
               ),
               children: <TextSpan>[
-                TextSpan(text: '尚有'),
+                const TextSpan(text: '尚有'),
                 TextSpan(
                   text: '${count.toString()}位',
                   style: MyStyles.kTextStyleH2Bold.copyWith(
                     color: MyStyles.redC80000,
                   ),
                 ),
-                TextSpan(text: '名額'),
+                const TextSpan(text: '名額'),
               ],
             ),
             textScaleFactor: MediaQuery.of(Get.context!).textScaleFactor,
@@ -235,7 +234,7 @@ class ScheduleCard extends StatelessWidget {
             _customButton('了解更多', () {
               Get.find<ScheduleSelectorController>().goToDetail(model);
             }),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             _customButton(

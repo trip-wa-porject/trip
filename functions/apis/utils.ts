@@ -68,7 +68,11 @@ export default function filter(filters: Partial<TripFilter>, data: Trip) {
       }
       case 'keyword': {
         return filters.keyword
-          ? data.title.indexOf(filters.keyword) !== -1
+          ? data.title.indexOf(filters.keyword) !== -1 ||
+              data.tripId.indexOf(filters.keyword) !== -1 ||
+              data.information.guides.some(
+                (e) => e.indexOf(filters.keyword ?? '') !== -1
+              )
           : true
       }
       default: {
