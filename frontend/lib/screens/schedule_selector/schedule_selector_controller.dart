@@ -13,6 +13,7 @@ class ScheduleSelectorController extends GetxController {
   FloatingSearchBarController searchController = FloatingSearchBarController();
   TextEditingController searchTextController = TextEditingController();
   RxBool isLoading = false.obs;
+
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs;
 
   RxList<AreaOption> areaOptions = <AreaOption>[].obs;
@@ -170,9 +171,16 @@ class ScheduleSelectorController extends GetxController {
   searchBarListener() {}
 
   @override
-  void onInit() {
+  void onInit() async {
+    Map<String, dynamic> result = await backendRepository.fetchTrip({});
+
+    List<dynamic> schduleData = result['results'];
     List<ScheduleModel> list =
-        List.generate(2, (index) => ScheduleModel.sampleFromJson());
+        schduleData.map((e) => ScheduleModel.fromJson(e)).toList();
+    if (hasSeat.value == true) {
+      list = list.where(filter).toList();
+    }
+
     scheduleList.assignAll(list);
     searchTextController.addListener(searchBarListener);
     super.onInit();

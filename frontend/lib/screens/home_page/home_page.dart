@@ -30,11 +30,11 @@ class _HomePageState extends State<HomePage> {
         child: PageView(
           controller: controller,
           children: [
-            ScheduleSelector(),
+            const ScheduleSelector(),
             // Center(child: Text('Home')),
             ScheduleManagerPage(),
-            Center(child: Text('Manager')),
-            Center(child: Text('Profile')),
+            const Center(child: Text('Manager')),
+            const Center(child: Text('Profile')),
           ],
         ),
       ),

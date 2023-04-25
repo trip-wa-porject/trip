@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: '登峰造極',
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: MyStyles.tripPrimary,
