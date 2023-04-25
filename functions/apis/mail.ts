@@ -21,53 +21,53 @@ const readHTMLFile = function (
   })
 }
 
-readHTMLFile(
-  join(__dirname, '../../email-template-maker/build_production/index.html'),
-  function (err, html) {
-    if (err) {
-      console.log('error reading file', err)
-      return
-    }
-    const template = compile(html)
-    const replacements = {}
-    const htmlToSend = template(replacements)
+// readHTMLFile(
+//   join(__dirname, '../../email-template-maker/build_production/index.html'),
+//   function (err, html) {
+//     if (err) {
+//       console.log('error reading file', err)
+//       return
+//     }
+//     const template = compile(html)
+//     const replacements = {}
+//     const htmlToSend = template(replacements)
 
-    const mailOptions = {
-      from: '登峰造極 <wa.project.mountain@gmail.com>',
-      to: 'zebrillu@gmail.com',
-      subject: '寄信測試 by WeiChen',
-      html: htmlToSend,
-    }
+//     const mailOptions = {
+//       from: '登峰造極 <wa.project.mountain@gmail.com>',
+//       to: 'zebrillu@gmail.com',
+//       subject: '寄信測試 by WeiChen',
+//       html: htmlToSend,
+//     }
 
-    mailSetting.sendMail(mailOptions, function (error, response) {
-      if (error) {
-        console.log(error)
-      }
-    })
-  }
-)
+//     mailSetting.sendMail(mailOptions, function (error, response) {
+//       if (error) {
+//         console.log(error)
+//       }
+//     })
+//   }
+// )
 
-export const sendEmail = https.onCall(
-  async (data: { tripId: string; userId: string }) => {
-    const keys = Object.keys(data)
-    if (!['tripId', 'userId'].every((e) => keys.includes(e))) {
-      throw new HttpsError(
-        'invalid-argument',
-        'must contains tripId and userId'
-      )
-    }
+// export const sendEmail = https.onCall(
+//   async (data: { tripId: string; userId: string }) => {
+//     const keys = Object.keys(data)
+//     if (!['tripId', 'userId'].every((e) => keys.includes(e))) {
+//       throw new HttpsError(
+//         'invalid-argument',
+//         'must contains tripId and userId'
+//       )
+//     }
 
-    if (typeof data?.tripId !== 'string' || typeof data?.userId !== 'string') {
-      throw new HttpsError(
-        'invalid-argument',
-        'type of tripId or userId illegal'
-      )
-    }
+//     if (typeof data?.tripId !== 'string' || typeof data?.userId !== 'string') {
+//       throw new HttpsError(
+//         'invalid-argument',
+//         'type of tripId or userId illegal'
+//       )
+//     }
 
-    try {
-      return
-    } catch {
-      throw new HttpsError('not-found', "This trip doesn't exist")
-    }
-  }
-)
+//     try {
+//       return
+//     } catch {
+//       throw new HttpsError('not-found', "This trip doesn't exist")
+//     }
+//   }
+// )
