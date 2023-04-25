@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
@@ -108,8 +109,8 @@ class BackendRepository implements GeneralRepository {
       final result = await FirebaseFunctions.instance
           .httpsCallable('getUserRegisters')
           .call({'userId': userId});
-      List data = result.data;
-      return List<Map<String, dynamic>>.from(data);
+      return List<Map<String, dynamic>>.from(
+          jsonDecode(jsonEncode(result.data)));
     } on FirebaseFunctionsException catch (error) {
       print(error.code);
       print(error.details);

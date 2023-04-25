@@ -1,20 +1,32 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/models/registration.dart';
 import 'package:tripflutter/modules/hike_repository.dart';
 import 'package:tripflutter/screens/auth_login_pages/login_dialog.dart';
+import '../../models/gpx_model.dart';
 import '../../models/schedule_model.dart';
 import '../../modules/auth_service.dart';
 import '../../modules/home_controller.dart';
 
-class ScheduleManagerController extends GetxController {
+class ScheduleManagerController extends GetxController
+    with GetTickerProviderStateMixin {
   final FirebaseAuthService _firebaseAuthService =
       Get.find<FirebaseAuthService>(); //TODO 思考一下需要放嗎
   final BackendRepository repository = BackendRepository();
+  final box = GetStorage();
 
   RxList<Registration> userJoinedModel = RxList<Registration>([]);
+  RxList<GPXModel> downloadedGpx = RxList<GPXModel>();
+  RxList<ScheduleModel> downloadedTrips = RxList<ScheduleModel>();
+
+  RxInt selectedIndex = 0.obs;
+  late TabController tabController;
+  int? tabLength;
 
   goToPayPage(String eventId) {
     Get.toNamed(
@@ -64,16 +76,92 @@ class ScheduleManagerController extends GetxController {
           await repository.getUserAllTrips(userId);
       List<Registration> models =
           data.map((e) => Registration.fromJson(e)).toList();
-      userJoinedModel.assignAll(models);
-      print(models);
+      userJoinedModel.assignAll(models.toList());
     }
+  }
+
+  Future<ScheduleModel?> getOneTripData(String? tripId) async {
+    if (tripId == null || tripId == '') return null;
+    List<ScheduleModel> trips = await getAllTripDataFromLocal();
+    ScheduleModel? trip =
+        trips.firstWhereOrNull((element) => element.id == tripId);
+    if (trip != null) {
+      return trip;
+    }
+    Map<String, dynamic>? data = await repository.getOneTrip(tripId);
+    if (data != null) {
+      return ScheduleModel.fromJson(data);
+    }
+    return null;
   }
 
   checkEachItem() {}
 
+  _handleTabSelection() {
+    if (tabController.indexIsChanging) {
+      final index = tabController.index;
+      selectedIndex.value = index;
+    }
+  }
+
+  downloadGPX(ScheduleModel model) async {
+    String gpxData =
+        await DefaultAssetBundle.of(Get.context!).loadString('assets/gpx.txt');
+    final GPXModel gpxModel = GPXModel(
+      model.id,
+      gpxData,
+    );
+    List<ScheduleModel> trips = await getAllTripDataFromLocal();
+    if (!trips.any((element) => element.id == model.id)) {
+      trips.add(model);
+      await box.write(
+          'trips', trips.map((e) => jsonEncode(e.toJson())).toList());
+    }
+    List<GPXModel> gpxs = await getAllGPXDataFromLocal();
+    if (!gpxs.any((element) => element.tripId == gpxModel.tripId)) {
+      gpxs.add(gpxModel);
+      await box.write(
+          'gpxModels', gpxs.map((e) => jsonEncode(e.toJson())).toList());
+    }
+    downloadedGpx.assignAll(gpxs.toList());
+  }
+
+  Future<List<ScheduleModel>> getAllTripDataFromLocal() async {
+    List<ScheduleModel> trips = List<String>.from((box.read('trips') ?? []))
+        .map((e) => ScheduleModel.fromJson(jsonDecode(e)))
+        .toList();
+    return trips;
+  }
+
+  Future<List<GPXModel>> getAllGPXDataFromLocal() async {
+    List<GPXModel> gpxModels = List<String>.from(box.read('gpxModels') ?? [])
+        .map((e) => GPXModel.fromJson(jsonDecode(e)))
+        .toList();
+    return gpxModels;
+  }
+
+  init() async {
+    List<GPXModel> gpxModels = await getAllGPXDataFromLocal();
+    downloadedGpx.assignAll(gpxModels);
+    List<ScheduleModel> trips = await getAllTripDataFromLocal();
+    downloadedTrips.assignAll(trips);
+  }
+
+  setTabController(int length) {
+    if (tabLength == null || tabLength != length) {
+      tabLength = length;
+      tabController = TabController(length: length, vsync: this);
+      tabController.addListener(_handleTabSelection);
+    }
+  }
+
   @override
   void onInit() {
     debounce(_firebaseAuthService.user, getDataUserJoined, time: 3.seconds);
+    ever(userJoinedModel, (callback) {
+      print('userJoinedModel change: callback:$callback');
+    });
+    init();
     super.onInit();
   }
 }
