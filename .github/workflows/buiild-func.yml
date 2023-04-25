@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - 'make-template'
-    paths:
-      - functions/**
+    # paths:
+    #   - functions/**
 
 jobs:
   deploy_func:
