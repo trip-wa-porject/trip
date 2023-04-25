@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/screens/auth_signup_pages/signup_controller.dart';
 
@@ -11,6 +14,7 @@ class LoginController extends GetxController {
   final FirebaseAuthService _firebaseAuthService =
       Get.find<FirebaseAuthService>();
   final formKey = GlobalKey<FormState>();
+  final box = GetStorage();
 
   final RxBool isLoading = false.obs;
   final RxString email = ''.obs;
@@ -34,7 +38,12 @@ class LoginController extends GetxController {
     User? user = await login();
     isLoading.value = false;
     if (user != null) {
-      Get.back(result: user);
+      await box.write('user', user.uid);
+      if (kIsWeb) {
+        Get.back(result: user);
+      } else {
+        Get.offAndToNamed(AppLinks.HOME);
+      }
     }
   }
 
@@ -78,10 +87,28 @@ class LoginController extends GetxController {
 
   forgetPassword() {}
 
+  checkLogin() {
+    try {
+      isLoading.value = true;
+      dynamic user = box.read('user');
+      if (user != null) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          Get.offAndToNamed(AppLinks.HOME);
+        });
+      }
+    } catch (e) {
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   String? path;
   @override
   void onInit() {
     path = Get.arguments;
+    if (!kIsWeb) {
+      checkLogin(); // mobile
+    }
     super.onInit();
   }
 }
