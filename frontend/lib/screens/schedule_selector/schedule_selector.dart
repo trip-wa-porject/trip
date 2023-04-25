@@ -33,7 +33,7 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
         paintHeight = 470 +
             145 +
             controller.scheduleList.length * kCardHeight +
-            225 +
+            360 +
             kFooterHeight;
       }
       return SingleChildScrollView(
