@@ -33,9 +33,9 @@ readHTMLFile(
     const htmlToSend = template(replacements)
 
     const mailOptions = {
-      from: 'my@email.com',
-      to: 'asdfg09487@gmail.com',
-      subject: 'test subject',
+      from: '登峰造極 <wa.project.mountain@gmail.com>',
+      to: 'zebrillu@gmail.com',
+      subject: '寄信測試 by WeiChen',
       html: htmlToSend,
     }
 

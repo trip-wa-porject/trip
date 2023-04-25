@@ -122,7 +122,8 @@ class ScheduleSelectorController extends GetxController {
         });
       }
 
-      List<int> selectedPrices = priceOptions.toList().map((e) => e.value).toList();
+      List<int> selectedPrices =
+          priceOptions.toList().map((e) => e.value).toList();
       if (selectedPrices.isNotEmpty) {
         querys.addAll({
           "price_intervals": selectedPrices,
@@ -137,10 +138,11 @@ class ScheduleSelectorController extends GetxController {
       }
 
       print(querys);
-      List<Map<String, dynamic>> result =
-          await backendRepository.fetchTrip(querys);
+      Map<String, dynamic> result = await backendRepository.fetchTrip(querys);
+
+      List<dynamic> schduleData = result['results'];
       List<ScheduleModel> list =
-          result.map((e) => ScheduleModel.fromJson(e)).toList();
+          schduleData.map((e) => ScheduleModel.fromJson(e)).toList();
       if (hasSeat.value == true) {
         list = list.where(filter).toList();
       }
