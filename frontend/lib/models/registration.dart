@@ -1,6 +1,8 @@
+import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../utils/utils.dart';
+import 'schedule_model.dart';
 part 'registration.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -24,6 +26,12 @@ class Registration {
   final Map<String, dynamic>? paymentInfo;
 
   //付款狀態
+  /*
+  0 未付款
+  1 已付款
+  2 送信狀態
+  3 已刪除
+   */
   final int? status;
 
   //報名日期
@@ -58,5 +66,10 @@ class Registration {
         0,
         DateTime.now().subtract(Duration(minutes: 10)),
         DateTime.now());
+  }
+
+  @override
+  String toString() {
+    return '${toJson()}';
   }
 }
