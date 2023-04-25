@@ -50,7 +50,7 @@ void main() async {
   await GetStorage.init();
 
   Get.put(FirebaseAuthService());
-  Get.put(HomeController()); //TODO 廢棄
+  // Get.put(HomeController()); //TODO 廢棄
   Get.put(ScheduleManagerController());
   usePathUrlStrategy();
   runApp(const MyApp());
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
           ThemeData(brightness: Brightness.light).textTheme,
         ),
       ),
-      initialRoute: GetPlatform.isWeb ? AppLinks.SCHEDUL : AppLinks.HOME,
+      initialRoute: GetPlatform.isWeb ? AppLinks.SCHEDUL : AppLinks.LOGIN,
       getPages: [
         GetPage(
           name: AppLinks.HOME,

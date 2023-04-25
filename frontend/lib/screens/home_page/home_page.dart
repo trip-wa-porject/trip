@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/modules/auth_service.dart';
+import 'package:tripflutter/screens/home_page/home_page_controller.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_page.dart';
-import 'package:tripflutter/screens/schedule_selector/schedule_selector.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   dynamic selected;
   var heart = false;
   PageController controller = PageController();
+  HomePageController homepageController = Get.put(HomePageController());
 
   @override
   void dispose() {
@@ -30,29 +34,25 @@ class _HomePageState extends State<HomePage> {
         child: PageView(
           controller: controller,
           children: [
-            ScheduleSelector(),
-            // Center(child: Text('Home')),
             ScheduleManagerPage(),
-            Center(child: Text('Manager')),
-            Center(child: Text('Profile')),
+            Center(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Profile'),
+                MyFilledButton(
+                  label: '登出',
+                  onPressed: () {
+                    homepageController.signOut();
+                  },
+                )
+              ],
+            )),
           ],
         ),
       ),
       bottomNavigationBar: StylishBottomBar(
         items: [
-          BottomBarItem(
-              icon: const Icon(
-                Icons.house,
-              ),
-              borderColor: Colors.white,
-              // selectedIcon: Icon(
-              //   Icons.house,
-              // ),
-              backgroundColor: Colors.white,
-              selectedColor: MyStyles.tripTertiary,
-              title: const Text(
-                '行程首頁',
-              )),
           BottomBarItem(
               icon: const Icon(
                 Icons.local_activity,
