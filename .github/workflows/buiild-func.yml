@@ -3,9 +3,9 @@ name: Deploy functions
 on:
   push:
     branches:
-      - 'make-template'
-    # paths:
-    #   - functions/**
+      - 'dev'
+    paths:
+      - functions/**
 
 jobs:
   deploy_func:
