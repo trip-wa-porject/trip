@@ -75,7 +75,7 @@ class SignUpController extends GetxController {
     }
   }
 
-  nextStep() {
+  nextStep() async {
     if (steps.value == 1) {
       bool validate = formKey.currentState?.validate() ?? false;
       print(validate);
@@ -83,7 +83,11 @@ class SignUpController extends GetxController {
         return;
       }
       formKey.currentState?.save();
-      signUp(formData.email!, formData.password!, formData);
+      bool? success =
+          await signUp(formData.email!, formData.password!, formData);
+      if (success == false) {
+        return;
+      }
     }
     if (steps.value < 2) {
       steps.value = steps.value + 1;
@@ -153,15 +157,22 @@ class SignUpController extends GetxController {
   }
 
   //註冊
-  signUp(String? email, String? password, FormData formData) async {
+  Future<bool?> signUp(
+      String? email, String? password, FormData formData) async {
     if (email == null || email.isEmpty) {
       Get.snackbar('Error', 'No email provided for update.');
-      return;
+      return false;
     }
     if (password == null || password.isEmpty) {
       Get.snackbar('Error', 'No email provided for update.');
-      return;
+      return false;
     }
+
+    if (await repository.checkUserAlreadyExist(formData.idno!, email)) {
+      Get.snackbar('email or idno already exist', '');
+      return false;
+    }
+
     await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
     String url = "${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=$eventId";
     await _firebaseAuthService.sendEmailVerification(url); //TODO change later
@@ -210,7 +221,7 @@ class SignUpController extends GetxController {
   selectDistrictOption(List<String> options) {
     //取得 City Index
     List<String> districtOptionList =
-    districtOptions.map((entry) => entry.name).toList();
+        districtOptions.map((entry) => entry.name).toList();
     int districtIndex = districtOptionList.indexOf(options[0]);
 
     //顯示郵遞區號

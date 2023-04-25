@@ -7,6 +7,7 @@ import 'package:tripflutter/models/gpx_model.dart';
 import 'package:tripflutter/models/registration.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
+import 'package:tripflutter/screens/schedule_selector/schedule_card.dart';
 
 import '../../component/my_app_bar.dart';
 import '../../component/widgets.dart';
@@ -287,6 +288,46 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
             },
           ),
           const SizedBox(
+            height: 120,
+          ),
+          Obx(() => controller.scheduleList.isNotEmpty
+              ? Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: kCardWidth),
+                    child: Row(
+                      children: const [
+                        Expanded(child: Divider()),
+                        Text('推薦行程'),
+                        Expanded(child: Divider()),
+                      ],
+                    ),
+                  ),
+                )
+              : const SizedBox()),
+
+          //推薦行程
+          Obx(() => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: controller.scheduleList
+                    .map((element) => Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: kCardWidth),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: SizedBox(
+                                height: kCardHeight,
+                                child: ScheduleCard(
+                                  model: element,
+                                  index: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              )),
+          const SizedBox(
             height: 110,
           ),
           const Footer(),
@@ -404,6 +445,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '取消報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.cancelRegister(registration);
+            },
           ),
         ];
       case TabStatus.pay:
@@ -411,6 +455,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '取消報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.cancelRegister(registration);
+            },
           ),
           const SizedBox(
             width: 8,
@@ -418,6 +465,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '繼續付款',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.goToPayPage(registration.tripId!);
+            },
           ),
         ];
       case TabStatus.cancel:
@@ -425,6 +475,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '重新報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.retryRegister(registration);
+            },
           ),
         ];
       case TabStatus.deleted:
@@ -432,6 +485,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '重新報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.retryRegister(registration);
+            },
           ),
         ];
       default:
@@ -497,6 +553,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
                     MyOutlinedButton(
                       label: '查看行程',
                       style: MyOutlinedButton.style1(),
+                      onPressed: () {
+                        controller.goToDetailPage(registration.tripId!);
+                      },
                     ),
                     const SizedBox(
                       height: 8,

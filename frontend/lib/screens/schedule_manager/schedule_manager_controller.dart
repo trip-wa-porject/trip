@@ -20,6 +20,7 @@ class ScheduleManagerController extends GetxController
   final BackendRepository repository = BackendRepository();
   final box = GetStorage();
 
+  RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs; //推薦行程
   RxList<Registration> userJoinedModel = RxList<Registration>([]);
   RxList<GPXModel> downloadedGpx = RxList<GPXModel>();
   RxList<ScheduleModel> downloadedTrips = RxList<ScheduleModel>();
@@ -28,9 +29,84 @@ class ScheduleManagerController extends GetxController
   late TabController tabController;
   int? tabLength;
 
+  //取消報名
+  Future<void> cancelRegister(Registration? registration) async {
+    try {
+      if (registration == null) {
+        throw Exception('no input');
+      }
+      String? userId = registration.userId;
+      String? tripId = registration.tripId;
+      if (userId == null || tripId == null) {
+        throw Exception('no input');
+      }
+      await repository.updateRegistrationUseInstance(userId, tripId, {
+        'status': 3,
+        'paymentInfo': {}, //Map
+      });
+      await .5.delay();
+      await getDataUserJoined(_firebaseAuthService.user.value);
+    } catch (e) {
+      //Todo
+      print(e);
+    }
+  }
+
+  //重新報名
+  retryRegister(Registration? registration) async {
+    try {
+      if (registration == null) {
+        throw Exception('no input');
+      }
+      String? userId = registration.userId;
+      String? tripId = registration.tripId;
+      if (userId == null || tripId == null) {
+        throw Exception('no input');
+      }
+      await repository.updateRegistrationUseInstance(userId, tripId, {
+        'status': 0,
+        'paymentInfo': {}, //Map
+      });
+      await .5.delay();
+      await getDataUserJoined(_firebaseAuthService.user.value);
+    } catch (e) {
+      //Todo
+      print(e);
+    }
+  }
+
+  //繼續付款
   goToPayPage(String eventId) {
     Get.toNamed(
         '${AppLinks.SCHEDUL}${AppLinks.DETAIL}${AppLinks.PAY}?id=$eventId');
+  }
+
+  //查看行程
+  goToDetailPage(String eventId) {
+    Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=$eventId');
+  }
+
+  confirmPay(
+      Registration? registration, Map<String, dynamic> paymentInfo) async {
+    try {
+      if (registration == null) {
+        throw Exception('no input');
+      }
+      String? userId = registration.userId;
+      String? tripId = registration.tripId;
+      if (userId == null || tripId == null) {
+        throw Exception('no input');
+      }
+      await repository.updateRegistrationUseInstance(userId, tripId, {
+        'status': 1,
+        'paymentInfo': {}, //Map
+      });
+      await .5.delay();
+      await getDataUserJoined(_firebaseAuthService.user.value);
+    } catch (e) {
+      //Todo
+      print(e);
+    }
   }
 
   Future joinNewEvent(String eventId, ScheduleModel model) async {
@@ -145,6 +221,24 @@ class ScheduleManagerController extends GetxController
     downloadedGpx.assignAll(gpxModels);
     List<ScheduleModel> trips = await getAllTripDataFromLocal();
     downloadedTrips.assignAll(trips);
+
+    try {
+      Map<String, dynamic> result = await repository.fetchTrip({});
+
+      List<dynamic> schduleData = result['results'];
+      List<ScheduleModel> list =
+          schduleData.map((e) => ScheduleModel.fromJson(e)).toList();
+      list = list
+          .where((model) => (model.limitation - model.applicants.length) > 0)
+          .toList();
+      if (list.length > 3) {
+        scheduleList.assignAll(list.sublist(0, 3));
+      } else {
+        scheduleList.assignAll(list);
+      }
+    } catch (e) {
+      //todo
+    }
   }
 
   setTabController(int length) {

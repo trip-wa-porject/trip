@@ -57,11 +57,9 @@ class PayController extends GetxController {
           break;
         case 1:
           payMethod = '匯款或無存摺存款';
-
           break;
         case 2:
           payMethod = '信用卡';
-
           break;
       }
       _orders = _orders.map((e) {
@@ -71,6 +69,14 @@ class PayController extends GetxController {
         return e;
       }).toList();
       orders.assignAll(_orders);
+      Get.find<ScheduleManagerController>()
+          .confirmPay(registrationModel.value, {
+        'method': selectedMethod.value,
+        'info': _account,
+      });
+    } else {
+      Get.snackbar('請提供付款資訊', '');
+      return;
     }
 
     final result = await Get.dialog(
@@ -78,6 +84,9 @@ class PayController extends GetxController {
     );
     if (result == '查看更多活動') {
       Get.toNamed('${AppLinks.SCHEDUL}');
+    }
+    if (result == '追蹤訂單') {
+      Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
     }
   }
 
@@ -87,7 +96,9 @@ class PayController extends GetxController {
       cancelSchedule(),
     );
     //TODO cancel schedule
-    // Get.back();
+    Get.find<ScheduleManagerController>()
+        .cancelRegister(registrationModel.value);
+    Get.back();
   }
 
   getData() async {
