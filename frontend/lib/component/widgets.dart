@@ -9,8 +9,8 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 143.22,
-      height: 39.32,
+      width: 204,
+      height: 38,
       child: InkWell(
         onTap: () {
           Get.toNamed('${AppLinks.SCHEDUL}');
