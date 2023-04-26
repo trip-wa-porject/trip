@@ -104,7 +104,7 @@ class TableViewColumn {
   }
 
   static TableRow createColumnWithMap(
-      Widget? button, String columnTitle, List<Area> keywordList) {
+      Widget? button, String columnTitle) {
     return TableRow(children: <Widget>[
       IntrinsicHeight(
         child: Row(
@@ -132,7 +132,7 @@ class TableViewColumn {
                 child: SizedBox(
                     height: 350,
                     width: 720,
-                    child: MapWidget(keywordList: keywordList)),
+                    child: MapWidget()),
               ),
             ),
           ],
