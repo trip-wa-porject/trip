@@ -31,25 +31,14 @@ const checkDayInterval = (difference: number, dayInterval: 1 | 2 | 3 | 4) => {
 export default function filter(filters: Partial<TripFilter>, data: Trip) {
   return Object.keys(filters).every((e) => {
     switch (e) {
-      case 'startDate': {
-        return filters?.startDate ? data.startDate > filters.startDate : true
-      }
       case 'endDate': {
         return filters?.endDate ? data.endDate < filters.endDate : true
       }
-      case 'levels': {
-        return filters?.levels ? filters.levels.includes(data.level) : true
-      }
-      case 'types': {
-        return filters?.types ? filters.types.includes(data.type) : true
-      }
       case 'regions': {
         return filters?.regions
-          ? filters?.regions
-            ? data.area.some((e) => {
-                return filters?.regions?.includes(e.city)
-              })
-            : true
+          ? data.area.some((e) => {
+              return filters?.regions?.includes(e.city)
+            })
           : true
       }
       case 'price_intervals': {
