@@ -1,4 +1,4 @@
-import { https } from 'firebase-functions'
+import { https, logger } from 'firebase-functions'
 import type { Trip, TripFilter } from '../@types'
 import { db } from '../auth'
 import filter from './utils'
@@ -67,27 +67,26 @@ const searchTripsFromFireStore = async (
   const result: Trip[] = []
   let totalCount: number = 0
 
-  await ref
+  const docs = await ref
     .where('type', 'in', filters.types)
     .where('level', 'in', filters.levels)
     .where('startDate', '>=', filters?.startDate ?? 1)
     .orderBy('startDate')
     .get()
-    .then((snapshot) => {
-      snapshot.forEach((doc) => {
-        const rec = doc.data()
 
-        const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
-        if (passfilter) {
-          result.push({
-            ...rec,
-            tripId: doc.id,
-          } as Trip)
-        }
-      })
-    })
-    .then(() => (totalCount = result.length))
-    .catch(() => [])
+  docs.forEach((doc) => {
+    const rec = doc.data()
+
+    const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
+    if (passfilter) {
+      result.push({
+        ...rec,
+        tripId: doc.id,
+      } as Trip)
+    }
+  })
+
+  totalCount = result.length
 
   return {
     results: result.slice((filters.page - 1) * 20, filters.page * 20),

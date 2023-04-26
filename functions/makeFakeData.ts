@@ -1,5 +1,5 @@
 import { db } from './auth'
-import trips from './data/test_trips.json'
+import trips from './data/all_data.json'
 
 const batch = db.batch()
 
