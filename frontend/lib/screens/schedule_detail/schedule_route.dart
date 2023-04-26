@@ -27,7 +27,7 @@ class ScheduleRoute extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableViewColumn.createColumnWithMap(
-            _createDownloadButton(), '路線地圖', model.area),
+            _createDownloadButton(), '路線地圖'),
       ],
     );
   }
