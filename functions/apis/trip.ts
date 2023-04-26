@@ -1,4 +1,4 @@
-import { https, logger } from 'firebase-functions'
+import { https } from 'firebase-functions'
 import type { Trip, TripFilter } from '../@types'
 import { db } from '../auth'
 import filter from './utils'
@@ -17,17 +17,20 @@ const regions = [
   '桃園市',
   '基隆市',
   '新竹市',
+  '新竹縣',
+  '臺中市',
   '花蓮縣',
   '苗栗縣',
   '彰化縣',
   '屏東縣',
   '宜蘭縣',
   '澎湖縣',
+  '臺東縣',
 ]
 
 const levels = ['A', 'B', 'C']
 
-const types = ['高山步道', '郊山步道', '中級山步道']
+const types = ['高山步道', '郊山步道', '中級山步道', '健行', '百岳']
 
 const ref = db.collection('trips')
 
@@ -57,7 +60,7 @@ const searchTripsFromFireStore = async (
     levels,
     types,
     regions,
-    page: 0,
+    page: 1,
     ...data,
   }
 
@@ -65,18 +68,16 @@ const searchTripsFromFireStore = async (
   let totalCount: number = 0
 
   await ref
+    .where('type', 'in', filters.types)
+    .where('level', 'in', filters.levels)
+    .where('startDate', '>=', filters?.startDate ?? 1)
     .orderBy('startDate')
-    .limit(20)
-    .startAfter(filters.page * 20)
     .get()
     .then((snapshot) => {
-      totalCount = snapshot.docs.length
-
       snapshot.forEach((doc) => {
         const rec = doc.data()
 
         const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
-
         if (passfilter) {
           result.push({
             ...rec,
@@ -85,11 +86,11 @@ const searchTripsFromFireStore = async (
         }
       })
     })
-    .then(() => logger.info('search filters', filters))
+    .then(() => (totalCount = result.length))
     .catch(() => [])
 
   return {
-    results: result,
+    results: result.slice((filters.page - 1) * 20, filters.page * 20),
     count: totalCount,
   }
 }
