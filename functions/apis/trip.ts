@@ -67,24 +67,28 @@ const searchTripsFromFireStore = async (
   const result: Trip[] = []
   let totalCount: number = 0
 
-  const docs = await ref
-    .where('type', 'in', filters.types)
-    .where('level', 'in', filters.levels)
-    .where('startDate', '>=', filters?.startDate ?? 1)
-    .orderBy('startDate')
-    .get()
+  try {
+    const docs = await ref
+      .where('type', 'in', filters.types)
+      .where('level', 'in', filters.levels)
+      .where('startDate', '>=', filters?.startDate ?? 1)
+      .orderBy('startDate')
+      .get()
 
-  docs.forEach((doc) => {
-    const rec = doc.data()
+    docs.forEach((doc) => {
+      const rec = doc.data()
 
-    const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
-    if (passfilter) {
-      result.push({
-        ...rec,
-        tripId: doc.id,
-      } as Trip)
-    }
-  })
+      const passfilter = filter(filters, { ...rec, tripId: doc.id } as Trip)
+      if (passfilter) {
+        result.push({
+          ...rec,
+          tripId: doc.id,
+        } as Trip)
+      }
+    })
+  } catch (e) {
+    throw new HttpsError('unknown', `${e}`)
+  }
 
   totalCount = result.length
 
