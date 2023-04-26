@@ -76,6 +76,16 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  Future<Map<String, dynamic>> getUserUseInstance(String userId) async {
+    Map<String, dynamic>? data =
+        (await FirebaseFirestore.instance.collection('users').doc(userId).get())
+            .data();
+    if (data == null) {
+      throw Exception('not found');
+    }
+    return data;
+  }
+
   //TODO
   //updateUser
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/updateUser -d '{"id":"m2ogLuNPJd12t8BgzV0b","status":"done"}'

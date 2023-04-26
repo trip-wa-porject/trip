@@ -89,7 +89,8 @@ class _MapState extends State<MapWidget> {
     var distance = getStraightLineDistance();
     var time = routeRequireTime.last.difference(routeRequireTime.first);
     totalDistance = getStraightLineDistance().toStringAsFixed(2);
-    totalTime = routeRequireTime.last.difference(routeRequireTime.first).toString();
+    totalTime =
+        routeRequireTime.last.difference(routeRequireTime.first).toString();
     speed = (distance / time.inHours).toStringAsFixed(2);
     // print('distance: $totalDistance km');
     // print('distance(小數點後兩位): ${totalDistance.toStringAsFixed(2)} km');
@@ -149,7 +150,7 @@ class _MapState extends State<MapWidget> {
   }
 
   void zoomCameraPosition(double latitude, double longitude) {
-    Timer(const Duration(milliseconds: 1000), () async {
+    Timer(const Duration(milliseconds: 3000), () async {
       await mapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(target: LatLng(latitude, longitude), zoom: 12)));
     });

@@ -20,8 +20,10 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
     controller.setTabController(2);
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80,
+        centerTitle: true,
         title: const Text('活動行程管理'),
-        titleTextStyle: MyStyles.kTextStyleH4.copyWith(
+        titleTextStyle: MyStyles.kTextStyleH2Bold.copyWith(
           color: Colors.white,
         ),
         backgroundColor: MyStyles.tripTertiary,
@@ -381,35 +383,40 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
             Row(
               children: tabStatus == TabStatus.register
                   ? [
-                      Expanded(
-                        flex: 1,
+                      SizedBox(
+                        width: 144,
                         child: MyFilledButton(
                           label: '查看行程',
                           style: MyFilledButton.style1(),
                         ),
                       ),
-                      const SizedBox(
-                        width: 4,
+                      const Expanded(
+                        child: SizedBox(
+                          width: 4,
+                        ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: gpxModel == null
-                            ? MyFilledButton(
+                      gpxModel == null
+                          ? SizedBox(
+                              width: 144,
+                              child: MyFilledButton(
                                 label: '下載GPX',
                                 style: MyFilledButton.style1(),
                                 onPressed: () async {
                                   await Get.find<ScheduleManagerController>()
                                       .downloadGPX(model);
                                 },
-                              )
-                            : MyFilledButton(
+                              ),
+                            )
+                          : SizedBox(
+                              width: 144,
+                              child: MyFilledButton(
                                 label: '打開GPX',
                                 style: MyFilledButton.style1(),
                                 onPressed: () {
                                   Get.toNamed(AppLinks.GPX);
                                 },
                               ),
-                      ),
+                            ),
                     ]
                   : [
                       Expanded(

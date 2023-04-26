@@ -6,6 +6,7 @@ import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
 import 'package:tripflutter/modules/auth_service.dart';
 import 'package:tripflutter/screens/home_page/home_page_controller.dart';
+import 'package:tripflutter/screens/profile_page/profile_page.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,22 +33,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: PageView(
+          physics: NeverScrollableScrollPhysics(),
           controller: controller,
           children: [
             ScheduleManagerPage(),
-            Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Profile'),
-                MyFilledButton(
-                  label: '登出',
-                  onPressed: () {
-                    homepageController.signOut();
-                  },
-                )
-              ],
-            )),
+            const ProfilePage(),
           ],
         ),
       ),
@@ -55,7 +45,7 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomBarItem(
               icon: const Icon(
-                Icons.local_activity,
+                Icons.hiking,
               ),
               borderColor: Colors.white,
               backgroundColor: Colors.white,
@@ -83,6 +73,7 @@ class _HomePageState extends State<HomePage> {
           });
         },
         option: BubbleBarOptions(
+          borderRadius: BorderRadius.circular(10),
           bubbleFillStyle: BubbleFillStyle.outlined,
           unselectedIconColor: Colors.white,
         ),

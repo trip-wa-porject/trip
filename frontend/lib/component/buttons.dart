@@ -212,6 +212,18 @@ class MyFilledButton extends StatelessWidget {
     );
   }
 
+  //橘色
+  static ButtonStyle styleOrangeBorder() {
+    return FilledButton.styleFrom(
+      backgroundColor: const Color(0xfffff9ee),
+      foregroundColor: MyStyles.tripPrimary,
+      textStyle: MyStyles.kTextStyleH4,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      side: const BorderSide(width: 1.0, color: MyStyles.primary),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
