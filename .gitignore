@@ -68,5 +68,3 @@ node_modules/
 credential.json
 
 .env
-
-firebase.json
