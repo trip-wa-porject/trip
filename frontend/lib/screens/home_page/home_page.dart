@@ -33,8 +33,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: PageView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           controller: controller,
+          onPageChanged: (value) {
+            print('change page :$value');
+            setState(() {
+              selected = value;
+            });
+          },
           children: [
             ScheduleManagerPage(),
             const ProfilePage(),

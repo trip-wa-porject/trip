@@ -16,106 +16,112 @@ class LoginPage extends GetView<LoginController> {
     final TextEditingController pwdController = TextEditingController();
 
     Get.put(LoginController());
-    return Form(
-      key: controller.formKey,
-      child: Card(
+    return Scaffold(
+      body: Form(
+        key: controller.formKey,
         child: Padding(
           padding: const EdgeInsets.only(top: 40.0),
           child: Obx(
             () => controller.isLoading.value
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : FractionallySizedBox(
-                    widthFactor: .8,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '登入',
-                          style: MyStyles.kTextStyleH2Bold.copyWith(),
-                        ),
-                        SizedBox(
-                          height: 22,
-                        ),
-                        Text(
-                          '帳號（email）',
-                          style: MyStyles.kTextStyleH3.copyWith(),
-                        ),
-                        Obx(
-                          () => LoginTextField(
-                            controller: emailController,
-                            hint: 'jijijijjijijijiji@gmail.com',
-                            error: controller.emailError.value,
-                            validator: (String? value) {
-                              return validateEmail(value);
-                            },
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '登入',
+                            style: MyStyles.kTextStyleH2Bold.copyWith(),
                           ),
-                        ),
-                        // Obx(() => Text('${controller.emailError.value}')),
-                        Text(
-                          '密碼',
-                          style: MyStyles.kTextStyleH3.copyWith(),
-                        ),
-                        Obx(
-                          () => LoginTextField(
-                            controller: pwdController,
-                            hint: 'xxxxxxxxxxxxx',
-                            error: controller.passwordError.value,
-                            validator: (String? value) {
-                              return validatePassword(value);
-                            },
+                          const SizedBox(
+                            height: 16,
                           ),
-                        ),
-                        // Obx(() => Text('${controller.passwordError.value}')),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 61,
-                          child: MyFilledButton(
-                            label: '登入',
-                            style: MyFilledButton.styleGreenBigWhite(),
-                            onPressed: () {
-                              if (controller.isLoading.value) return;
-                              controller.loginEvent(
-                                emailController.text,
-                                pwdController.text,
-                              );
-                            },
+                          Text(
+                            '帳號（email）',
+                            style: MyStyles.kTextStyleH4.copyWith(),
                           ),
-                        ),
-                        SizedBox(
-                          height: 28,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 61,
-                          child: MyFilledButton(
-                            label: '加入會員',
-                            style: MyFilledButton.styleOrangeBigBlack(),
-                            onPressed: () {
-                              controller.signup();
-                            },
+                          const SizedBox(
+                            height: 4,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Center(
-                            child: Text(
-                              '忘記密碼?',
-                              style: MyStyles.kTextStyleH4.copyWith(
-                                color: MyStyles.redC80000,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Obx(
+                            () => LoginTextField(
+                              controller: emailController,
+                              hint: 'jijijijjijijijiji@gmail.com',
+                              error: controller.emailError.value,
+                              validator: (String? value) {
+                                return validateEmail(value);
+                              },
                             ),
                           ),
-                        )
-                      ],
+                          // Obx(() => Text('${controller.emailError.value}')),
+                          Text(
+                            '密碼',
+                            style: MyStyles.kTextStyleH4.copyWith(),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Obx(
+                            () => LoginTextField(
+                              controller: pwdController,
+                              hint: 'xxxxxxxxxxxxx',
+                              error: controller.passwordError.value,
+                              validator: (String? value) {
+                                return validatePassword(value);
+                              },
+                            ),
+                          ),
+                          // Obx(() => Text('${controller.passwordError.value}')),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: MyFilledButton(
+                              label: '登入',
+                              style: MyFilledButton.styleGreenWhiteH4(),
+                              onPressed: () {
+                                if (controller.isLoading.value) return;
+                                controller.loginEvent(
+                                  emailController.text,
+                                  pwdController.text,
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 28,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: MyFilledButton(
+                              label: '加入會員',
+                              style: MyFilledButton.styleOrangeBorder(),
+                              onPressed: () {
+                                controller.signup();
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Center(
+                              child: Text(
+                                '忘記密碼?',
+                                style: MyStyles.kTextStyleBody1.copyWith(
+                                  color: MyStyles.greyScale757575,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
           ),

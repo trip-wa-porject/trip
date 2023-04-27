@@ -168,6 +168,9 @@ class DataContainer extends StatelessWidget {
           height: 12.0,
         ),
         Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+          ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(color: MyStyles.tripTertiary)),
@@ -176,11 +179,17 @@ class DataContainer extends StatelessWidget {
             children: data.entries
                 .map((e) => Row(
                       children: [
-                        Text(e.key),
+                        Text(
+                          e.key,
+                          style: MyStyles.kTextStyleSubtitle1Bold,
+                        ),
                         const SizedBox(
                           width: 12,
                         ),
-                        Text(e.value),
+                        Text(
+                          e.value,
+                          style: MyStyles.kTextStyleBody1,
+                        ),
                       ],
                     ))
                 .toList(),

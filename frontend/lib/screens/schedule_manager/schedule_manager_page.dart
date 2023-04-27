@@ -364,6 +364,8 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
   @override
   Widget phone() {
     return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       shape: RoundedRectangleBorder(
         side: const BorderSide(
           color: MyStyles.tripPrimary,
@@ -371,24 +373,23 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(model.title),
             Text(model.getDateRageString()),
             const SizedBox(
-              height: 8,
+              height: 16,
             ),
             Row(
               children: tabStatus == TabStatus.register
                   ? [
-                      SizedBox(
-                        width: 144,
-                        child: MyFilledButton(
-                          label: '查看行程',
-                          style: MyFilledButton.style1(),
-                        ),
+                      MyAppIconButton(
+                        iconData: Icons.search,
+                        label: '查看行程',
+                        style: MyAppIconButton.styleOrangeBorder(),
+                        onPressed: () {},
                       ),
                       const Expanded(
                         child: SizedBox(
@@ -396,46 +397,41 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
                         ),
                       ),
                       gpxModel == null
-                          ? SizedBox(
-                              width: 144,
-                              child: MyFilledButton(
-                                label: '下載GPX',
-                                style: MyFilledButton.style1(),
-                                onPressed: () async {
-                                  await Get.find<ScheduleManagerController>()
-                                      .downloadGPX(model);
-                                },
-                              ),
+                          ? MyAppIconButton(
+                              iconData: Icons.file_download_outlined,
+                              label: '下載GPX',
+                              style: MyAppIconButton.styleOrangeFill(),
+                              onPressed: () async {
+                                await Get.find<ScheduleManagerController>()
+                                    .downloadGPX(model);
+                              },
                             )
-                          : SizedBox(
-                              width: 144,
-                              child: MyFilledButton(
-                                label: '打開GPX',
-                                style: MyFilledButton.style1(),
-                                onPressed: () {
-                                  Get.toNamed(AppLinks.GPX);
-                                },
-                              ),
+                          : MyAppIconButton(
+                              iconData: Icons.map,
+                              label: '打開GPX',
+                              style: MyAppIconButton.styleGreenFill(),
+                              onPressed: () {
+                                Get.toNamed(AppLinks.GPX);
+                              },
                             ),
                     ]
                   : [
-                      Expanded(
-                        flex: 1,
-                        child: MyFilledButton(
-                          label: '查看行程',
-                          style: MyFilledButton.style1(),
+                      MyAppIconButton(
+                        iconData: Icons.search,
+                        label: '查看行程',
+                        style: MyAppIconButton.styleOrangeBorder(),
+                        onPressed: () {},
+                      ),
+                      const Expanded(
+                        child: SizedBox(
+                          width: 4,
                         ),
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: MyFilledButton(
-                          label: '前往繳費',
-                          style: MyFilledButton.style1(),
-                          onPressed: () async {},
-                        ),
+                      MyAppIconButton(
+                        iconData: Icons.attach_money,
+                        label: '前往繳費',
+                        style: MyAppIconButton.styleGreenFill(),
+                        onPressed: () async {},
                       ),
                     ],
             ),
