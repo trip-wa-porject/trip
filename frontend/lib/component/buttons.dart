@@ -21,7 +21,7 @@ class MyOutlinedButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10))),
       side: const BorderSide(width: 1.0, color: MyStyles.tripPrimary),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
+        vertical: 20,
         horizontal: 24,
       ),
     );
@@ -37,7 +37,7 @@ class MyOutlinedButton extends StatelessWidget {
           side: BorderSide(color: MyStyles.tripTertiary),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
+        vertical: 20,
         horizontal: 24,
       ),
     );
@@ -46,13 +46,11 @@ class MyOutlinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      // height: 40,
       child: OutlinedButton(
         style: style,
         onPressed: onPressed,
-        child: Center(
-          child: Text(label),
-        ),
+        child: Text(label),
       ),
     );
   }
@@ -87,7 +85,7 @@ class MyFilledButton extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
+        vertical: 20,
         horizontal: 24,
       ),
     );
@@ -105,6 +103,20 @@ class MyFilledButton extends StatelessWidget {
       //   vertical: 15,
       //   horizontal: 79.5,
       // ),
+    );
+  }
+
+  //綠色 白字
+  static ButtonStyle styleGreenWhiteH4() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.tripTertiary,
+      foregroundColor: Colors.white,
+      textStyle: MyStyles.kTextStyleH4,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      padding: const EdgeInsets.symmetric(
+        vertical: 12.5,
+      ),
     );
   }
 
@@ -132,7 +144,7 @@ class MyFilledButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10))),
       // side: const BorderSide(width: 1.0, color: MyStyles.primary),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
+        vertical: 20,
         horizontal: 24,
       ),
     );
@@ -212,15 +224,112 @@ class MyFilledButton extends StatelessWidget {
     );
   }
 
+  //橘色
+  static ButtonStyle styleOrangeBorder() {
+    return FilledButton.styleFrom(
+      backgroundColor: const Color(0xfffff9ee),
+      foregroundColor: MyStyles.tripPrimary,
+      textStyle: MyStyles.kTextStyleH4,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(vertical: 12.5),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      style: style,
+      onPressed: onPressed,
+      child: Center(
+        child: Text(label),
+      ),
+    );
+  }
+}
+
+class MyAppIconButton extends StatelessWidget {
+  const MyAppIconButton({
+    Key? key,
+    required this.label,
+    required this.iconData,
+    this.style,
+    this.onPressed,
+  }) : super(key: key);
+
+  final String label;
+  final IconData iconData;
+  final ButtonStyle? style;
+  final void Function()? onPressed;
+
+  //橘色 淺橘色底色，border
+  static ButtonStyle styleOrangeBorder() {
+    return OutlinedButton.styleFrom(
+      backgroundColor: const Color(0xfffff9ee),
+      foregroundColor: MyStyles.tripPrimary,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+    );
+  }
+
+  //橘色 黑字
+  static ButtonStyle styleOrangeFill() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.primary,
+      foregroundColor: MyStyles.greyScale000000,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      // side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+    );
+  }
+
+  //綠色 白字
+  static ButtonStyle styleGreenFill() {
+    return FilledButton.styleFrom(
+      backgroundColor: MyStyles.tripTertiary,
+      foregroundColor: Colors.white,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      // side: const BorderSide(width: 1.0, color: MyStyles.primary),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      // height: 40,
       child: FilledButton(
         style: style,
         onPressed: onPressed,
-        child: Center(
-          child: Text(label),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              iconData,
+              size: 20,
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Text(label),
+          ],
         ),
       ),
     );

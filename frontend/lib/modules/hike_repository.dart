@@ -23,6 +23,24 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  Future<bool> checkUserAlreadyExist(String idno, String email) async {
+    final int idnoCount = (await FirebaseFirestore.instance
+            .collection('users')
+            .where('idno', isEqualTo: idno)
+            .count()
+            .get())
+        .count;
+    if (idnoCount != 0) return true;
+    final int emailCount = (await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .count()
+            .get())
+        .count;
+    if (emailCount != 0) return true;
+    return false;
+  }
+
   //addUserOnCall
   //curl -k -H "Content-Type:application/json" http://127.0.0.1:5001/mountain-climb-b03b9/us-central1/addUser -d '{"id":"123456","email":"amew@gmail.com","name":"陳阿喵","mobile":"0987654321","idno":"A123456789","emergentContactor":"陳旺旺","emergentContactTel":"0987654321","sexual":0,"address":"台北市中山區中山北路","birth":"2006-07-23","contactorRelationship":"pet","member":0}'
   Future<Map<String, dynamic>> addUser(Map<String, dynamic> args) async {
@@ -56,6 +74,16 @@ class BackendRepository implements GeneralRepository {
       print(error.message);
       rethrow;
     }
+  }
+
+  Future<Map<String, dynamic>> getUserUseInstance(String userId) async {
+    Map<String, dynamic>? data =
+        (await FirebaseFirestore.instance.collection('users').doc(userId).get())
+            .data();
+    if (data == null) {
+      throw Exception('not found');
+    }
+    return data;
   }
 
   //TODO
@@ -133,7 +161,7 @@ class BackendRepository implements GeneralRepository {
       final result = await FirebaseFunctions.instance
           .httpsCallable('updateRegister')
           .call({
-        'userId': args['userId'],
+        'registerId': args['registerId'],
         'status': args['status'],
         'paymentInfo': args['paymentInfo'], //Map
       });
@@ -142,6 +170,38 @@ class BackendRepository implements GeneralRepository {
     } on FirebaseFunctionsException catch (error) {
       print(error.code);
       print(error.details);
+      print(error.message);
+      rethrow;
+    }
+  }
+
+  Future updateRegistrationUseInstance(
+      String userId, String tripId, Map<String, dynamic> args) async {
+    try {
+      final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
+          (await FirebaseFirestore.instance
+                  .collection('register')
+                  .where(
+                    'userId',
+                    isEqualTo: userId,
+                  )
+                  .where(
+                    'tripId',
+                    isEqualTo: tripId,
+                  )
+                  .limit(1)
+                  .get())
+              .docs;
+
+      if (docs.isEmpty) {
+        throw Exception('no document exist');
+      }
+      await docs[0].reference.update({
+        'status': args['status'],
+        'paymentInfo': args['paymentInfo'],
+      });
+    } on FirebaseException catch (error) {
+      print(error.code);
       print(error.message);
       rethrow;
     }

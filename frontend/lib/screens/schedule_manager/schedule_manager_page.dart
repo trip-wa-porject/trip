@@ -7,6 +7,7 @@ import 'package:tripflutter/models/gpx_model.dart';
 import 'package:tripflutter/models/registration.dart';
 import 'package:tripflutter/models/schedule_model.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
+import 'package:tripflutter/screens/schedule_selector/schedule_card.dart';
 
 import '../../component/my_app_bar.dart';
 import '../../component/widgets.dart';
@@ -19,8 +20,10 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
     controller.setTabController(2);
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80,
+        centerTitle: true,
         title: const Text('活動行程管理'),
-        titleTextStyle: MyStyles.kTextStyleH4.copyWith(
+        titleTextStyle: MyStyles.kTextStyleH2Bold.copyWith(
           color: Colors.white,
         ),
         backgroundColor: MyStyles.tripTertiary,
@@ -287,6 +290,46 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
             },
           ),
           const SizedBox(
+            height: 120,
+          ),
+          Obx(() => controller.scheduleList.isNotEmpty
+              ? Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: kCardWidth),
+                    child: Row(
+                      children: const [
+                        Expanded(child: Divider()),
+                        Text('推薦行程'),
+                        Expanded(child: Divider()),
+                      ],
+                    ),
+                  ),
+                )
+              : const SizedBox()),
+
+          //推薦行程
+          Obx(() => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: controller.scheduleList
+                    .map((element) => Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: kCardWidth),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: SizedBox(
+                                height: kCardHeight,
+                                child: ScheduleCard(
+                                  model: element,
+                                  index: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              )),
+          const SizedBox(
             height: 110,
           ),
           const Footer(),
@@ -321,6 +364,8 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
   @override
   Widget phone() {
     return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       shape: RoundedRectangleBorder(
         side: const BorderSide(
           color: MyStyles.tripPrimary,
@@ -328,66 +373,65 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(model.title),
             Text(model.getDateRageString()),
             const SizedBox(
-              height: 8,
+              height: 16,
             ),
             Row(
               children: tabStatus == TabStatus.register
                   ? [
-                      Expanded(
-                        flex: 1,
-                        child: MyFilledButton(
-                          label: '查看行程',
-                          style: MyFilledButton.style1(),
+                      MyAppIconButton(
+                        iconData: Icons.search,
+                        label: '查看行程',
+                        style: MyAppIconButton.styleOrangeBorder(),
+                        onPressed: () {},
+                      ),
+                      const Expanded(
+                        child: SizedBox(
+                          width: 4,
                         ),
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: gpxModel == null
-                            ? MyFilledButton(
-                                label: '下載GPX',
-                                style: MyFilledButton.style1(),
-                                onPressed: () async {
-                                  await Get.find<ScheduleManagerController>()
-                                      .downloadGPX(model);
-                                },
-                              )
-                            : MyFilledButton(
-                                label: '打開GPX',
-                                style: MyFilledButton.style1(),
-                                onPressed: () {
-                                  Get.toNamed(AppLinks.GPX);
-                                },
-                              ),
-                      ),
+                      gpxModel == null
+                          ? MyAppIconButton(
+                              iconData: Icons.file_download_outlined,
+                              label: '下載GPX',
+                              style: MyAppIconButton.styleOrangeFill(),
+                              onPressed: () async {
+                                await Get.find<ScheduleManagerController>()
+                                    .downloadGPX(model);
+                              },
+                            )
+                          : MyAppIconButton(
+                              iconData: Icons.map,
+                              label: '打開GPX',
+                              style: MyAppIconButton.styleGreenFill(),
+                              onPressed: () {
+                                Get.toNamed(AppLinks.GPX);
+                              },
+                            ),
                     ]
                   : [
-                      Expanded(
-                        flex: 1,
-                        child: MyFilledButton(
-                          label: '查看行程',
-                          style: MyFilledButton.style1(),
+                      MyAppIconButton(
+                        iconData: Icons.search,
+                        label: '查看行程',
+                        style: MyAppIconButton.styleOrangeBorder(),
+                        onPressed: () {},
+                      ),
+                      const Expanded(
+                        child: SizedBox(
+                          width: 4,
                         ),
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: MyFilledButton(
-                          label: '前往繳費',
-                          style: MyFilledButton.style1(),
-                          onPressed: () async {},
-                        ),
+                      MyAppIconButton(
+                        iconData: Icons.attach_money,
+                        label: '前往繳費',
+                        style: MyAppIconButton.styleGreenFill(),
+                        onPressed: () async {},
                       ),
                     ],
             ),
@@ -404,6 +448,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '取消報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.cancelRegister(registration);
+            },
           ),
         ];
       case TabStatus.pay:
@@ -411,6 +458,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '取消報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.cancelRegister(registration);
+            },
           ),
           const SizedBox(
             width: 8,
@@ -418,6 +468,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '繼續付款',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.goToPayPage(registration.tripId!);
+            },
           ),
         ];
       case TabStatus.cancel:
@@ -425,6 +478,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '重新報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.retryRegister(registration);
+            },
           ),
         ];
       case TabStatus.deleted:
@@ -432,6 +488,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
           MyFilledButton(
             label: '重新報名',
             style: MyOutlinedButton.style1(),
+            onPressed: () {
+              controller.retryRegister(registration);
+            },
           ),
         ];
       default:
@@ -497,6 +556,9 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
                     MyOutlinedButton(
                       label: '查看行程',
                       style: MyOutlinedButton.style1(),
+                      onPressed: () {
+                        controller.goToDetailPage(registration.tripId!);
+                      },
                     ),
                     const SizedBox(
                       height: 8,
