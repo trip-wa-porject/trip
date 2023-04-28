@@ -2,11 +2,16 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gpx/gpx.dart';
+import 'package:location/location.dart';
+import 'package:tripflutter/screens/gpx_page/gpx_controller.dart';
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({Key? key}) : super(key: key);
+  MapWidget({Key? key, this.gpxController}) : super(key: key);
+
+  GpxController? gpxController;
 
   @override
   State<StatefulWidget> createState() => _MapState();
@@ -15,13 +20,9 @@ class MapWidget extends StatefulWidget {
 class _MapState extends State<MapWidget> {
   String googleAPiKey = 'AIzaSyAR4ABOvlLdPyaC4T_nyRHXVpCJPVSeOMU';
   late GoogleMapController mapController;
-  MapType _mapType = MapType.normal;
 
   /// GPX PolyLine Point List
   List<LatLng> points = [];
-  String totalDistance = '';
-  String totalTime = '';
-  String speed = '';
 
   /// Map Initial Position
   final double _originLatitude = 25.16171788826669,
@@ -37,34 +38,47 @@ class _MapState extends State<MapWidget> {
     // 載入GPX檔案路線
     loadGpxPointsData();
 
-    //載入GPX檔案後,儲存起點和終點的 LATLNG > 繪製一條直距離線
-    // getRouteStraightDistance();
-
-    //載入GPX檔案後,開始導航路線
+    widget.gpxController?.locationCallback = getCurrentLocation;
+    widget.gpxController?.routeDistanceCallback = addStraightPolyLine;
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-            target: LatLng(_originLatitude, _originLongitude), zoom: 10),
-        myLocationEnabled: true,
-        tiltGesturesEnabled: true,
-        compassEnabled: true,
-        scrollGesturesEnabled: true,
-        zoomGesturesEnabled: true,
-        onMapCreated: onMapCreated,
-        mapType: _mapType,
-        markers: Set<Marker>.of(markers.values),
-        polylines: Set<Polyline>.of(polyLines.values),
-      )),
+        body: GoogleMap(
+          initialCameraPosition: CameraPosition(
+              target: LatLng(_originLatitude, _originLongitude), zoom: 10),
+          myLocationEnabled: true,
+          myLocationButtonEnabled: false,
+          tiltGesturesEnabled: true,
+          compassEnabled: true,
+          scrollGesturesEnabled: true,
+          zoomGesturesEnabled: true,
+          onMapCreated: onMapCreated,
+          mapType: widget.gpxController != null
+              ? widget.gpxController!.mapType.value!
+              : MapType.normal,
+          markers: Set<Marker>.of(markers.values),
+          polylines: Set<Polyline>.of(polyLines.values),
+          zoomControlsEnabled: GetPlatform.isWeb ? true : false,
+        ),
+      ),
     );
   }
 
   void onMapCreated(GoogleMapController controller) async {
     mapController = controller;
+  }
+
+  void getCurrentLocation() async {
+    LocationData? locationData;
+    try {
+      locationData = await Location().getLocation();
+    } on Exception {
+      locationData = null;
+    }
+    zoomCameraPosition(locationData!.latitude!, locationData.longitude!);
   }
 
   void loadGpxPointsData() async {
@@ -84,19 +98,13 @@ class _MapState extends State<MapWidget> {
     }
     addOriginMarker();
     addPolyLine();
-    // addStraightPolyLine();
 
     var distance = getStraightLineDistance();
     var time = routeRequireTime.last.difference(routeRequireTime.first);
-    totalDistance = getStraightLineDistance().toStringAsFixed(2);
-    totalTime =
-        routeRequireTime.last.difference(routeRequireTime.first).toString();
-    speed = (distance / time.inHours).toStringAsFixed(2);
-    // print('distance: $totalDistance km');
-    // print('distance(小數點後兩位): ${totalDistance.toStringAsFixed(2)} km');
-    // print('endTime - startTime: hr: $time');
-    // print('speed: m/hr: ${totalDistance / time.inHours}');
-    // print('speed(小數點後兩位): m/hr: ${(totalDistance / time.inHours).toStringAsFixed(2)}');
+    widget.gpxController!.saveDistance(distance.toStringAsFixed(2));
+    widget.gpxController!.saveTotalTime('${time.inHours}:${time.inMinutes - (time.inHours*60)}');
+    widget.gpxController!
+        .saveSpeed((distance / time.inHours).toStringAsFixed(2));
   }
 
   void addOriginMarker() {
@@ -154,13 +162,6 @@ class _MapState extends State<MapWidget> {
       await mapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(target: LatLng(latitude, longitude), zoom: 12)));
     });
-  }
-
-  void changeMapType(MapType type) {
-    _mapType = type;
-
-    /// Update Map
-    setState(() {});
   }
 
   double getStraightLineDistance() {
