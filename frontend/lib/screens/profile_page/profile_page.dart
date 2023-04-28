@@ -20,7 +20,17 @@ class ProfilePage extends GetView<ProfilePageController> {
                 .getUserData(Get.find<FirebaseAuthService>().user.value),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return const ColoredBox(
+                  color: MyStyles.tripTertiary,
+                  child: SafeArea(
+                    child: ColoredBox(
+                      color: Colors.white,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                );
               }
               UserModel? userModel = snapshot.data;
               if (userModel == null) {
@@ -32,55 +42,59 @@ class ProfilePage extends GetView<ProfilePageController> {
                 children: [
                   Container(
                     color: MyStyles.tripTertiary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
+                    padding: const EdgeInsets.only(
+                      left: 24,
+                      right: 24,
+                      top: 8,
+                      bottom: 24,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          width: double.infinity,
-                          height: 8,
-                        ),
-                        Text(
-                          '${userModel.name}',
-                          style: MyStyles.kTextStyleH2Bold.copyWith(
-                            color: Colors.white,
+                    child: SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: double.infinity,
+                            height: 8,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          '帳號：${userModel.email}',
-                          style: MyStyles.kTextStyleH4.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '會籍：${"正式會員"}',
-                              style: MyStyles.kTextStyleH4.copyWith(
-                                color: Colors.white,
-                              ),
+                          Text(
+                            '${userModel.name}',
+                            style: MyStyles.kTextStyleH2Normal.copyWith(
+                              color: Colors.white,
                             ),
-                            Expanded(
-                              child: FittedBox(
-                                child: Text(
-                                  '${"(會籍到期將於 2024/5/16 到期)"}',
-                                  style: MyStyles.kTextStyleBody1.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                  maxLines: 1,
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            '帳號：${userModel.email}',
+                            style: MyStyles.kTextStyleSubtitle1.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '會籍：${"正式會員"}',
+                                style: MyStyles.kTextStyleSubtitle1.copyWith(
+                                  color: Colors.white,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Expanded(
+                                child: FittedBox(
+                                  child: Text(
+                                    '${"(會籍到期將於 2024/5/16 到期)"}',
+                                    style: MyStyles.kTextStyleBody1.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -91,7 +105,7 @@ class ProfilePage extends GetView<ProfilePageController> {
                         child: Column(
                           children: [
                             DataContainer(
-                              iconData: Icons.heart_broken,
+                              iconData: Icons.emergency,
                               title: '保險用資料',
                               data: {
                                 "出生年月日": "${userModel.birth ?? "1995/05/16"}",

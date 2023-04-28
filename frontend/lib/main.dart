@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,7 +19,6 @@ import 'firebase_options.dart';
 
 import 'middleware.dart';
 import 'modules/auth_service.dart';
-import 'modules/home_controller.dart';
 import 'screens/auth_login_pages/login_page.dart';
 import 'screens/auth_signup_pages/signup_page.dart';
 import 'screens/gpx_page/gpx_page.dart';
@@ -50,7 +50,6 @@ void main() async {
   await GetStorage.init();
 
   Get.put(FirebaseAuthService());
-  // Get.put(HomeController()); //TODO 廢棄
   Get.put(ScheduleManagerController());
   usePathUrlStrategy();
   runApp(const MyApp());
@@ -70,6 +69,12 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.notoSansTextTheme(
           ThemeData(brightness: Brightness.light).textTheme,
         ),
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarBrightness: Brightness.dark,
+              ),
+              backgroundColor: MyStyles.tripTertiary,
+            ),
       ),
       initialRoute: GetPlatform.isWeb ? AppLinks.SCHEDUL : AppLinks.LOGIN,
       getPages: [
@@ -136,9 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: MyAppBar(),
-      // backgroundColor: MyStyles.greyScaleF4F4F4,
-      body:
-          ScheduleSelector(), // This trailing comma makes auto-formatting nicer for build methods.
+      body: ScheduleSelector(),
     );
   }
 }

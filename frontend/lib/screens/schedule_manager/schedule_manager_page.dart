@@ -20,19 +20,18 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
     controller.setTabController(2);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 80,
         centerTitle: true,
         title: const Text('活動行程管理'),
-        titleTextStyle: MyStyles.kTextStyleH2Bold.copyWith(
+        titleTextStyle: MyStyles.kTextStyleH2Normal.copyWith(
           color: Colors.white,
         ),
-        backgroundColor: MyStyles.tripTertiary,
         bottom: TabBar(
           controller: controller.tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white,
           indicatorColor: Colors.white,
           indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: MyStyles.kTextStyleH4,
           tabs: const [
             Tab(
               text: '已報名',
@@ -76,6 +75,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
           //已付款
           return ListView.builder(
             shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
             itemCount: registrations.length,
             itemBuilder: (ctx, index) {
               return Center(
@@ -84,12 +84,15 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                       controller.getOneTripData(registrations[index].tripId),
                   builder: (ctx, snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
-                      return ScheduleStatusCard(
-                        model: snapshot.data!,
-                        registration: registrations[index],
-                        tabStatus: status,
-                        gpxModel: downloadedGpx.firstWhereOrNull((element) =>
-                            element.tripId == registrations[index].tripId),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: ScheduleStatusCard(
+                          model: snapshot.data!,
+                          registration: registrations[index],
+                          tabStatus: status,
+                          gpxModel: downloadedGpx.firstWhereOrNull((element) =>
+                              element.tripId == registrations[index].tripId),
+                        ),
                       );
                     }
                     return const SizedBox();
@@ -377,8 +380,14 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(model.title),
-            Text(model.getDateRageString()),
+            Text(
+              model.title,
+              style: MyStyles.kTextStyleH4,
+            ),
+            Text(
+              model.getDateRageString(),
+              style: MyStyles.kTextStyleSubtitle1,
+            ),
             const SizedBox(
               height: 16,
             ),

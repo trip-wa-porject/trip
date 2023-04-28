@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
-import 'package:tripflutter/modules/auth_service.dart';
 import 'package:tripflutter/screens/home_page/home_page_controller.dart';
 import 'package:tripflutter/screens/profile_page/profile_page.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_page.dart';
@@ -31,21 +29,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: PageView(
-          physics: const ClampingScrollPhysics(),
-          controller: controller,
-          onPageChanged: (value) {
-            print('change page :$value');
-            setState(() {
-              selected = value;
-            });
-          },
-          children: [
-            ScheduleManagerPage(),
-            const ProfilePage(),
-          ],
-        ),
+      body: PageView(
+        physics: const ClampingScrollPhysics(),
+        controller: controller,
+        onPageChanged: (value) {
+          setState(() {
+            selected = value;
+          });
+        },
+        children: [
+          ScheduleManagerPage(),
+          const ProfilePage(),
+        ],
       ),
       bottomNavigationBar: StylishBottomBar(
         items: [
@@ -82,6 +77,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(10),
           bubbleFillStyle: BubbleFillStyle.outlined,
           unselectedIconColor: Colors.white,
+          padding: const EdgeInsets.only(top: 16.0),
         ),
       ),
     );
