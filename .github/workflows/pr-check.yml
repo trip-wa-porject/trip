@@ -1,6 +1,9 @@
-name: Deploy Flutter Web
+name: Pre-build Flutter Web
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - frontend/**
 
 jobs:
   build:
