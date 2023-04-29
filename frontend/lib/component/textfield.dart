@@ -1,35 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:tripflutter/consts.dart';
 
-class LoginTextField extends StatelessWidget {
+class LoginTextField extends StatefulWidget {
   const LoginTextField({
     Key? key,
     this.controller,
     this.hint,
     this.validator,
     this.error,
+    this.obscureText = false,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? hint;
   final String? error;
   final String? Function(String?)? validator;
+  final bool obscureText;
+
+  @override
+  State<LoginTextField> createState() => _LoginTextFieldState();
+}
+
+class _LoginTextFieldState extends State<LoginTextField> {
+  bool passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.green,
               width: 20,
             )),
-        hintText: hint,
-        errorText: error,
+        hintText: widget.hint,
+        errorText: widget.error,
         helperText: '',
+        suffixIcon: widget.obscureText
+            ? IconButton(
+                icon: Icon(
+                  passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: MyStyles.tripTertiary,
+                ),
+                onPressed: () {
+                  setState(() {
+                    passwordVisible = !passwordVisible;
+                  });
+                },
+              )
+            : null,
       ),
-      controller: controller,
-      validator: validator,
+      controller: widget.controller,
+      validator: widget.validator,
+      obscureText: widget.obscureText ? !passwordVisible : false,
     );
   }
 }

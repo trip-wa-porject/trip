@@ -67,6 +67,7 @@ class LoginDialog extends GetView<LoginController> {
                               validator: (String? value) {
                                 return validatePassword(value);
                               },
+                              obscureText: true,
                             ),
                           ),
                           // Obx(() => Text('${controller.passwordError.value}')),

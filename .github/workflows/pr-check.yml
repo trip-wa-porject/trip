@@ -1,0 +1,32 @@
+name: Pre-build Flutter Web
+
+on:
+  pull_request:
+    paths:
+      - frontend/**
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.0.0'
+
+      - name: Install Dependencies
+        working-directory: './frontend'
+        run: |
+          flutter upgrade && \
+          flutter pub get
+
+      - name: Build the application
+        working-directory: './frontend'
+        env:
+          FLUTTER_APIKEY: ${{ secrets.FLUTTER_APIKEY }}
+        run: flutter build web --dart-define FLUTTER_APIKEY=$FLUTTER_APIKEY --release --web-renderer html

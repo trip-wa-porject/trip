@@ -237,6 +237,12 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
           ),
           Obx(
             () {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
               List<Registration> registrations =
                   controller.userJoinedModel.toList();
               TabStatus status = TabStatus.register;
@@ -257,30 +263,37 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                   status = TabStatus.cancel;
                   break;
                 case 3:
-                  registrations =
-                      registrations.where((p0) => p0.status == 3).toList();
-                  status = TabStatus.deleted;
+                  //TODO
+                  registrations = [];
+
                   break;
                 default:
               }
+              if (registrations.isEmpty) {
+                return const Center(
+                  child: Text('目前無相關紀錄'),
+                );
+              }
+
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: registrations.length,
                 itemBuilder: (ctx, index) {
                   return Center(
-                    child: FutureBuilder<ScheduleModel?>(
-                      future: controller
-                          .getOneTripData(registrations[index].tripId),
-                      builder: (ctx, snapshot) {
-                        if (snapshot.hasData && snapshot.data != null) {
+                    child: Builder(
+                      builder: (ctx) {
+                        if (registrations[index].scheduleModel != null) {
                           return ConstrainedBox(
                             constraints: const BoxConstraints(
                               maxWidth: 1160,
                             ),
-                            child: ScheduleStatusCard(
-                              model: snapshot.data!,
-                              registration: registrations[index],
-                              tabStatus: status,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: ScheduleStatusCard(
+                                model: registrations[index].scheduleModel!,
+                                registration: registrations[index],
+                                tabStatus: status,
+                              ),
                             ),
                           );
                         }
@@ -293,7 +306,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
             },
           ),
           const SizedBox(
-            height: 120,
+            height: 60,
           ),
           Obx(() => controller.scheduleList.isNotEmpty
               ? Center(
@@ -302,14 +315,22 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                     child: Row(
                       children: const [
                         Expanded(child: Divider()),
-                        Text('推薦行程'),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            '推薦相關行程',
+                            style: MyStyles.kTextStyleH3Bold,
+                          ),
+                        ),
                         Expanded(child: Divider()),
                       ],
                     ),
                   ),
                 )
               : const SizedBox()),
-
+          const SizedBox(
+            height: 60,
+          ),
           //推薦行程
           Obx(() => Column(
                 mainAxisSize: MainAxisSize.min,
@@ -634,12 +655,53 @@ class PayTableInCard extends StatelessWidget {
 
     Map<String, String> tableColumn = {
       '繳費編號': '80808000808',
-      '票種': 'VIP會員',
+      '票種': '一般會員',
       '付款金額': '2400',
       '繳費狀態': '已繳費',
       '繳費方式': '匯款或無存摺存款',
       '是否成行': '成行',
     };
+    tableColumn['付款金額'] =
+        registration.scheduleModel!.price.toString(); //default
+    tableColumn['繳費編號'] = registration.tripId.toString() +
+        registration.userId!.codeUnitAt(0).toString() +
+        registration.userId!.codeUnitAt(1).toString();
+
+    switch (registration.status) {
+      case 0:
+        tableColumn['繳費狀態'] = '尚未繳費';
+        break;
+      case 1:
+        tableColumn['繳費狀態'] = '已繳費';
+        break;
+      case 2:
+        tableColumn['繳費狀態'] = '已送信';
+        break;
+      case 3:
+        tableColumn['繳費狀態'] = '已取消報名';
+        break;
+    }
+    if (registration.paymentInfo!.keys.isNotEmpty) {
+      int? method = registration.paymentInfo!['method'];
+      switch (method) {
+        case 0:
+          tableColumn['繳費方式'] = 'ATM繳款';
+          break;
+        case 1:
+          tableColumn['繳費方式'] = '匯款或無存摺存款';
+          break;
+        case 2:
+          tableColumn['繳費方式'] = '信用卡';
+          break;
+        default:
+      }
+      bool? isMember = registration.paymentInfo!['isMember'];
+      if (isMember == true) {
+        tableColumn['票種'] = 'VIP會員';
+        tableColumn['付款金額'] =
+            registration.scheduleModel!.memberPrice.toString();
+      }
+    }
     return Container(
       decoration: boxDecorationOutSide,
       child: Row(

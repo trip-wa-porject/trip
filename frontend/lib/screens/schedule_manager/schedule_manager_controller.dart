@@ -21,6 +21,7 @@ class ScheduleManagerController extends GetxController
   final box = GetStorage();
 
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs; //推薦行程
+  RxBool isLoading = false.obs;
   RxList<Registration> userJoinedModel = RxList<Registration>([]);
   RxList<GPXModel> downloadedGpx = RxList<GPXModel>();
   RxList<ScheduleModel> downloadedTrips = RxList<ScheduleModel>();
@@ -32,6 +33,7 @@ class ScheduleManagerController extends GetxController
   //取消報名
   Future<void> cancelRegister(Registration? registration) async {
     try {
+      isLoading.value = true;
       if (registration == null) {
         throw Exception('no input');
       }
@@ -55,6 +57,7 @@ class ScheduleManagerController extends GetxController
   //重新報名
   retryRegister(Registration? registration) async {
     try {
+      isLoading.value = true;
       if (registration == null) {
         throw Exception('no input');
       }
@@ -99,7 +102,7 @@ class ScheduleManagerController extends GetxController
       }
       await repository.updateRegistrationUseInstance(userId, tripId, {
         'status': 1,
-        'paymentInfo': {}, //Map
+        'paymentInfo': paymentInfo, //Map
       });
       await .5.delay();
       await getDataUserJoined(_firebaseAuthService.user.value);
@@ -144,16 +147,28 @@ class ScheduleManagerController extends GetxController
   }
 
   getDataUserJoined(User? user) async {
-    String? userId = user?.uid;
-    if (userId == null) {
-      userJoinedModel.assignAll([]);
-    } else {
-      List<Map<String, dynamic>> data =
-          await repository.getUserAllTrips(userId);
-      List<Registration> models =
-          data.map((e) => Registration.fromJson(e)).toList();
-      userJoinedModel.assignAll(models.toList());
+    try {
+      isLoading.value = true;
+      String? userId = user?.uid;
+      if (userId == null) {
+        userJoinedModel.assignAll([]);
+      } else {
+        List<Map<String, dynamic>> data =
+            await repository.getUserAllTrips(userId);
+        List<Registration> models =
+            data.map((e) => Registration.fromJson(e)).toList();
+        await Future.wait(models.map((e) => getTripData(e)));
+        userJoinedModel.assignAll(models.toList());
+      }
+    } catch (e) {
+      print('getDataUserJoined error :$e');
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  Future<void> getTripData(Registration registration) async {
+    registration.scheduleModel = await getOneTripData(registration.tripId);
   }
 
   Future<ScheduleModel?> getOneTripData(String? tripId) async {

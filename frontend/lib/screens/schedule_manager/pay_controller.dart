@@ -8,6 +8,7 @@ import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller
 
 import '../../models/registration.dart';
 import '../../models/schedule_model.dart';
+import '../../models/user_model.dart';
 import '../../modules/auth_service.dart';
 import '../../modules/hike_repository.dart';
 
@@ -62,6 +63,37 @@ class PayController extends GetxController {
           payMethod = '信用卡';
           break;
       }
+
+      bool isMember = false;
+      if (_orders.any((element) => element.detail == '正式會員')) {
+        isMember = true;
+        if (_firebaseAuthService.user.value?.uid != null) {
+          try {
+            repository.updateUserUseInstance(
+                _firebaseAuthService.user.value!.uid, {'member': 1});
+          } catch (e) {
+            Get.snackbar('升級會員失敗', '請聯絡客服');
+            print(e);
+          }
+        }
+      } else {
+        if (_firebaseAuthService.user.value?.uid != null) {
+          Map<String, dynamic> data = await repository
+              .getUserUseInstance(_firebaseAuthService.user.value!.uid);
+          UserModel userModel = UserModel.fromJson(data);
+          if (userModel.membership == 1) {
+            isMember = true;
+          }
+        }
+      }
+
+      Get.find<ScheduleManagerController>()
+          .confirmPay(registrationModel.value, {
+        'method': selectedMethod.value,
+        'info': _account,
+        'isMember': isMember,
+      });
+
       _orders = _orders.map((e) {
         e.lastNumbers = _account;
         e.payMethod = payMethod;
@@ -69,11 +101,6 @@ class PayController extends GetxController {
         return e;
       }).toList();
       orders.assignAll(_orders);
-      Get.find<ScheduleManagerController>()
-          .confirmPay(registrationModel.value, {
-        'method': selectedMethod.value,
-        'info': _account,
-      });
     } else {
       Get.snackbar('請提供付款資訊', '');
       return;
@@ -83,10 +110,10 @@ class PayController extends GetxController {
       joinScheduleSuccess(),
     );
     if (result == '查看更多活動') {
-      Get.toNamed('${AppLinks.SCHEDUL}');
+      Get.offAndToNamed('${AppLinks.SCHEDUL}');
     }
     if (result == '追蹤訂單') {
-      Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+      Get.offAndToNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
     }
   }
 

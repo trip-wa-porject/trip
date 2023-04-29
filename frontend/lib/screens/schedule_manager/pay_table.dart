@@ -133,7 +133,12 @@ class PayTable extends StatelessWidget {
                       .map((e) => Expanded(
                             child: Container(
                               decoration: boxDecoration,
-                              child: Center(child: Text(e ?? "")),
+                              child: Center(
+                                  child: Text(
+                                e ?? "",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                             ),
                           ))
                       .toList()))

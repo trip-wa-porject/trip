@@ -7,11 +7,12 @@ import 'package:tripflutter/consts.dart';
 import 'gpx_controller.dart';
 
 class GpxPage extends StatefulWidget {
-  GpxPage({Key? key, this.addStraightLineCallback, this.changeMapTypeCallback})
+  const GpxPage(
+      {Key? key, this.addStraightLineCallback, this.changeMapTypeCallback})
       : super(key: key);
 
-  VoidCallback? addStraightLineCallback;
-  void Function(MapType mapType)? changeMapTypeCallback;
+  final VoidCallback? addStraightLineCallback;
+  final void Function(MapType mapType)? changeMapTypeCallback;
 
   @override
   State<StatefulWidget> createState() => GpxState();

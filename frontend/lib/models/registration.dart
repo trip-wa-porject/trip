@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'schedule_model.dart';
 
 import '../utils/utils.dart';
 import 'schedule_model.dart';
@@ -46,6 +46,9 @@ class Registration {
       fromJson: dateTimeFromTimestamp,
       toJson: timestampFromDateTimeFromTimestamp)
   final DateTime? updateDate;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  ScheduleModel? scheduleModel;
 
   Registration(this.tripId, this.userId, this.price, this.paymentExpireDate,
       this.paymentInfo, this.status, this.createDate, this.updateDate);
