@@ -47,7 +47,6 @@ class GpxState extends State<GpxPage> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: isWindowVisibility ? Colors.black.withOpacity(0.3) : null,
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
