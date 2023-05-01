@@ -20,31 +20,47 @@ class GpxState extends State<GpxPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('路線導覽'),
-        titleTextStyle: MyStyles.kTextStyleSubtitle1.copyWith(
-          color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (isWindowVisibility) isWindowVisibility = !isWindowVisibility;
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('路線導覽'),
+          titleTextStyle: MyStyles.kTextStyleSubtitle1.copyWith(
+            color: Colors.white,
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Get.back();
+            },
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
-      body: Listener(
-        behavior: HitTestBehavior.opaque,
-        onPointerDown: (_) {
-          setState(() {
-            if (isWindowVisibility) isWindowVisibility = !isWindowVisibility;
-          });
-        },
-        child: Stack(
+        body: Stack(
           alignment: Alignment.center,
           children: <Widget>[
             MapWidget(gpxController: controller),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: isWindowVisibility ? Colors.black.withOpacity(0.3) : null,
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Positioned(
+                    bottom: 100.0,
+                    child: Visibility(
+                      visible: isWindowVisibility,
+                      child: getShowingFloatWindow(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Positioned(
               bottom: 36.0,
               left: 15.0,
@@ -82,13 +98,6 @@ class GpxState extends State<GpxPage> {
                     });
                   }),
                 ],
-              ),
-            ),
-            Positioned(
-              bottom: 100.0,
-              child: Visibility(
-                visible: isWindowVisibility,
-                child: getShowingFloatWindow(),
               ),
             ),
           ],
@@ -142,6 +151,7 @@ class GpxState extends State<GpxPage> {
                     floatWindowItemWithImage(
                         '緊急求救', 'assets/images/sos.png', 24.0, () {
                       setState(() {
+                        isWindowVisibility = !isWindowVisibility;
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -165,7 +175,6 @@ class GpxState extends State<GpxPage> {
                                 ],
                               );
                             });
-                        isWindowVisibility = !isWindowVisibility;
                       });
                     }),
                   ],
@@ -204,23 +213,23 @@ class GpxState extends State<GpxPage> {
                   children: [
                     floatWindowItemWithImage(
                         '預設地圖', 'assets/images/default_map.png', 6.0, () {
-                      controller.changeMapType(MapType.normal);
                       setState(() {
                         isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.normal);
                       });
                     }),
                     floatWindowItemWithImage(
                         'Google 衛星圖', 'assets/images/satellite.png', 6.0, () {
-                      controller.changeMapType(MapType.satellite);
                       setState(() {
                         isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.satellite);
                       });
                     }),
                     floatWindowItemWithImage(
                         'Google 地形圖', 'assets/images/terrain.png', 6.0, () {
-                      controller.changeMapType(MapType.terrain);
                       setState(() {
                         isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.terrain);
                       });
                     }),
                   ],
