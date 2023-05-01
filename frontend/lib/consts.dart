@@ -141,4 +141,5 @@ class AppLinks {
   static const String MANAGEMENT = '/management';
   static const String HOME = '/home';
   static const String GPX = '/gpx';
+  static const String ADMIN = '/admin';
 }

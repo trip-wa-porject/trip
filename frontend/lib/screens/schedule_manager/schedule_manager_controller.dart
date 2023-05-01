@@ -101,7 +101,7 @@ class ScheduleManagerController extends GetxController
         throw Exception('no input');
       }
       await repository.updateRegistrationUseInstance(userId, tripId, {
-        'status': 1,
+        'status': 2,
         'paymentInfo': paymentInfo, //Map
       });
       await .5.delay();

@@ -54,6 +54,8 @@ dependencies:
   url_launcher: ^6.1.10
   stylish_bottom_bar: ^1.0.0
   get_storage: ^2.1.1
+  flutter_side_menu: ^0.3.2
+  data_table_2: ^2.4.2
 
 dev_dependencies:
   flutter_test:

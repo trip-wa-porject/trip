@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:tripflutter/models/registration.dart';
 
 abstract class GeneralRepository {}
 
@@ -153,6 +154,33 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  //使用Firebase firestore
+  Future<List<Registration>> getRegistrations(
+      {String? userId, String? tripId}) async {
+    try {
+      final result = await FirebaseFirestore.instance
+          .collection('register')
+          .where(
+            'userId',
+            isEqualTo: userId,
+          )
+          .where(
+            'tripId',
+            isEqualTo: tripId,
+          )
+          .get();
+      return List<Map<String, dynamic>>.from(
+              result.docs.map((e) => e.data()).toList())
+          .map((e) => Registration.fromJson(e))
+          .toList();
+    } on FirebaseFunctionsException catch (error) {
+      print(error.code);
+      print(error.details);
+      print(error.message);
+      rethrow;
+    }
+  }
+
   //TODO today
   //updateRegistration
   /*
@@ -177,6 +205,37 @@ class BackendRepository implements GeneralRepository {
     } on FirebaseFunctionsException catch (error) {
       print(error.code);
       print(error.details);
+      print(error.message);
+      rethrow;
+    }
+  }
+
+  Future confirmPayUseInstance(
+      String userId, String tripId, int? status) async {
+    try {
+      final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
+          (await FirebaseFirestore.instance
+                  .collection('register')
+                  .where(
+                    'userId',
+                    isEqualTo: userId,
+                  )
+                  .where(
+                    'tripId',
+                    isEqualTo: tripId,
+                  )
+                  .limit(1)
+                  .get())
+              .docs;
+
+      if (docs.isEmpty) {
+        throw Exception('no document exist');
+      }
+      await docs[0].reference.update({
+        'status': status,
+      });
+    } on FirebaseException catch (error) {
+      print(error.code);
       print(error.message);
       rethrow;
     }

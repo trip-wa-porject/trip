@@ -14,53 +14,48 @@ class MySearchBar extends StatelessWidget {
     return LayoutBuilder(builder: (context, constrains) {
       return Align(
         alignment: Alignment.topCenter,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: kSearchBarTopPadding,
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 620),
-            child: SizedBox(
-              height: kSearchBarHeight,
-              width: constrains.maxWidth,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(kSearchBarHeight),
-                        color: Colors.white.withOpacity(.7),
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: Icon(
-                              Icons.search,
-                              color: MyStyles.greyScale757575,
+        //TODO check padding
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: SizedBox(
+            height: kSearchBarHeight,
+            width: constrains.maxWidth,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kSearchBarHeight),
+                      color: Colors.white.withOpacity(.7),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 48,
+                          height: 48,
+                          child: Icon(
+                            Icons.search,
+                            color: MyStyles.greyScale757575,
+                          ),
+                        ),
+                        Flexible(
+                          child: TextField(
+                            controller: controller,
+                            decoration: InputDecoration(
+                              hintText: '請輸入活動編號、活動名稱、領隊嚮導名字',
+                              hintStyle: MyStyles.kTextStyleSubtitle1.copyWith(
+                                color: MyStyles.greyScale757575,
+                              ),
+                              border: InputBorder.none,
                             ),
                           ),
-                          Flexible(
-                            child: TextField(
-                              controller: controller,
-                              decoration: InputDecoration(
-                                hintText: '請輸入活動編號、活動名稱、領隊嚮導名字',
-                                hintStyle:
-                                    MyStyles.kTextStyleSubtitle1.copyWith(
-                                  color: MyStyles.greyScale757575,
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

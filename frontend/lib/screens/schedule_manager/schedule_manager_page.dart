@@ -66,8 +66,8 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
               break;
             case 3:
               registrations =
-                  registrations.where((p0) => p0.status == 3).toList();
-              status = TabStatus.deleted;
+                  registrations.where((p0) => p0.status == 2).toList();
+              status = TabStatus.waitCheck;
               break;
             default:
           }
@@ -192,7 +192,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                             ),
                           ),
                           child: const Center(
-                            child: Text('繼續報名'),
+                            child: Text('等待審核'),
                           ),
                         ),
                       ),
@@ -205,7 +205,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                             ),
                           ),
                           child: const Center(
-                            child: Text('已取消'),
+                            child: Text('繼續報名'),
                           ),
                         ),
                       ),
@@ -222,7 +222,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                             ),
                           ),
                           child: const Center(
-                            child: Text('退票紀錄'),
+                            child: Text('已取消'),
                           ),
                         ),
                       ),
@@ -254,18 +254,18 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                   break;
                 case 1:
                   registrations =
-                      registrations.where((p0) => p0.status == 0).toList();
-                  status = TabStatus.pay;
+                      registrations.where((p0) => p0.status == 2).toList();
+                  status = TabStatus.waitCheck;
                   break;
                 case 2:
                   registrations =
-                      registrations.where((p0) => p0.status == 3).toList();
-                  status = TabStatus.cancel;
+                      registrations.where((p0) => p0.status == 0).toList();
+                  status = TabStatus.pay;
                   break;
                 case 3:
-                  //TODO
-                  registrations = [];
-
+                  registrations =
+                      registrations.where((p0) => p0.status == 3).toList();
+                  status = TabStatus.cancel;
                   break;
                 default:
               }
@@ -367,8 +367,8 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
 enum TabStatus {
   register,
   pay,
+  waitCheck,
   cancel,
-  deleted,
 }
 
 class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
@@ -513,13 +513,13 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
             },
           ),
         ];
-      case TabStatus.deleted:
+      case TabStatus.waitCheck:
         return [
           MyFilledButton(
-            label: '重新報名',
+            label: '取消報名',
             style: MyOutlinedButton.style1(),
             onPressed: () {
-              controller.retryRegister(registration);
+              controller.cancelRegister(registration);
             },
           ),
         ];
@@ -675,7 +675,7 @@ class PayTableInCard extends StatelessWidget {
         tableColumn['繳費狀態'] = '已繳費';
         break;
       case 2:
-        tableColumn['繳費狀態'] = '已送信';
+        tableColumn['繳費狀態'] = '待工作人員確認';
         break;
       case 3:
         tableColumn['繳費狀態'] = '已取消報名';

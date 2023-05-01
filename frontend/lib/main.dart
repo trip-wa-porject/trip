@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tripflutter/consts.dart';
+import 'package:tripflutter/screens/admin_user_pages/admin_user_home_page.dart';
+import 'package:tripflutter/screens/admin_user_pages/admin_user_page_controller.dart';
 import 'package:tripflutter/screens/api_test_page/api_test.dart';
 import 'package:tripflutter/screens/home_page/home_page.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_page.dart';
@@ -122,6 +124,15 @@ class MyApp extends StatelessWidget {
           name: AppLinks.TEST,
           page: () => const ApiTestsPage(),
         ),
+        GetPage(
+            name: AppLinks.ADMIN,
+            page: () => const AdminUserHomePage(),
+            children: [
+              GetPage(
+                name: AppLinks.MANAGEMENT,
+                page: () => ScheduleManagerPage(),
+              ),
+            ]),
       ],
     );
   }

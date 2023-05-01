@@ -50,6 +50,9 @@ class Registration {
   @JsonKey(includeFromJson: false, includeToJson: false)
   ScheduleModel? scheduleModel;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool selected = false;
+
   Registration(this.tripId, this.userId, this.price, this.paymentExpireDate,
       this.paymentInfo, this.status, this.createDate, this.updateDate);
 
