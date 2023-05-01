@@ -20,31 +20,46 @@ class GpxState extends State<GpxPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('路線導覽'),
-        titleTextStyle: MyStyles.kTextStyleSubtitle1.copyWith(
-          color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (isWindowVisibility) isWindowVisibility = !isWindowVisibility;
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('路線導覽'),
+          titleTextStyle: MyStyles.kTextStyleSubtitle1.copyWith(
+            color: Colors.white,
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Get.back();
+            },
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
-      body: Listener(
-        behavior: HitTestBehavior.opaque,
-        onPointerDown: (_) {
-          setState(() {
-            if (isWindowVisibility) isWindowVisibility = !isWindowVisibility;
-          });
-        },
-        child: Stack(
+        body: Stack(
           alignment: Alignment.center,
           children: <Widget>[
             MapWidget(gpxController: controller),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Positioned(
+                    bottom: 100.0,
+                    child: Visibility(
+                      visible: isWindowVisibility,
+                      child: getShowingFloatWindow(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Positioned(
               bottom: 36.0,
               left: 15.0,
@@ -84,13 +99,6 @@ class GpxState extends State<GpxPage> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 100.0,
-              child: Visibility(
-                visible: isWindowVisibility,
-                child: getShowingFloatWindow(),
-              ),
-            ),
           ],
         ),
       ),
@@ -115,59 +123,61 @@ class GpxState extends State<GpxPage> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
-        // height: 160,
+        height: 160,
         width: MediaQuery.of(context).size.width * 0.4,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             floatWindowTitle('其他工具', Icons.business_center_outlined),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // floatWindowItemWithImage(
-                  //     '兩點量測', 'assets/images/measure.png', 24.0, () {
-                  //   controller.routeDistanceCallback?.call();
-                  // }),
-                  // const VerticalDivider(
-                  //   thickness: 1,
-                  //   indent: 0,
-                  //   endIndent: 0,
-                  //   color: Colors.grey,
-                  // ),
-                  floatWindowItemWithImage(
-                      '緊急求救', 'assets/images/sos.png', 24.0, () {
-                    setState(() {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("注意！"),
-                              content: const Text("緊急電話撥打中..."),
-                              backgroundColor: Colors.white,
-                              actions: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: MyStyles
-                                          .tripTertiary, // Background color
-                                    ),
-                                    child: const Text(
-                                      "取消",
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                              ],
-                            );
-                          });
-                      isWindowVisibility = !isWindowVisibility;
-                    });
-                  }),
-                ],
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // floatWindowItemWithImage(
+                    //     '兩點量測', 'assets/images/measure.png', 24.0, () {
+                    //   controller.routeDistanceCallback?.call();
+                    // }),
+                    // const VerticalDivider(
+                    //   thickness: 1,
+                    //   indent: 0,
+                    //   endIndent: 0,
+                    //   color: Colors.grey,
+                    // ),
+                    floatWindowItemWithImage(
+                        '緊急求救', 'assets/images/sos.png', 24.0, () {
+                      setState(() {
+                        isWindowVisibility = !isWindowVisibility;
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("注意！"),
+                                content: const Text("緊急電話撥打中..."),
+                                backgroundColor: Colors.white,
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: MyStyles
+                                            .tripTertiary, // Background color
+                                      ),
+                                      child: const Text(
+                                        "取消",
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                ],
+                              );
+                            });
+                      });
+                    }),
+                  ],
+                ),
               ),
             ),
           ],
@@ -185,42 +195,44 @@ class GpxState extends State<GpxPage> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
-        // height: 180,
+        height: 180,
         width: MediaQuery.of(context).size.width * 0.92,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             floatWindowTitle('選擇地圖', Icons.map_outlined),
-            Container(
-              color: Colors.white,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 6.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  floatWindowItemWithImage(
-                      '預設地圖', 'assets/images/default_map.png', 6.0, () {
-                    controller.changeMapType(MapType.normal);
-                    setState(() {
-                      isWindowVisibility = !isWindowVisibility;
-                    });
-                  }),
-                  floatWindowItemWithImage(
-                      'Google 衛星圖', 'assets/images/satellite.png', 6.0, () {
-                    controller.changeMapType(MapType.satellite);
-                    setState(() {
-                      isWindowVisibility = !isWindowVisibility;
-                    });
-                  }),
-                  floatWindowItemWithImage(
-                      'Google 地形圖', 'assets/images/terrain.png', 6.0, () {
-                    controller.changeMapType(MapType.terrain);
-                    setState(() {
-                      isWindowVisibility = !isWindowVisibility;
-                    });
-                  }),
-                ],
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 6.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    floatWindowItemWithImage(
+                        '預設地圖', 'assets/images/default_map.png', 6.0, () {
+                      setState(() {
+                        isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.normal);
+                      });
+                    }),
+                    floatWindowItemWithImage(
+                        'Google 衛星圖', 'assets/images/satellite.png', 6.0, () {
+                      setState(() {
+                        isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.satellite);
+                      });
+                    }),
+                    floatWindowItemWithImage(
+                        'Google 地形圖', 'assets/images/terrain.png', 6.0, () {
+                      setState(() {
+                        isWindowVisibility = !isWindowVisibility;
+                        controller.changeMapType(MapType.terrain);
+                      });
+                    }),
+                  ],
+                ),
               ),
             ),
           ],
@@ -326,29 +338,27 @@ class GpxState extends State<GpxPage> {
 
   Widget floatWindowItemWithImage(
       String title, String imageSrc, double margin, void Function()? onTap) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: margin),
-            child: Column(
-              children: [
-                Image.asset(
-                  imageSrc,
-                  width: 100,
-                  height: 62,
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                Text(
-                  title,
-                  style: MyStyles.kTextStyleSubtitle1
-                      .copyWith(color: MyStyles.greyScale424242),
-                )
-              ],
-            ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: margin),
+          child: Column(
+            children: [
+              Image.asset(
+                imageSrc,
+                width: 100,
+                height: 62,
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Text(
+                title,
+                style: MyStyles.kTextStyleSubtitle1
+                    .copyWith(color: MyStyles.greyScale424242),
+              )
+            ],
           ),
         ),
       ),
