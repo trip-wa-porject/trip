@@ -759,6 +759,8 @@ PODS:
   - Libuv-gRPC/Implementation (0.0.10):
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
+  - location (0.0.1):
+    - Flutter
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -779,6 +781,7 @@ DEPENDENCIES:
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - Flutter (from `Flutter`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -823,6 +826,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   url_launcher_ios:
@@ -857,6 +862,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: c9e714f7eec91a55641e2bab9f45fd83a219b882
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef

@@ -37,6 +37,8 @@ class UserModel {
   @JsonKey(defaultValue: <String, dynamic>{})
   Map? agreements; //	閱讀條款統一狀態	Map{}
 
+  get isAdminUser => email == 'admin@gmail.com';
+
   UserModel(
     this.idno,
     this.userId,
