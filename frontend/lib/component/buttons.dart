@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../consts.dart';
 
+//
 class MyOutlinedButton extends StatelessWidget {
   const MyOutlinedButton(
       {Key? key, required this.label, this.style, this.onPressed})
@@ -244,6 +245,152 @@ class MyFilledButton extends StatelessWidget {
       onPressed: onPressed,
       child: Center(
         child: Text(label),
+      ),
+    );
+  }
+}
+
+class MyWebButton extends StatelessWidget {
+  const MyWebButton(
+      {Key? key,
+      required this.label,
+      this.icon,
+      this.iconData,
+      this.style,
+      this.onPressed})
+      : super(key: key);
+
+  final String label;
+  final Widget? icon;
+  final IconData? iconData;
+  final ButtonStyle? style;
+  final void Function()? onPressed;
+
+  static ButtonStyle styleSmallFilled() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
+  static ButtonStyle styleSmallOutlined() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfff8fdef),
+        foregroundColor: MyStyles.tripTertiary,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
+  static ButtonStyle styleMediumFilledGreen() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleButtonM,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(113, 40));
+  }
+
+  static ButtonStyle styleMediumFilledOrange() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.primary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleSubtitle1Bold,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.primary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(113, 40));
+  }
+
+  static ButtonStyle styleMediumOutlinedGreen() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfff8fdef),
+        foregroundColor: MyStyles.tripTertiary,
+        textStyle: MyStyles.kTextStyleButtonM,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(113, 40));
+  }
+
+  static ButtonStyle styleMediumOutlinedOrange() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfffff9ee),
+        foregroundColor: MyStyles.primary,
+        textStyle: MyStyles.kTextStyleButtonM,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.primary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(113, 40));
+  }
+
+  static ButtonStyle styleMediumFillGrey() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xffe5e5e5),
+        foregroundColor: const Color(0xff767676),
+        textStyle: MyStyles.kTextStyleButtonM,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(113, 40));
+  }
+
+  static ButtonStyle styleLargeFilled() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
+  static ButtonStyle styleLargeOutlined() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfff8fdef),
+        foregroundColor: MyStyles.tripTertiary,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      style: style,
+      onPressed: onPressed,
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) icon!,
+            if (icon == null && iconData != null)
+              Icon(
+                iconData,
+                size: 16,
+              ),
+            Text(label),
+          ],
+        ),
       ),
     );
   }

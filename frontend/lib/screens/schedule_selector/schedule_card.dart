@@ -67,7 +67,6 @@ class ScheduleCard extends StatelessWidget {
               width: 363,
               child: _leftSideImage("${_model.id}", _model.imageUrls.first)),
           SizedBox(
-            width: 520,
             child: Padding(
               padding: const EdgeInsets.only(
                 left: 30,
@@ -78,17 +77,16 @@ class ScheduleCard extends StatelessWidget {
                   _model.area.map((e) => e.toString()).toList(), _model.title),
             ),
           ),
-          SizedBox(
-              width: 277,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 30,
-                  top: 16.0,
-                  bottom: 18,
-                ),
-                child: _rightSideBook(model.price),
-              )),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 30,
+              top: 16.0,
+              bottom: 18,
+            ),
+            child: _rightSideBook(model.price),
+          ),
         ],
       ),
     );
@@ -115,18 +113,18 @@ class ScheduleCard extends StatelessWidget {
       ),
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.all(16),
-      child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: const Color.fromRGBO(255, 255, 255, 0.6)),
-            child: Text(
-              "ID-$tripNum",
-              style: MyStyles.kTextStyleBody1,
-            ),
-          )),
+      // child: Align(
+      //     alignment: Alignment.bottomLeft,
+      //     child: Container(
+      //       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      //       decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(8.0),
+      //           color: const Color.fromRGBO(255, 255, 255, 0.6)),
+      //       child: Text(
+      //         "ID-$tripNum",
+      //         style: MyStyles.kTextStyleBody1,
+      //       ),
+      //     )),
     );
   }
 
@@ -144,17 +142,35 @@ class ScheduleCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "$handleStartDate(${intToDate[startDate.weekday]}) - $handleEndDate(${intToDate[endDate.weekday]}) ${area.first.substring(0, 3)}",
-          maxLines: 1,
-          style: MyStyles.kTextStyleH4.copyWith(
-            color: MyStyles.greyScale212121,
-          ),
+        Row(
+          children: [
+            Text(
+              "$handleStartDate(${intToDate[startDate.weekday]}) - $handleEndDate(${intToDate[endDate.weekday]})", //${area.first.substring(0, 3)}
+              maxLines: 1,
+              style: MyStyles.kTextStyleH4.copyWith(
+                color: MyStyles.greyScale212121,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Icon(
+              Icons.maps_ugc_outlined,
+              color: MyStyles.tripTertiary,
+            ),
+            Text(
+              "${area.first.substring(0, 3)}", //
+              maxLines: 1,
+              style: MyStyles.kTextStyleH4.copyWith(
+                color: MyStyles.greyScale212121,
+              ),
+            ),
+          ],
         ),
         Text(
           title,
           maxLines: 1,
-          style: MyStyles.kTextStyleH3.copyWith(
+          style: MyStyles.kTextStyleH3M.copyWith(
             color: MyStyles.greyScale000000,
           ),
         ),
@@ -253,14 +269,14 @@ class ScheduleCard extends StatelessWidget {
 
   Widget _customButton(String label, void Function()? onPressed) {
     return label == '了解更多'
-        ? MyOutlinedButton(
+        ? MyWebButton(
             label: label,
-            style: MyOutlinedButton.style1(),
+            style: MyWebButton.styleMediumOutlinedOrange(),
             onPressed: onPressed,
           )
-        : MyFilledButton(
+        : MyWebButton(
             label: label,
-            style: MyFilledButton.style2(),
+            style: MyWebButton.styleMediumFilledOrange(),
             onPressed: onPressed,
           );
   }
@@ -270,16 +286,15 @@ class ScheduleCard extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 4, top: 4),
       decoration: BoxDecoration(
-          border: Border.all(
-              color: active ? MyStyles.tripTertiary : MyStyles.greyScale757575),
-          borderRadius: BorderRadius.circular(6.0),
-          color: active ? MyStyles.tripTertiary : Colors.white),
+          borderRadius: BorderRadius.circular(6.0), color: MyStyles.green4),
       child: Align(
         alignment: Alignment.center,
-        child: Text(label,
-            style: MyStyles.kTextStyleBody1.copyWith(
-              color: active ? Colors.white : Colors.black,
-            )),
+        child: Text(
+          label,
+          style: MyStyles.kTextStyleBody1.copyWith(
+            color: MyStyles.tripTertiary,
+          ),
+        ),
       ),
     );
   }

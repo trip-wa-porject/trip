@@ -32,6 +32,8 @@ class MyStyles {
   static const Color green1 = Color(0xffDDE1DA);
   static const Color green2 = Color(0xffC8CABE);
   static const Color green3 = Color(0xffA9B19C);
+  static const Color green4 = Color(0xfff8fdef);
+
   static const Color yellow1 = Color(0xffF4F1D5);
   static const Color yellow2 = Color(0xffF0EEC9);
   static const Color yellow3 = Color(0xffEDD9A1);
@@ -51,6 +53,7 @@ class MyStyles {
   static const Color greyScale6037392F = Color(0x6037392F);
   static const Color greyScale8037392F = Color(0x8037392F);
   static const Color greyScaleF4F4F4 = Color(0xffF4F4F4);
+  static const Color white = Color(0xffffffff);
 
 //TextStyles
   static const TextStyle kTextStyleH1 = TextStyle(
@@ -87,7 +90,19 @@ class MyStyles {
     letterSpacing: 0.15,
   );
 
+  static const TextStyle kTextStyleH3M = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.15,
+  );
+
   static const TextStyle kTextStyleH4 = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0.15,
+  );
+
+  static const TextStyle kTextStyleH4M = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.15,
@@ -114,6 +129,18 @@ class MyStyles {
   );
 
   static const TextStyle kTextStyleBody1 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0.25,
+  );
+
+  static const TextStyle kTextStyleButtonS = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    letterSpacing: 0.25,
+  );
+
+  static const TextStyle kTextStyleButtonM = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
     letterSpacing: 0.25,
