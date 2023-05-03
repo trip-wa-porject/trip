@@ -15,7 +15,7 @@
       </table>
       <table class="w-full py-12 lg:w-2/3 lg:mx-auto border-x">
         <tr class="w-5/6 lg:w-2/3">
-          <td class="font-black text-2xl px-[10%]">陳先生，謝謝</td>
+          <td class="font-black text-2xl px-[10%]">{{ name }}，謝謝</td>
         </tr>
         <tr>
           <td class="font-black text-2xl px-[10%]">
@@ -40,21 +40,21 @@
           >
             繳費編號
           </td>
-          <td class="text-[#424242] text-sm">808080080808</td>
+          <td class="text-[#424242] text-sm">{{ registerId }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center py-1">商品明細</td>
           <td class="text-[#424242] text-sm truncate max-w-[120px] pr-1">
-            舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員
+            {{ title }}
           </td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center py-1">繳費日期</td>
-          <td class="text-[#424242] text-sm">2023 / 3 / 10</td>
+          <td class="text-[#424242] text-sm">{{ paymentDate }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center py-1">付款金額</td>
-          <td class="text-[#424242] text-sm">TWD 3,000</td>
+          <td class="text-[#424242] text-sm">TWD {{ price }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center py-1">繳費狀態</td>
@@ -79,7 +79,7 @@
             活動名稱
           </td>
           <td class="text-[#424242] text-sm max-w-[120px] pr-2 py-1 truncate">
-            舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員舊好茶部落巡禮、正式會員
+            {{ title }}
           </td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
             活動日期
           </td>
           <td class="text-[#424242] text-sm truncate max-w-[120px] pr-1">
-            2023 / 3 / 25 (六) - 3 / 27(一）
+            {{ duration }}
           </td>
         </tr>
         <tr>
@@ -97,7 +97,7 @@
           >
             類&#32; 型
           </td>
-          <td class="text-[#424242] text-sm">百岳</td>
+          <td class="text-[#424242] text-sm">{{ type }}</td>
         </tr>
         <tr>
           <td
@@ -106,19 +106,19 @@
           >
             等&#32; 級
           </td>
-          <td class="text-[#424242] text-sm">大眾路線（入門）</td>
+          <td class="text-[#424242] text-sm">{{ level }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center px-2 py-1">
             集合地點
           </td>
-          <td class="text-[#424242] text-sm">三重捷運站2號出口</td>
+          <td class="text-[#424242] text-sm">{{ preDepartureMeetingPlace }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center px-2 py-1">
             集合時間
           </td>
-          <td class="text-[#424242] text-sm">3/25 (六) 9:00</td>
+          <td class="text-[#424242] text-sm">{{ gatherTime }}</td>
         </tr>
         <tr>
           <td class="text-[#424242] font-black text-center px-2 py-1">
@@ -133,7 +133,7 @@
           >
             領&#32; 隊
           </td>
-          <td class="text-[#424242] text-sm">林麗英</td>
+          <td class="text-[#424242] text-sm">{{ leader }}</td>
         </tr>
         <tr>
           <td
@@ -142,13 +142,13 @@
           >
             嚮&#32; 導
           </td>
-          <td class="text-[#424242] text-sm">林麗英、林麗英、林麗英</td>
+          <td class="text-[#424242] text-sm">{{ guides }}</td>
         </tr>
         <tr>
           <td colspan="2" class="w-full pt-4" align="center">
             <div class="flex items-center pl-[10%] lg:pl-[20%]">
               <img
-                src="https://firebasestorage.googleapis.com/v0/b/wa-project-mountain.appspot.com/o/qrcode.png?alt=media&token=e6a0303b-4b95-4fdf-91d9-1ada34d65bde"
+                src="https://firebasestorage.googleapis.com/v0/b/wa-project-mountain.appspot.com/o/76OXH3P8JA.png?alt=media&token=78d4a044-242c-4070-ba22-5522bf651f17"
                 alt="qrcode"
                 class="w-24 h-24"
               />

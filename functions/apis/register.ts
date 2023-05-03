@@ -2,6 +2,41 @@ import { https, logger } from 'firebase-functions'
 import type { Register, Payment, User, Trip } from '../@types'
 import { db } from '../auth'
 import { HttpsError } from 'firebase-functions/v1/auth'
+import { readFile } from 'fs'
+import { compile } from 'handlebars'
+import { join } from 'path'
+
+import { mailSetting } from '../auth'
+
+const readHTMLFile = function (
+  path: string,
+  callback: (...params: any) => any
+) {
+  readFile(path, { encoding: 'utf-8' }, function (err, html) {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, html)
+    }
+  })
+}
+
+const formateDate = (date: number) => {
+  const now = new Date(date)
+  return (
+    now.getDate() +
+    '/' +
+    (now.getMonth() + 1) +
+    '/' +
+    now.getFullYear() +
+    ' ' +
+    now.getHours() +
+    ':' +
+    now.getMinutes() +
+    ':' +
+    now.getSeconds()
+  )
+}
 
 const ref = db.collection('register')
 
@@ -206,6 +241,20 @@ export const updateRegister = https.onCall(
     }
 
     const may_update_register = checker.data()
+
+    if (!may_update_register?.userId || !may_update_register?.tripId) {
+      throw new HttpsError('not-found', "Register doesn't exist")
+    }
+
+    const { userId, tripId } = may_update_register
+
+    const userChecker = await db.collection('users').doc(userId).get()
+    const tripChecker = await db.collection('trips').doc(tripId).get()
+
+    if (!userChecker.exists || !tripChecker.exists) {
+      throw new HttpsError('not-found', "user or trip doesn't exist")
+    }
+
     if (may_update_register && may_update_register.status !== 0) {
       throw new HttpsError(
         'invalid-argument',
@@ -213,9 +262,58 @@ export const updateRegister = https.onCall(
       )
     }
 
-    checker.ref.update({ status, paymentInfo })
     try {
       const _ = await checker.ref.update({ status, paymentInfo })
+
+      const user = userChecker.data() as User
+      const trip = tripChecker.data() as Trip
+
+      const now = new Date()
+
+      readHTMLFile(
+        join(
+          __dirname,
+          '../../email-template-maker/build_production/index.html'
+        ),
+        function (err, html) {
+          if (err) {
+            console.log('error reading file', err)
+            return
+          }
+          const template = compile(html)
+          const replacements = {
+            name: trip?.title ?? '',
+            registerId: registerId,
+            title: trip?.title ?? '',
+            paymentDate: formateDate(now.getTime()),
+            price: user?.member === 0 ? trip?.price : trip?.memberPrice,
+            duration: `${formateDate(trip.startDate)} - ${formateDate(
+              trip.endDate
+            )}`,
+            type: trip?.type,
+            level: trip?.level,
+            preDepartureMeetingPlace:
+              trip?.information?.preDepartureMeetingPlace,
+            gatherTime: formateDate(trip.information.gatherTime),
+            leader: trip?.information?.leader,
+            guides: trip?.information?.guides.join(', '),
+          }
+          const htmlToSend = template(replacements)
+
+          const mailOptions = {
+            from: '登峰造極 <wa.project.mountain@gmail.com>',
+            to: user.email,
+            subject: '謝謝您的預定行程！',
+            html: htmlToSend,
+          }
+
+          mailSetting.sendMail(mailOptions, function (error, response) {
+            if (error) {
+              console.log(error)
+            }
+          })
+        }
+      )
 
       return 'ok'
     } catch {
@@ -223,39 +321,6 @@ export const updateRegister = https.onCall(
     }
   }
 )
-
-// export const cancelRegister = https.onCall(
-//   async (data: { registerId: string }) => {
-//     const keys = Object.keys(data)
-//     if (keys.length > 1 && !keys.includes('registerId')) {
-//       throw new HttpsError('invalid-argument', 'argument too much or not include enougn information')
-//     }
-
-//     const { registerId } = data
-
-//     const checker = await ref.doc(registerId).get()
-//     if (!checker.exists) {
-//       throw new HttpsError('not-found', "Register doesn't exist")
-//     }
-
-//     const may_update_register = checker.data()
-//     if (may_update_register && may_update_register.status !== ) {
-//       throw new HttpsError(
-//         'invalid-argument',
-//         'register status not allowed to change'
-//       )
-//     }
-
-//     checker.ref.update({ status, paymentInfo })
-//     try {
-//       const _ = await checker.ref.update({ status, paymentInfo })
-
-//       return 'ok'
-//     } catch {
-//       return {}
-//     }
-//   }
-// )
 
 export const getUserRegisters = https.onCall(
   async (data: { userId: string }) => {
