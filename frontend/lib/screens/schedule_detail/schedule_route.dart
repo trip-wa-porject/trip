@@ -46,15 +46,15 @@ Widget _createDownloadButton() {
         },
         style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(const Color(0xFFEA9F49)),
+                MaterialStateProperty.all<Color>(MyStyles.tripTertiary),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100.0),
-                    side: const BorderSide(color: Color(0xFFEA9F49))))),
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: const BorderSide(color: MyStyles.tripTertiary)))),
         child: const Text(
           '下載GPX',
           style: TextStyle(
-            color: MyStyles.greyScale000000,
+            color: Colors.white,
             fontSize: 14,
           ),
         ),
