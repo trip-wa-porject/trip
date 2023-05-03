@@ -302,7 +302,7 @@ export const updateRegister = https.onCall(
 
           const mailOptions = {
             from: '登峰造極 <wa.project.mountain@gmail.com>',
-            to: user.email,
+            to: 'asdfg09487@gmail.com',
             subject: '謝謝您的預定行程！',
             html: htmlToSend,
           }
