@@ -209,7 +209,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                     RichText(
                       textScaleFactor: Get.textScaleFactor,
                       text: TextSpan(
-                        text: '非會員 ',
+                        text: '一般會員 ',
                         style: MyStyles.kTextStyleH2Bold.copyWith(
                             fontWeight: FontWeight.normal,
                             color: MyStyles.greyScale000000),
@@ -220,7 +220,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                                 .copyWith(color: MyStyles.redC80000),
                           ),
                           TextSpan(
-                            text: ' 會員 ',
+                            text: ' VIP會員 ',
                             style: MyStyles.kTextStyleH2Bold.copyWith(
                                 fontWeight: FontWeight.normal,
                                 color: MyStyles.greyScale000000),

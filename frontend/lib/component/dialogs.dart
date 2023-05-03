@@ -24,7 +24,7 @@ Widget joinMemberDialog() {
               children: [
                 Center(
                   child: Text(
-                    'I 加入正式會員 I',
+                    'I 加入VIP會員 I',
                     style: MyStyles.kTextStyleH2Bold.copyWith(
                       color: MyStyles.greyScale212121,
                     ),
@@ -34,7 +34,7 @@ Widget joinMemberDialog() {
                   height: 25,
                 ),
                 Text(
-                  '以下為加入正式會員說明條款：',
+                  '以下為加入VIP會員說明條款：',
                   style: MyStyles.kTextStyleH3Bold.copyWith(
                     color: MyStyles.tripPrimary,
                   ),
@@ -43,7 +43,7 @@ Widget joinMemberDialog() {
                   height: 9,
                 ),
                 Text(
-                  '臨時會員要轉正式會員除需繳納常年會費（新臺幣500元）外尚需加收手續費100元。辦理入會申請時，如為親至協會辦理者須準備有效證件(身分證或駕照或健保卡.......等有照片之證件驗證身份使用（辦理入山申請時專用）)，並於協會制式表單正確填寫申請表：姓名、性別、出生地、血型、出生日期、身分證號、通訊地址、戶籍地址、聯絡電話（家、手機、公司）、緊急聯絡人及電話。',
+                  '一般會員要轉VIP會員除需繳納常年會費（新臺幣500元）外尚需加收手續費100元。辦理入會申請時，如為親至協會辦理者須準備有效證件(身分證或駕照或健保卡.......等有照片之證件驗證身份使用（辦理入山申請時專用）)，並於協會制式表單正確填寫申請表：姓名、性別、出生地、血型、出生日期、身分證號、通訊地址、戶籍地址、聯絡電話（家、手機、公司）、緊急聯絡人及電話。',
                   style: MyStyles.kTextStyleSubtitle1.copyWith(
                     color: MyStyles.greyScale000000,
                   ),
