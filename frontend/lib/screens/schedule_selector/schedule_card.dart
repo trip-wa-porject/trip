@@ -66,18 +66,22 @@ class ScheduleCard extends StatelessWidget {
           SizedBox(
               width: 363,
               child: _leftSideImage("${_model.id}", _model.imageUrls.first)),
-          SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 30,
-                top: 16.0,
-                bottom: 18,
+          Flexible(
+            child: SizedBox(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  top: 16.0,
+                  bottom: 18,
+                ),
+                child: _rightSideInfo(
+                    _model.startDate!,
+                    _model.endDate!,
+                    _model.area.map((e) => e.toString()).toList(),
+                    _model.title),
               ),
-              child: _rightSideInfo(_model.startDate!, _model.endDate!,
-                  _model.area.map((e) => e.toString()).toList(), _model.title),
             ),
           ),
-          const Spacer(),
           Padding(
             padding: const EdgeInsets.only(
               left: 16.0,
