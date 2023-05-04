@@ -42,7 +42,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     );
     DropdownStyleData dropdownStyleData = DropdownStyleData(
       width: width, //展開視窗風格
-      maxHeight: allItems.length > 8 ? 400 : null,
+      maxHeight: 200,
       offset: const Offset(0, -8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
