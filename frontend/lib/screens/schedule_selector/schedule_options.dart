@@ -15,7 +15,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ScheduleSelectorController());
-    double spacerWidth = 16.0;
+    double spacerWidth = 8.0;
 
     return Card(
       elevation: 10.0,
@@ -186,19 +186,29 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                   ),
                   Row(
                     children: [
-                      MyOutlinedButton(
-                        label: '清除所有',
-                        style: MyOutlinedButton.style2(),
-                        onPressed: () {
-                          controller.clearAllSelected();
-                        },
-                      ),
+                      GestureDetector(
+                          onTap: () {
+                            controller.clearAllSelected();
+                          },
+                          child: const SizedBox(
+                            height: 40,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                '清除所有',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: MyStyles.tripTertiary,
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         width: 16.0,
                       ),
-                      MyFilledButton(
+                      MyWebButton(
                         label: '搜尋',
-                        style: MyFilledButton.style1(),
+                        style: MyWebButton.styleSmallFilled(),
                         onPressed: () {
                           controller.search();
                         },

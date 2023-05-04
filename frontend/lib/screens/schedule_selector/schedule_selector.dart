@@ -151,7 +151,10 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                             }),
                           ),
                           Positioned.fill(
-                            child: buildFloatingSearchBar(context),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: buildFloatingSearchBar(context),
+                            ),
                           ),
                         ],
                       ),

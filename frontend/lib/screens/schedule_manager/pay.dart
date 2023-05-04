@@ -10,7 +10,6 @@ import '../../component/my_app_bar.dart';
 import '../../component/textfield.dart';
 import '../../component/widgets.dart';
 import '../../consts.dart';
-import '../../models/schedule_model.dart';
 import 'pay_table.dart';
 
 class Pay extends GetView<PayController> {
@@ -78,11 +77,11 @@ class Pay extends GetView<PayController> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: EasyRichText(
-                            '● 付款狀態（臨時會員）',
+                            '● 付款狀態（一般會員）',
                             defaultStyle: MyStyles.kTextStyleH3Bold,
                             patternList: [
                               EasyRichTextPattern(
-                                targetString: '（臨時會員）',
+                                targetString: '（一般會員）',
                                 style: MyStyles.kTextStyleH3Bold.copyWith(
                                   color: MyStyles.tripTertiary,
                                 ),

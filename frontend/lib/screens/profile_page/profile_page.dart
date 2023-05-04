@@ -75,7 +75,7 @@ class ProfilePage extends GetView<ProfilePageController> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '會籍：${"正式會員"}',
+                                '會籍：${userModel.membership == 1 ? "VIP會員" : "一般會員"}',
                                 style: MyStyles.kTextStyleSubtitle1.copyWith(
                                   color: Colors.white,
                                 ),
@@ -162,6 +162,7 @@ class DataContainer extends StatelessWidget {
   final IconData iconData;
   final String title;
   final Map<String, String> data;
+
   @override
   Widget build(BuildContext context) {
     return Column(

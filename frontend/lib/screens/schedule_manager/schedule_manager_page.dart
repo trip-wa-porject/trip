@@ -128,7 +128,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '活動行程管理',
+                  '登山行程管理',
                   style: MyStyles.kTextStyleH2Bold
                       .copyWith(color: MyStyles.tripTertiary),
                 ),
@@ -146,7 +146,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                 Color borderColor = MyStyles.tripPrimary;
                 return Container(
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 244, 244),
+                    color: const Color(0xfffff9ee),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(10.0),
                     ),
@@ -156,13 +156,13 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                   child: TabBar(
                     controller: controller.tabController,
                     labelPadding: const EdgeInsets.all(0),
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.black,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: MyStyles.primary,
                     indicatorWeight: 0,
-                    labelStyle: MyStyles.kTextStyleH3Bold.copyWith(),
-                    unselectedLabelStyle: MyStyles.kTextStyleH3.copyWith(),
+                    labelStyle: MyStyles.kTextStyleH4M.copyWith(),
+                    unselectedLabelStyle: MyStyles.kTextStyleH4M.copyWith(),
                     indicator: const BoxDecoration(
-                      color: Colors.orange,
+                      color: MyStyles.primary,
                       backgroundBlendMode: BlendMode.dstOver,
                     ),
                     tabs: [
@@ -178,8 +178,21 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                               bottomLeft: Radius.circular(10),
                             ),
                           ),
-                          child: const Center(
-                            child: const Text('已報名'),
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (controller.selectedIndex.value == 0)
+                                  const Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                const Text('已報名'),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -191,8 +204,26 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                               width: borderWidth,
                             ),
                           ),
-                          child: const Center(
-                            child: Text('等待審核'),
+                          child: Center(
+                            child: Obx(
+                              () => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (controller.selectedIndex.value == 1)
+                                    const Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 4.0),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  Text(
+                                    '等待審核中',
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -204,8 +235,24 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                               width: borderWidth,
                             ),
                           ),
-                          child: const Center(
-                            child: Text('繼續報名'),
+                          child: Center(
+                            child: Obx(
+                              () => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (controller.selectedIndex.value == 2)
+                                    const Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 4.0),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  Text('繼續報名'),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -221,8 +268,24 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                               bottomRight: Radius.circular(10),
                             ),
                           ),
-                          child: const Center(
-                            child: Text('已取消'),
+                          child: Center(
+                            child: Obx(
+                              () => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (controller.selectedIndex.value == 3)
+                                    const Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 4.0),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  Text('已取消'),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -472,32 +535,29 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
   }
 
   List<Widget> getButtons(TabStatus status) {
+    MyWebButton cancelRegister = MyWebButton(
+      label: '取消報名',
+      iconData: Icons.close,
+      style: MyWebButton.styleMediumFillGrey(),
+      onPressed: () {
+        controller.cancelRegister(registration);
+      },
+    );
     switch (status) {
       case TabStatus.register:
         return [
-          MyFilledButton(
-            label: '取消報名',
-            style: MyOutlinedButton.style1(),
-            onPressed: () {
-              controller.cancelRegister(registration);
-            },
-          ),
+          cancelRegister,
         ];
       case TabStatus.pay:
         return [
-          MyFilledButton(
-            label: '取消報名',
-            style: MyOutlinedButton.style1(),
-            onPressed: () {
-              controller.cancelRegister(registration);
-            },
-          ),
+          cancelRegister,
           const SizedBox(
             width: 8,
           ),
-          MyFilledButton(
+          MyWebButton(
             label: '繼續付款',
-            style: MyOutlinedButton.style1(),
+            iconData: Icons.attach_money,
+            style: MyWebButton.styleMediumFilledOrange(),
             onPressed: () {
               controller.goToPayPage(registration.tripId!);
             },
@@ -505,9 +565,10 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
         ];
       case TabStatus.cancel:
         return [
-          MyFilledButton(
+          MyWebButton(
             label: '重新報名',
-            style: MyOutlinedButton.style1(),
+            iconData: Icons.refresh,
+            style: MyWebButton.styleMediumFillGrey(),
             onPressed: () {
               controller.retryRegister(registration);
             },
@@ -515,13 +576,7 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
         ];
       case TabStatus.waitCheck:
         return [
-          MyFilledButton(
-            label: '取消報名',
-            style: MyOutlinedButton.style1(),
-            onPressed: () {
-              controller.cancelRegister(registration);
-            },
-          ),
+          cancelRegister,
         ];
       default:
         return [];
@@ -583,9 +638,10 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    MyOutlinedButton(
+                    MyWebButton(
                       label: '查看行程',
-                      style: MyOutlinedButton.style1(),
+                      iconData: Icons.search,
+                      style: MyWebButton.styleMediumOutlinedOrange(),
                       onPressed: () {
                         controller.goToDetailPage(registration.tripId!);
                       },

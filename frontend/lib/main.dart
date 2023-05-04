@@ -53,6 +53,7 @@ void main() async {
 
   Get.put(FirebaseAuthService());
   Get.put(ScheduleManagerController());
+  Get.put(AdminUserPageController());
   usePathUrlStrategy();
   runApp(const MyApp());
 }
