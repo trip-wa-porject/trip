@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/buttons.dart';
+import 'package:tripflutter/component/widgets.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
@@ -56,42 +58,47 @@ class ScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ScheduleModel _model = model;
 
-    return Card(
-      elevation: 10,
-      margin: const EdgeInsets.all(0.0),
-      color: Colors.white,
-      surfaceTintColor: Colors.transparent,
-      child: Row(
-        children: [
-          SizedBox(
-              width: 363,
-              child: _leftSideImage("${_model.id}", _model.imageUrls.first)),
-          Flexible(
-            child: SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 30,
-                  top: 16.0,
-                  bottom: 18,
+    return GestureDetector(
+      onTap: () {
+        Get.find<ScheduleSelectorController>().goToDetail(model);
+      },
+      child: Card(
+        elevation: 10,
+        margin: const EdgeInsets.all(0.0),
+        color: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        child: Row(
+          children: [
+            SizedBox(
+                width: 363,
+                child: _leftSideImage("${_model.id}", _model.imageUrls.first)),
+            Flexible(
+              child: SizedBox(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 30,
+                    top: 16.0,
+                    bottom: 18,
+                  ),
+                  child: _rightSideInfo(
+                      _model.startDate!,
+                      _model.endDate!,
+                      _model.area.map((e) => e.toString()).toList(),
+                      _model.title),
                 ),
-                child: _rightSideInfo(
-                    _model.startDate!,
-                    _model.endDate!,
-                    _model.area.map((e) => e.toString()).toList(),
-                    _model.title),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16.0,
-              right: 30,
-              top: 16.0,
-              bottom: 18,
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 30,
+                top: 16.0,
+                bottom: 18,
+              ),
+              child: _rightSideBook(model.price),
             ),
-            child: _rightSideBook(model.price),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -299,6 +306,150 @@ class ScheduleCard extends StatelessWidget {
             color: MyStyles.tripTertiary,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ScheduleCardSkeleton extends StatelessWidget {
+  const ScheduleCardSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final decoration = BoxDecoration(
+        color: Colors.white, borderRadius: BorderRadius.circular(10.0));
+
+    bool enabled = true;
+
+    return Card(
+      elevation: 10,
+      margin: const EdgeInsets.all(0.0),
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      child: Row(
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            enabled: enabled,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10)),
+              ),
+              width: 340,
+              height: double.infinity,
+            ),
+          ),
+          Expanded(
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              enabled: enabled,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: 20,
+                          width: 280,
+                          decoration: decoration,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: 20,
+                          width: 230,
+                          decoration: decoration,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: 20,
+                          width: 66,
+                          decoration: decoration,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: 14,
+                          width: 288,
+                          decoration: decoration,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.all(8.0),
+                              height: 16,
+                              width: 50,
+                              decoration: decoration,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(8.0),
+                              height: 16,
+                              width: 50,
+                              decoration: decoration,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(8.0),
+                              height: 16,
+                              width: 50,
+                              decoration: decoration,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: 46,
+                          width: 165,
+                          decoration: decoration,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 29,
+                            width: 70,
+                            decoration: decoration,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.all(8.0),
+                              height: 40,
+                              width: 77,
+                              decoration: decoration,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(8.0),
+                              height: 40,
+                              width: 77,
+                              decoration: decoration,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

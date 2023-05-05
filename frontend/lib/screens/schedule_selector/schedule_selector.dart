@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/footer.dart';
 import 'package:tripflutter/component/widgets.dart';
 import 'package:tripflutter/consts.dart';
@@ -86,9 +87,30 @@ class ScheduleSelector extends GetView<ScheduleSelectorController> {
                             bottom: 0,
                             child: Obx(() {
                               if (controller.isLoading.value) {
-                                return const Align(
-                                  alignment: Alignment.topCenter,
-                                  child: CircularProgressIndicator(),
+                                return ListView.separated(
+                                  cacheExtent: kCardHeight,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: 3,
+                                  itemBuilder: (c, index) {
+                                    return Center(
+                                      child: FittedBox(
+                                        fit: BoxFit.fitWidth,
+                                        child: SizedBox(
+                                          height: kCardHeight,
+                                          width: kCardWidth + 8.0,
+                                          child: const ScheduleCardSkeleton(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return const SizedBox(
+                                      height: 16.0,
+                                    );
+                                  },
                                 );
                               }
                               if (controller.scheduleList.isEmpty) {

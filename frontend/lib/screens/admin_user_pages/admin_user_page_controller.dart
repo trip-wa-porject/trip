@@ -53,6 +53,7 @@ class AdminUserPageController extends GetxController {
     );
     if (result) {
       await repository.confirmPayUseInstance(userId, tripId, 1);
+      // await repository.confirmPayUseAPI(userId, tripId, 1);//TODO 等WeiChen改Function後換用這個
     }
   }
 
