@@ -30,6 +30,6 @@ class DateFormatUtils {
     from = DateTime(from.year, from.month, from.day);
     to = DateTime(to.year, to.month, to.day);
     var days = (to.difference(from).inHours / 24).round();
-    return days > 0 ? days : 1;
+    return days > 0 ? days + 1 : 1;
   }
 }

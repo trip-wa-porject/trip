@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/buttons.dart';
-import 'package:tripflutter/component/widgets.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
+import '../../utils/date_format_utils.dart';
 
 Map<int, String> intToDate = {
   1: '一',
@@ -147,7 +147,7 @@ class ScheduleCard extends StatelessWidget {
     final handleEndDate =
         "${endDate.month.toString()}/${endDate.day.toString()}";
 
-    final timeDelta = endDate.difference(startDate).inDays;
+    // final timeDelta = endDate.difference(startDate).inDays;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,7 +195,7 @@ class ScheduleCard extends StatelessWidget {
         const SizedBox(),
         Row(
           children: [
-            _customTab(true, '${timeDelta}天'),
+            _customTab(true, DateFormatUtils.getTotalDate(startDate, endDate)),
             const SizedBox(
               width: 12.0,
             ),
