@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/component/footer.dart';
 import 'package:tripflutter/consts.dart';
@@ -44,6 +45,18 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
       ),
       body: Obx(
         () {
+          if (controller.isLoading.value) {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: 4,
+                itemBuilder: (ctx, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ScheduleStatusCardSkeleton(),
+                  );
+                });
+          }
+
           List<Registration> registrations =
               controller.userJoinedModel.toList();
           List<GPXModel> downloadedGpx = controller.downloadedGpx.toList();
@@ -301,9 +314,26 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
           Obx(
             () {
               if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 2,
+                    itemBuilder: (ctx, index) {
+                      return Center(
+                        child: Builder(
+                          builder: (ctx) {
+                            return ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                maxWidth: 1160,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: ScheduleStatusCardSkeleton(),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    });
               }
 
               List<Registration> registrations =
@@ -371,33 +401,67 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
           const SizedBox(
             height: 60,
           ),
-          Obx(() => controller.scheduleList.isNotEmpty
-              ? Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: kCardWidth),
-                    child: Row(
-                      children: const [
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '推薦相關行程',
-                            style: MyStyles.kTextStyleH3Bold,
+          Obx(() {
+            if (controller.isLoadingRecommend.value) {
+              return Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: kCardWidth),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            margin: const EdgeInsets.all(4.0),
+                            height: 30,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
                   ),
-                )
-              : const SizedBox()),
+                ),
+              );
+            }
+
+            return controller.scheduleList.isNotEmpty
+                ? Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: kCardWidth),
+                      child: Row(
+                        children: const [
+                          Expanded(child: Divider()),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              '推薦相關行程',
+                              style: MyStyles.kTextStyleH3Bold,
+                            ),
+                          ),
+                          Expanded(child: Divider()),
+                        ],
+                      ),
+                    ),
+                  )
+                : const SizedBox();
+          }),
           const SizedBox(
             height: 60,
           ),
           //推薦行程
-          Obx(() => Column(
+          Obx(() {
+            if (controller.isLoadingRecommend.value) {
+              return Column(
                 mainAxisSize: MainAxisSize.min,
-                children: controller.scheduleList
+                children: [0, 1, 2]
                     .map((element) => Center(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: kCardWidth),
@@ -406,16 +470,36 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: SizedBox(
                                 height: kCardHeight,
-                                child: ScheduleCard(
-                                  model: element,
-                                  index: 0,
-                                ),
+                                child: const ScheduleCardSkeleton(),
                               ),
                             ),
                           ),
                         ))
                     .toList(),
-              )),
+              );
+            }
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: controller.scheduleList
+                  .map((element) => Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: kCardWidth),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: SizedBox(
+                              height: kCardHeight,
+                              child: ScheduleCard(
+                                model: element,
+                                index: 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            );
+          }),
           const SizedBox(
             height: 110,
           ),
@@ -661,6 +745,179 @@ class ScheduleStatusCard extends GetResponsiveView<ScheduleManagerController> {
             registration: registration,
           )
         ],
+      ),
+    );
+  }
+}
+
+class ScheduleStatusCardSkeleton extends GetResponsiveView {
+  ScheduleStatusCardSkeleton({Key? key}) : super(key: key);
+  final decoration = BoxDecoration(
+      color: Colors.white, borderRadius: BorderRadius.circular(10.0));
+
+  final bool enabled = true;
+
+  @override
+  Widget? phone() {
+    return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          enabled: enabled,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(4.0),
+                height: 30,
+                width: double.infinity,
+                decoration: decoration,
+              ),
+              Container(
+                margin: const EdgeInsets.all(4.0),
+                height: 30,
+                width: 160,
+                decoration: decoration,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(children: [
+                Container(
+                  margin: const EdgeInsets.all(4.0),
+                  height: 40,
+                  width: 77,
+                  decoration: decoration,
+                ),
+                const Expanded(
+                  child: SizedBox(
+                    width: 4,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(4.0),
+                  height: 40,
+                  width: 77,
+                  decoration: decoration,
+                ),
+              ]),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget? desktop() {
+    return Card(
+      elevation: 8,
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        enabled: enabled,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(4.0),
+                          height: 30,
+                          width: 252,
+                          decoration: decoration,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(4.0),
+                          height: 30,
+                          width: 172,
+                          decoration: decoration,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(4.0),
+                          height: 20,
+                          width: 160,
+                          decoration: decoration,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(8.0),
+                        height: 40,
+                        width: 113,
+                        decoration: decoration,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(8.0),
+                            height: 40,
+                            width: 113,
+                            decoration: decoration,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(8.0),
+                            height: 40,
+                            width: 113,
+                            decoration: decoration,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              height: 30,
+              width: double.infinity,
+              decoration: decoration,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              height: 30,
+              width: double.infinity,
+              decoration: decoration,
+            ),
+            const SizedBox(
+              height: 8.0,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -16,12 +16,14 @@ import '../../modules/home_controller.dart';
 class ScheduleManagerController extends GetxController
     with GetTickerProviderStateMixin {
   final FirebaseAuthService _firebaseAuthService =
-      Get.find<FirebaseAuthService>(); //TODO 思考一下需要放嗎
+      Get.find<FirebaseAuthService>();
   final BackendRepository repository = BackendRepository();
   final box = GetStorage();
 
   RxList<ScheduleModel> scheduleList = <ScheduleModel>[].obs; //推薦行程
   RxBool isLoading = false.obs;
+  RxBool isLoadingRecommend = false.obs;
+
   RxList<Registration> userJoinedModel = RxList<Registration>([]);
   RxList<GPXModel> downloadedGpx = RxList<GPXModel>();
   RxList<ScheduleModel> downloadedTrips = RxList<ScheduleModel>();
@@ -147,6 +149,7 @@ class ScheduleManagerController extends GetxController
   }
 
   getDataUserJoined(User? user) async {
+    if (isLoading.value) return;
     try {
       isLoading.value = true;
       String? userId = user?.uid;
@@ -235,9 +238,12 @@ class ScheduleManagerController extends GetxController
     List<GPXModel> gpxModels = await getAllGPXDataFromLocal();
     downloadedGpx.assignAll(gpxModels);
     List<ScheduleModel> trips = await getAllTripDataFromLocal();
-    downloadedTrips.assignAll(trips);
+    downloadedTrips.assignAll(trips); //TODO add get registration from local
+
+    getDataUserJoined(_firebaseAuthService.user.value);
 
     try {
+      isLoadingRecommend.value = true;
       Map<String, dynamic> result = await repository.fetchTrip({});
 
       List<dynamic> schduleData = result['results'];
@@ -253,6 +259,8 @@ class ScheduleManagerController extends GetxController
       }
     } catch (e) {
       //todo
+    } finally {
+      isLoadingRecommend.value = false;
     }
   }
 
@@ -266,7 +274,7 @@ class ScheduleManagerController extends GetxController
 
   @override
   void onInit() {
-    debounce(_firebaseAuthService.user, getDataUserJoined, time: 3.seconds);
+    ever(_firebaseAuthService.user, getDataUserJoined);
     ever(userJoinedModel, (callback) {
       print('userJoinedModel change: callback:$callback');
     });

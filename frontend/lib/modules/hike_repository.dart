@@ -210,6 +210,40 @@ class BackendRepository implements GeneralRepository {
     }
   }
 
+  Future confirmPayUseAPI(String userId, String tripId, int? status) async {
+    try {
+      final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
+          (await FirebaseFirestore.instance
+                  .collection('register')
+                  .where(
+                    'userId',
+                    isEqualTo: userId,
+                  )
+                  .where(
+                    'tripId',
+                    isEqualTo: tripId,
+                  )
+                  .limit(1)
+                  .get())
+              .docs;
+
+      if (docs.isEmpty) {
+        throw Exception('no document exist');
+      }
+      String docId = docs[0].id;
+      final newData = {
+        'registerId': docId,
+        'status': status,
+        'paymentInfo': docs[0].data()['paymentInfo'],
+      };
+      await updateRegistration(newData);
+    } on FirebaseException catch (error) {
+      print(error.code);
+      print(error.message);
+      rethrow;
+    }
+  }
+
   Future confirmPayUseInstance(
       String userId, String tripId, int? status) async {
     try {
