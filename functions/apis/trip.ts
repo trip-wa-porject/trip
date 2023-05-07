@@ -44,7 +44,7 @@ const searchTripsFromFireStore = async (
     'types',
     'regions',
     'price_intervals',
-    'day_interval',
+    'day_intervals',
     'keyword',
     'page',
   ]
