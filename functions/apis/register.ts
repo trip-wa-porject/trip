@@ -110,7 +110,7 @@ const checkUserAndTripExists = async (info: {
       const tripInfo = tripChecker.data() as Trip
 
       return {
-        price: userInfo.member === 0 ? tripInfo.price : tripInfo.memberPrice,
+        price: userInfo.member === 0 ? tripInfo.price : tripInfo.memberPrice
       }
     } else {
       return false
@@ -155,14 +155,14 @@ export const createRegister = https.onCall(async (data: Register) => {
         appendId: userId,
         targetId: tripId,
         collection: 'trips',
-        appendKey: 'applicants',
+        appendKey: 'applicants'
       },
       {
         appendId: tripId,
         targetId: userId,
         collection: 'users',
-        appendKey: 'registerTrips',
-      },
+        appendKey: 'registerTrips'
+      }
     ]
 
     await Promise.all(
@@ -173,7 +173,7 @@ export const createRegister = https.onCall(async (data: Register) => {
               collection: e.collection,
               docId: e.targetId,
               removeKey: e.appendKey,
-              removeId: e.appendId,
+              removeId: e.appendId
             })
           )
         })
@@ -199,7 +199,7 @@ export const createRegister = https.onCall(async (data: Register) => {
         updateDate: now.getTime(),
         paymentInfo: {},
         sendMail: 0,
-        sendMailTime: null,
+        sendMailTime: null
       })
       return { registerId: addRegister?.id }
     } catch {
@@ -255,7 +255,7 @@ export const updateRegister = https.onCall(
       throw new HttpsError('not-found', "user or trip doesn't exist")
     }
 
-    if (may_update_register && may_update_register.status !== 0) {
+    if (may_update_register && may_update_register.status !== 2) {
       throw new HttpsError(
         'invalid-argument',
         'register status not allowed to change'
@@ -296,7 +296,7 @@ export const updateRegister = https.onCall(
               trip?.information?.preDepartureMeetingPlace,
             gatherTime: formateDate(trip.information.gatherTime),
             leader: trip?.information?.leader,
-            guides: trip?.information?.guides.join(', '),
+            guides: trip?.information?.guides.join(', ')
           }
           const htmlToSend = template(replacements)
 
@@ -304,7 +304,7 @@ export const updateRegister = https.onCall(
             from: '登峰造極 <wa.project.mountain@gmail.com>',
             to: user.email,
             subject: '謝謝您的預定行程！',
-            html: htmlToSend,
+            html: htmlToSend
           }
 
           mailSetting.sendMail(mailOptions, function (error, response) {
