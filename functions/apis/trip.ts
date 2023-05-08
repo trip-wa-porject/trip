@@ -25,7 +25,7 @@ const regions = [
   '屏東縣',
   '宜蘭縣',
   '澎湖縣',
-  '臺東縣',
+  '臺東縣'
 ]
 
 const levels = ['A', 'B', 'C']
@@ -46,7 +46,7 @@ const searchTripsFromFireStore = async (
     'price_intervals',
     'day_intervals',
     'keyword',
-    'page',
+    'page'
   ]
 
   const data_keys = Object.keys(data)
@@ -61,17 +61,19 @@ const searchTripsFromFireStore = async (
     types,
     regions,
     page: 1,
-    ...data,
+    ...data
   }
 
   const result: Trip[] = []
   let totalCount: number = 0
 
+  const now = new Date()
+
   try {
     const docs = await ref
       .where('type', 'in', filters.types)
       .where('level', 'in', filters.levels)
-      .where('startDate', '>=', filters?.startDate ?? 1)
+      .where('startDate', '>=', filters?.startDate ?? now.getTime())
       .orderBy('startDate')
       .get()
 
@@ -82,7 +84,7 @@ const searchTripsFromFireStore = async (
       if (passfilter) {
         result.push({
           ...rec,
-          tripId: doc.id,
+          tripId: doc.id
         } as Trip)
       }
     })
@@ -90,11 +92,13 @@ const searchTripsFromFireStore = async (
     throw new HttpsError('unknown', `${e}`)
   }
 
-  totalCount = result.length
+  const filterExpired = result.filter(
+    (e) => e.information.applyStart > now.getTime()
+  )
 
   return {
-    results: result.slice((filters.page - 1) * 20, filters.page * 20),
-    count: totalCount,
+    results: filterExpired.slice((filters.page - 1) * 20, filters.page * 20),
+    count: filterExpired.length
   }
 }
 
