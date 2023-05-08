@@ -84,7 +84,7 @@ class ScheduleOptions extends GetView<ScheduleSelectorController> {
                       title: "天數",
                       width: 120,
                       allItems: DayOption.values,
-                      mode: CheckBoxOptionMode.single,
+                      mode: CheckBoxOptionMode.multiple,
                       selectedItems: controller.dayOptions.toList(),
                       borderColor: Colors.transparent,
                       onChangeCallback: (value) {

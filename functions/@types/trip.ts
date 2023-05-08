@@ -45,6 +45,6 @@ export interface TripFilter {
   types: string[]
   regions: string[]
   price_intervals: number[]
-  day_interval: 1 | 2 | 3 | 4
+  day_intervals: number[]
   page: number
 }

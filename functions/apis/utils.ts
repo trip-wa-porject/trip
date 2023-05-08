@@ -20,7 +20,7 @@ const checkPriceInterval = (price: number, price_intervals: number[]) => {
   })
 }
 
-const checkDayInterval = (difference: number, dayInterval: 1 | 2 | 3 | 4) => {
+const checkDayInterval = (difference: number, dayInterval: number) => {
   if (dayInterval < 4) {
     return difference === dayInterval
   } else {
@@ -46,13 +46,13 @@ export default function filter(filters: Partial<TripFilter>, data: Trip) {
           ? checkPriceInterval(data.price, filters.price_intervals)
           : true
       }
-      case 'day_interval': {
+      case 'day_intervals': {
         const difference = Math.ceil(
           (data.endDate - data.startDate) / (24 * 60 * 60 * 1000)
         )
 
-        return filters?.day_interval
-          ? checkDayInterval(difference, filters.day_interval)
+        return filters?.day_intervals
+          ? filters?.day_intervals?.some((e) => checkDayInterval(difference, e))
           : true
       }
       case 'keyword': {
