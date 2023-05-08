@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/buttons.dart';
-import 'package:tripflutter/component/widgets.dart';
 import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_selector_controller.dart';
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
+import '../../utils/date_format_utils.dart';
 
 Map<int, String> intToDate = {
   1: '一',
@@ -147,7 +147,7 @@ class ScheduleCard extends StatelessWidget {
     final handleEndDate =
         "${endDate.month.toString()}/${endDate.day.toString()}";
 
-    final timeDelta = endDate.difference(startDate).inDays;
+    // final timeDelta = endDate.difference(startDate).inDays;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,7 +195,7 @@ class ScheduleCard extends StatelessWidget {
         const SizedBox(),
         Row(
           children: [
-            _customTab(true, '${timeDelta}天'),
+            _customTab(true, DateFormatUtils.getTotalDate(startDate, endDate)),
             const SizedBox(
               width: 12.0,
             ),
@@ -210,6 +210,7 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 
+  //TODO show only
   Widget _rightSideBook(int price) {
     int _status = 0;
 
@@ -258,38 +259,30 @@ class ScheduleCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _customButton('了解更多', () {
-              Get.find<ScheduleSelectorController>().goToDetail(model);
-            }),
-            const SizedBox(
-              width: 8,
+            MyWebButton(
+              label: '了解更多',
+              style: MyWebButton.styleMediumOutlinedOrange(),
+              onPressed: () {
+                Get.find<ScheduleSelectorController>().goToDetail(model);
+              },
             ),
-            _customButton(
-                '立即預訂',
-                isShowOnly
-                    ? null
-                    : () async {
-                        Get.find<ScheduleManagerController>()
-                            .joinNewEvent(model.id, model);
-                      }),
+            if (model.information.applyStart!.isBefore(DateTime.now()))
+              const SizedBox(
+                width: 8,
+              ),
+            if (model.information.applyStart!.isBefore(DateTime.now()))
+              MyWebButton(
+                label: '立即報名',
+                style: MyWebButton.styleMediumFilledOrange(),
+                futureFunction: () async {
+                  await Get.find<ScheduleManagerController>()
+                      .joinNewEvent(model.id, model);
+                },
+              ),
           ],
         )
       ],
     );
-  }
-
-  Widget _customButton(String label, void Function()? onPressed) {
-    return label == '了解更多'
-        ? MyWebButton(
-            label: label,
-            style: MyWebButton.styleMediumOutlinedOrange(),
-            onPressed: onPressed,
-          )
-        : MyWebButton(
-            label: label,
-            style: MyWebButton.styleMediumFilledOrange(),
-            onPressed: onPressed,
-          );
   }
 
   Widget _customTab(bool active, String label) {

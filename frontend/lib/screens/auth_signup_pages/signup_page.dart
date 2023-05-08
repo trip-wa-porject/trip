@@ -1,6 +1,5 @@
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/component/footer.dart';
@@ -272,6 +271,7 @@ class DropdownTerm extends StatefulWidget {
 class _DropdownTermState extends State<DropdownTerm> {
   final ScrollController scrollController = ScrollController();
   bool checkable = false;
+
   scrollListener() {
     if (scrollController.position.atEdge) {
       bool isTop = scrollController.position.pixels == 0;
@@ -320,8 +320,13 @@ class _DropdownTermState extends State<DropdownTerm> {
           children: [
             InkWell(
               onTap: () {
-                Get.find<SignUpController>()
-                    .step1SelectCallback(checkState.index);
+                if (!checkState.isShowed) {
+                  Get.find<SignUpController>()
+                      .step1SelectCallback(checkState.index);
+                } else {
+                  Get.find<SignUpController>()
+                      .step1CollapseCallback(checkState.index);
+                }
               },
               child: Row(
                 children: [
@@ -329,11 +334,11 @@ class _DropdownTermState extends State<DropdownTerm> {
                     width: 48,
                     height: 48,
                     child: checkState.checked
-                        ? Icon(
+                        ? const Icon(
                             Icons.check_circle,
                             color: MyStyles.tripTertiary,
                           )
-                        : Icon(Icons.check_circle_outline),
+                        : const Icon(Icons.check_circle_outline),
                   ),
                   Flexible(
                     child: Align(
@@ -347,7 +352,10 @@ class _DropdownTermState extends State<DropdownTerm> {
                       ),
                     ),
                   ),
-                  Icon(Icons.keyboard_arrow_up)
+                  if (checkState.isShowed)
+                    Icon(Icons.keyboard_arrow_up)
+                  else
+                    Icon(Icons.keyboard_arrow_down)
                 ],
               ),
             ),

@@ -147,6 +147,11 @@ class SignUpController extends GetxController {
     step0CheckedStates.refresh();
   }
 
+  step1CollapseCallback(int tapIndex) {
+    step0CheckedStates[tapIndex].isShowed = false;
+    step0CheckedStates.refresh();
+  }
+
   //step2
   goToMailer() async {
     try {

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../consts.dart';
 
@@ -251,20 +253,23 @@ class MyFilledButton extends StatelessWidget {
 }
 
 class MyWebButton extends StatelessWidget {
-  const MyWebButton(
-      {Key? key,
-      required this.label,
-      this.icon,
-      this.iconData,
-      this.style,
-      this.onPressed})
-      : super(key: key);
+  MyWebButton({
+    Key? key,
+    required this.label,
+    this.icon,
+    this.iconData,
+    this.style,
+    this.onPressed,
+    this.futureFunction,
+  }) : super(key: key);
 
   final String label;
   final Widget? icon;
   final IconData? iconData;
   final ButtonStyle? style;
   final void Function()? onPressed;
+  final Future Function()? futureFunction;
+  final RxBool isLoading = false.obs;
 
   static ButtonStyle styleSmallFilled() {
     return FilledButton.styleFrom(
@@ -375,21 +380,42 @@ class MyWebButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      style: style,
-      onPressed: onPressed,
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) icon!,
-            if (icon == null && iconData != null)
-              Icon(
-                iconData,
-                size: 16,
-              ),
-            Text(label),
-          ],
+    return Obx(
+      () => FilledButton(
+        style: style,
+        onPressed: futureFunction != null
+            ? isLoading.value
+                ? () {}
+                : () async {
+                    if (isLoading.value) return;
+                    try {
+                      isLoading.value = true;
+                      await futureFunction!();
+                    } catch (e) {
+                      //todo
+                    } finally {
+                      isLoading.value = false;
+                    }
+                  }
+            : onPressed,
+        child: Center(
+          child: isLoading.value
+              ? const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: CupertinoActivityIndicator(),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (icon != null) icon!,
+                    if (icon == null && iconData != null)
+                      Icon(
+                        iconData,
+                        size: 16,
+                      ),
+                    Text(label),
+                  ],
+                ),
         ),
       ),
     );
