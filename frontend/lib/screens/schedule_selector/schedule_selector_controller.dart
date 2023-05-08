@@ -119,7 +119,7 @@ class ScheduleSelectorController extends GetxController {
       List<int> selectedDays = dayOptions.toList().map((e) => e.value).toList();
       if (selectedDays.isNotEmpty) {
         querys.addAll({
-          "day_interval": selectedDays,
+          "day_intervals": selectedDays,
         });
       }
 
