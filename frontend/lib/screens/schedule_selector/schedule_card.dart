@@ -7,6 +7,7 @@ import 'package:tripflutter/screens/schedule_selector/schedule_selector_controll
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
+import '../../utils/amount_format_utils.dart';
 import '../../utils/date_format_utils.dart';
 
 Map<int, String> intToDate = {
@@ -251,7 +252,7 @@ class ScheduleCard extends StatelessWidget {
             style: intToStatusStyle[_status],
           ),
         Text(
-          price == 0 ? "免費" : "\$ $price 起",
+          price == 0 ? "免費" : "NT\$ ${amountFormat(price)}起",
           style: MyStyles.kTextStyleH4.copyWith(
             color: MyStyles.greyScale000000,
           ),
