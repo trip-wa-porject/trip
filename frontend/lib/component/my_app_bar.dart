@@ -14,7 +14,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final FirebaseAuthService authService = Get.put(FirebaseAuthService());
     TextStyle appBarTextStyle =
-        MyStyles.kTextStyleH4.copyWith(color: Colors.white);
+        MyStyles.kTextStyleButtonS.copyWith(color: Colors.white);
     SizedBox appBarSpacer = const SizedBox(width: 24.0);
 
     return AppBar(
@@ -34,23 +34,32 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.offAndToNamed(
-                          '${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+                      Get.toNamed('${AppLinks.SCHEDUL}');
                     },
                     child: Text(
-                      '行程管理',
+                      '登山行程',
                       style: appBarTextStyle,
                     ),
                   ),
-                  appBarSpacer,
-                  InkWell(
-                    onTap: () {
-                      Get.offAndToNamed('${AppLinks.SCHEDUL}');
-                    },
-                    child: Text(
-                      '活動行程',
-                      style: appBarTextStyle,
-                    ),
+                  Obx(
+                    () => authService.user.value == null
+                        ? const SizedBox()
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              appBarSpacer,
+                              InkWell(
+                                onTap: () {
+                                  Get.toNamed(
+                                      '${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+                                },
+                                child: Text(
+                                  '我的行程',
+                                  style: appBarTextStyle,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
                   Obx(
                     () => authService.user.value == null
@@ -58,29 +67,29 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               appBarSpacer,
-                              InkWell(
-                                onTap: () {
+                              MyWebButton(
+                                label: '註冊',
+                                style: MyWebButton.styleSmallFilledForSignUp(),
+                                onPressed: () {
                                   Get.toNamed('${AppLinks.SIGNUP}');
                                 },
-                                child: Text(
-                                  '註冊',
-                                  style: appBarTextStyle,
-                                ),
                               ),
                             ],
                           )
                         : SizedBox(),
                   ),
-                  appBarSpacer,
+                  const SizedBox(
+                    width: 12,
+                  ),
                   Obx(
                     () => authService.user.value == null
-                        ? MyFilledButton(
+                        ? MyWebButton(
                             label: '登入',
                             onPressed: () async {
                               final result =
                                   await Get.dialog(const LoginDialog());
                             },
-                            style: MyFilledButton.styleWhiteSmallGreen(),
+                            style: MyWebButton.styleSmallFilledForLogin(),
                           )
                         : SizedBox(
                             width: 30,

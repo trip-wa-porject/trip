@@ -84,11 +84,10 @@ class PayTable extends StatelessWidget {
       }
     }
     bool isContainVIP = orderData.any((element) => element.detail == "正式會員");
-    TextStyle redText = MyStyles.kTextStyleH4.copyWith(
-      fontSize: 19.36,
-      color: MyStyles.redC80000,
-      fontWeight: FontWeight.bold,
-    );
+
+    TextStyle title = MyStyles.kTextStyleH4.copyWith();
+    TextStyle label = MyStyles.kTextStyleSubtitle1Bold.copyWith();
+    TextStyle content = MyStyles.kTextStyleBody1.copyWith();
     return Container(
       decoration: boxDecoration,
       child: Column(
@@ -96,23 +95,26 @@ class PayTable extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 13,
-              horizontal: 25,
+              horizontal: 8,
             ),
             child: Row(
               children: [
                 Text(
                   " 總金額\$${totalPrice}",
-                  style: redText,
+                  style: title,
                 ),
-                Text('（報名費用${isContainVIP ? '+會員費用' : ''}）'),
+                Text(
+                  '（報名費用${isContainVIP ? '+會員費用' : ''}）',
+                  style: title,
+                ),
                 Spacer(),
                 Text(
                   '已確認付款金額：0元  ',
-                  style: redText,
+                  style: title,
                 ),
                 Text(
                   '剩餘金額：$totalPrice元',
-                  style: redText,
+                  style: title,
                 ),
               ],
             ),
@@ -123,7 +125,11 @@ class PayTable extends StatelessWidget {
                   .map((e) => Expanded(
                         child: Container(
                           decoration: boxDecorationTitle,
-                          child: Center(child: Text(e ?? "")),
+                          child: Center(
+                              child: Text(
+                            e ?? "",
+                            style: label,
+                          )),
                         ),
                       ))
                   .toList()),
@@ -133,11 +139,14 @@ class PayTable extends StatelessWidget {
                       .map((e) => Expanded(
                             child: Container(
                               decoration: boxDecoration,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: Center(
                                   child: Text(
                                 e ?? "",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                style: content,
                               )),
                             ),
                           ))

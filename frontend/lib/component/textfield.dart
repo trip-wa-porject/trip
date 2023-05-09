@@ -72,7 +72,10 @@ class PayTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: MyStyles.kTextStyleSubtitle1,
       decoration: InputDecoration(
+        isCollapsed: true,
+        contentPadding: const EdgeInsets.all(12.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
           borderSide: BorderSide(

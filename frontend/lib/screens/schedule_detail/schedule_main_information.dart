@@ -1,10 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/consts.dart';
-import 'package:tripflutter/screens/schedule_manager/schedule_manager_controller.dart';
 import 'package:tripflutter/utils/level_format_utils.dart';
 
 import '../../models/schedule_model.dart';
@@ -46,16 +43,26 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
               const EdgeInsets.only(left: 10, top: 8, bottom: 10, right: 10),
           child: Column(
             children: [
-              SizedBox(
-                  width: double.infinity,
-                  child: Text(
+              Row(
+                children: [
+                  Text(
                     widget.model.title,
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        fontSize: 44,
-                        fontWeight: FontWeight.bold,
-                        color: MyStyles.tripTertiary),
-                  )),
+                    style: MyStyles.kTextStyleH2Bold
+                        .copyWith(color: MyStyles.tripTertiary),
+                  ),
+                  const SizedBox(
+                    width: 12.0,
+                  ),
+                  Image.asset('assets/images/distance.png',),
+                  const SizedBox(width: 8.0,),
+                  Text(
+                    getCities(widget.model.area),
+                    style: MyStyles.kTextStyleH4
+                        .copyWith(color: MyStyles.greyScale212121),
+                  ),
+                ],
+              ),
               SizedBox(
                 width: double.infinity,
                 child: Row(
@@ -64,28 +71,23 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                       DateFormatUtils.getDateWithFullDateTemplate(
                           widget.model.startDate!, widget.model.endDate!),
                       textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontSize: 36, color: MyStyles.greyScale757575),
+                      style: MyStyles.kTextStyleH4
+                          .copyWith(color: MyStyles.greyScale757575),
                     ),
-                    //tags
                     const SizedBox(
                       width: 12.0,
                     ),
-                    _customTab(
-                        true,
-                        DateFormatUtils.getTotalDate(
-                            widget.model.startDate!, widget.model.endDate!)),
+                    _customTab(DateFormatUtils.getTotalDate(
+                        widget.model.startDate!, widget.model.endDate!)),
                     const SizedBox(
                       width: 12.0,
                     ),
-                    _customTab(false, widget.model.type),
+                    _customTab(widget.model.type),
                     const SizedBox(
                       width: 12.0,
                     ),
-                    _customTab(
-                        false,
-                        LevelFormatUtils.getLevelStringTemplate(
-                            widget.model.level)),
+                    _customTab(LevelFormatUtils.getLevelStringTemplate(
+                        widget.model.level)),
                   ],
                 ),
               ),
@@ -98,7 +100,7 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
           children: [
             SizedBox(
                 height: 375,
-                width: MediaQuery.of(context).size.width,
+                width: double.infinity,
                 child: PageView.builder(
                     itemCount: images.length,
                     pageSnapping: true,
@@ -184,105 +186,23 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
               ),
           ],
         ),
-        //資訊區 Card
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin:
-              const EdgeInsets.only(top: 50, bottom: 50, left: 10, right: 10),
-          padding: const EdgeInsets.all(35),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2),
-              ],
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      textScaleFactor: Get.textScaleFactor,
-                      text: TextSpan(
-                        text: '一般會員 ',
-                        style: MyStyles.kTextStyleH2Bold.copyWith(
-                            fontWeight: FontWeight.normal,
-                            color: MyStyles.greyScale000000),
-                        children: [
-                          TextSpan(
-                            text: '\$${widget.model.price}',
-                            style: MyStyles.kTextStyleH2Bold
-                                .copyWith(color: MyStyles.redC80000),
-                          ),
-                          TextSpan(
-                            text: ' VIP會員 ',
-                            style: MyStyles.kTextStyleH2Bold.copyWith(
-                                fontWeight: FontWeight.normal,
-                                color: MyStyles.greyScale000000),
-                          ),
-                          TextSpan(
-                            text: '\$${widget.model.memberPrice}',
-                            style: MyStyles.kTextStyleH2Bold
-                                .copyWith(color: MyStyles.redC80000),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      '報名期間：${DateFormatUtils.getDateWithDateTemplate(widget.model.information.applyStart!, widget.model.information.applyEnd!)}',
-                      style: MyStyles.kTextStyleH4
-                          .copyWith(color: MyStyles.greyScale757575),
-                      // textScaleFactor: ScaleSize.textScaleFactor(context),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 65,
-                width: 205,
-                child: MyFilledButton(
-                  label: widget.alreadyJoined ? '訂單資訊' : '立即報名',
-                  style: MyFilledButton.style3(),
-                  onPressed: widget.alreadyJoined
-                      ? () async {
-                          Get.find<ScheduleManagerController>()
-                              .goToPayPage(widget.model.id);
-                        }
-                      : () async {
-                          Get.find<ScheduleManagerController>()
-                              .joinNewEvent(widget.model.id, widget.model);
-                        },
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }
 }
 
-Widget _customTab(bool active, String label) {
+Widget _customTab(String label) {
   return Container(
     alignment: Alignment.center,
     margin: const EdgeInsets.only(right: 0, left: 0, top: 12, bottom: 12),
-    padding: const EdgeInsets.only(left: 6, right: 6, bottom: 2, top: 2),
+    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 8, top: 8),
     decoration: BoxDecoration(
-        border: active ? null : Border.all(color: MyStyles.greyScale757575),
-        borderRadius: BorderRadius.circular(6.0),
-        color: active ? MyStyles.tripTertiary : Colors.white),
+        borderRadius: BorderRadius.circular(6.0), color: MyStyles.green4),
     child: Align(
       alignment: Alignment.center,
       child: Text(
         label,
-        style: TextStyle(
-            color: active ? MyStyles.tripNeutral : MyStyles.greyScale757575,
-            fontSize: 20),
+        style: MyStyles.kTextStyleBody1.copyWith(color: MyStyles.tripTertiary),
       ),
     ),
   );
@@ -307,6 +227,10 @@ List<Widget> _indicators(imagesLength, currentIndex) {
       ),
     );
   });
+}
+
+String getCities(List<Area> cities) {
+  return cities.join('、');
 }
 
 //RWD 字體縮放測試

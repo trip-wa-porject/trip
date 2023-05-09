@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tripflutter/component/map_widget.dart';
-import 'package:tripflutter/models/schedule_model.dart';
 
 import '../consts.dart';
 
@@ -17,7 +16,7 @@ class TableViewColumn {
               alignment: Alignment.center,
               child: Text(
                 columnTitle,
-                style: MyStyles.kTextStyleH3Bold
+                style: MyStyles.kTextStyleH4Bold
                     .copyWith(color: MyStyles.greyScale424242),
               ),
             ),
@@ -27,12 +26,13 @@ class TableViewColumn {
                   child: RichText(
                     text: TextSpan(
                       text: '$limitation位 / ',
-                      style: MyStyles.kTextStyleH3
+                      style: MyStyles.kTextStyleSubtitle1
                           .copyWith(color: MyStyles.greyScale212121),
                       children: [
                         TextSpan(
                             text: '剩${limitation - applicants}位',
-                            style: const TextStyle(color: MyStyles.redC80000)),
+                            style: MyStyles.kTextStyleSubtitle1
+                                .copyWith(color: MyStyles.redC80000)),
                       ],
                     ),
                   )),
@@ -48,12 +48,12 @@ class TableViewColumn {
       IntrinsicHeight(
         child: Row(children: <Widget>[
           Container(
-            width: 265,
+            width: 135,
             color: MyStyles.green1,
             alignment: Alignment.center,
             child: Text(
               columnTitle,
-              style: MyStyles.kTextStyleH3Bold
+              style: MyStyles.kTextStyleH4Bold
                   .copyWith(color: MyStyles.greyScale424242),
             ),
           ),
@@ -63,8 +63,49 @@ class TableViewColumn {
               child: Text(
                 columnContent,
                 overflow: TextOverflow.visible,
-                style: MyStyles.kTextStyleH3
+                style: MyStyles.kTextStyleSubtitle1
                     .copyWith(color: MyStyles.greyScale212121),
+              ),
+            ),
+          ),
+        ]),
+      )
+    ]);
+  }
+
+  static TableRow createColumnWithIcon(
+      String columnTitle, String columnContent, Widget icon, void Function() onTap) {
+    return TableRow(children: <Widget>[
+      IntrinsicHeight(
+        child: Row(children: <Widget>[
+          Container(
+            width: 135,
+            color: MyStyles.green1,
+            alignment: Alignment.center,
+            child: Text(
+              columnTitle,
+              style: MyStyles.kTextStyleH4Bold
+                  .copyWith(color: MyStyles.greyScale424242),
+            ),
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Text(
+                    columnContent,
+                    overflow: TextOverflow.visible,
+                    style: MyStyles.kTextStyleSubtitle1
+                        .copyWith(color: MyStyles.greyScale212121),
+                  ),
+                  IconButton(
+                    icon: icon,
+                    iconSize: 18,
+                    color: MyStyles.greyScale616161,
+                    onPressed: onTap,
+                  ),
+                ],
               ),
             ),
           ),
@@ -80,12 +121,12 @@ class TableViewColumn {
         child: Row(
           children: <Widget>[
             Container(
-              width: 265,
+              width: 135,
               color: MyStyles.green1,
               alignment: Alignment.center,
               child: Text(
                 columnTitle,
-                style: MyStyles.kTextStyleH3Bold
+                style: MyStyles.kTextStyleH4Bold
                     .copyWith(color: MyStyles.greyScale424242),
               ),
             ),
@@ -103,14 +144,13 @@ class TableViewColumn {
     ]);
   }
 
-  static TableRow createColumnWithMap(
-      Widget? button, String columnTitle) {
+  static TableRow createColumnWithMap(Widget? button, String columnTitle) {
     return TableRow(children: <Widget>[
       IntrinsicHeight(
         child: Row(
           children: <Widget>[
             Container(
-                width: 265,
+                width: 135,
                 color: MyStyles.green1,
                 alignment: Alignment.center,
                 child: Column(
@@ -119,7 +159,7 @@ class TableViewColumn {
                   children: [
                     Text(
                       columnTitle,
-                      style: MyStyles.kTextStyleH3Bold
+                      style: MyStyles.kTextStyleH4Bold
                           .copyWith(color: MyStyles.greyScale424242),
                     ),
                     if (button != null) button,
@@ -128,11 +168,8 @@ class TableViewColumn {
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 85, bottom: 85, left: 140, right: 140),
-                child: SizedBox(
-                    height: 350,
-                    width: 720,
-                    child: MapWidget()),
+                    top: 35, bottom: 35, left: 60, right: 60),
+                child: SizedBox(height: 300, width: 630, child: MapWidget()),
               ),
             ),
           ],

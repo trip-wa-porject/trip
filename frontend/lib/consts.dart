@@ -96,6 +96,12 @@ class MyStyles {
     letterSpacing: 0.15,
   );
 
+  static const TextStyle kTextStyleH4Bold = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.15,
+  );
+
   static const TextStyle kTextStyleH4 = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.normal,
