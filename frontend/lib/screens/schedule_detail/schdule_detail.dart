@@ -322,11 +322,11 @@ Widget getCard(BuildContext context, ScheduleDetail widget) {
             MyWebButton(
                 label: '分享',
                 iconData: Icons.share,
-                style: MyWebButton.styleSmallFilled(),
+                style: MyWebButton.styleSmallFilledForShare(),
                 onPressed: () {
-                  String shareContent = '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n${window.location.href}';
-                  Clipboard.setData(
-                      ClipboardData(text: shareContent));
+                  String shareContent =
+                      '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n${window.location.href}';
+                  Clipboard.setData(ClipboardData(text: shareContent));
                   showShareDialog(context, shareContent);
                 }),
           ],

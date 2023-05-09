@@ -298,6 +298,18 @@ class MyWebButton extends StatelessWidget {
         fixedSize: const Size(77, 40));
   }
 
+  static ButtonStyle styleSmallFilledForShare() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(70, 40));
+  }
+
   static ButtonStyle styleSmallOutlined() {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xfff8fdef),
