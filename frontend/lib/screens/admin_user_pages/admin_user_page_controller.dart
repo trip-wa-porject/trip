@@ -52,8 +52,8 @@ class AdminUserPageController extends GetxController {
       onCancel: () => Get.back(result: false),
     );
     if (result) {
-      await repository.confirmPayUseInstance(userId, tripId, 1);
-      // await repository.confirmPayUseAPI(userId, tripId, 1);//TODO 等WeiChen改Function後換用這個
+      // await repository.confirmPayUseInstance(userId, tripId, 1);
+      await repository.confirmPayUseAPI(userId, tripId, 1);
     }
   }
 
