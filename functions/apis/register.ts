@@ -355,29 +355,3 @@ export const getUserRegisters = https.onCall(
     }
   }
 )
-
-readHTMLFile(
-  join(__dirname, '../../email-template-maker/build_production/index.html'),
-  function (err, html) {
-    if (err) {
-      console.log('error reading file', err)
-      return
-    }
-    const template = compile(html)
-    const replacements = {}
-    const htmlToSend = template(replacements)
-
-    const mailOptions = {
-      from: 'wa.project.mountain@gmail.com',
-      to: 'asdfg09487@gmail.com',
-      subject: '謝謝您的預定行程！',
-      html: htmlToSend
-    }
-
-    mailSetting.sendMail(mailOptions, function (error, response) {
-      if (error) {
-        console.log(error)
-      }
-    })
-  }
-)

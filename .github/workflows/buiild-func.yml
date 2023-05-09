@@ -24,7 +24,8 @@ jobs:
         run: |
           echo APP_PASSWORD="${{ secrets.APP_PASSWORD }}"\\nSERVICE_ACCOUNT_KEY="${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
           npm install && \
-          npx tsc
+          npx tsc && \
+          npm run notify
 
       - name: Deploy to Firebase Functions
         uses: w9jds/firebase-action@master
