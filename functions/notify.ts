@@ -24,7 +24,7 @@ readHTMLFile(
       return
     }
     console.log('************')
-    console.log(process.env.APP_PASSWORD)
+    console.log(process.env.APP_PASSWORD?.split('\n')[0])
     console.log('************')
 
     const template = compile(html)
