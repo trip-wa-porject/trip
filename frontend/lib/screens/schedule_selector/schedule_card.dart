@@ -266,11 +266,13 @@ class ScheduleCard extends StatelessWidget {
                 Get.find<ScheduleSelectorController>().goToDetail(model);
               },
             ),
-            if (model.information.applyStart!.isBefore(DateTime.now()))
+            if (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now()))
               const SizedBox(
                 width: 8,
               ),
-            if (model.information.applyStart!.isBefore(DateTime.now()))
+            if (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now()))
               MyWebButton(
                 label: '立即報名',
                 style: MyWebButton.styleMediumFilledOrange(),
