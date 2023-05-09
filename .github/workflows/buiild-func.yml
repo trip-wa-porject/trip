@@ -3,7 +3,7 @@ name: Deploy functions
 on:
   push:
     branches:
-      - 'fix-cd '
+      - 'fix-cd'
     # paths:
     #   - functions/**
 
