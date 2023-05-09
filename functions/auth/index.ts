@@ -15,12 +15,12 @@ const cert = {
   token_uri: 'https://oauth2.googleapis.com/token',
   auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
   client_x509_cert_url:
-    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com',
+    'https://www.googleapis.com/robot/v1/metadata/x509/wa-project-mountain%40appspot.gserviceaccount.com'
 }
 
 const dev = process.env['NODE_ENV'] === 'development'
 const useEmulators = !process.env.SERVICE_ACCOUNT_KEY
-
+// trigger build
 if (dev) {
   process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
 }
@@ -28,11 +28,11 @@ if (dev) {
 const app = firebase.initializeApp(
   dev || useEmulators
     ? {
-        projectId: 'wa-project-mountain',
+        projectId: 'wa-project-mountain'
       }
     : {
         // for typescript hint
-        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert))),
+        credential: firebase.credential.cert(JSON.parse(JSON.stringify(cert)))
       }
 )
 
@@ -43,8 +43,8 @@ const mailSetting = createTransport({
   port: 465,
   auth: {
     user: 'wa.project.mountain@gmail.com',
-    pass: process.env.APP_PASSWORD,
-  },
+    pass: process.env.APP_PASSWORD
+  }
 })
 
 export { db, mailSetting }
