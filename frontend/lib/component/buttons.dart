@@ -369,6 +369,17 @@ class MyWebButton extends StatelessWidget {
         fixedSize: const Size(113, 40));
   }
 
+  static ButtonStyle styleLargeFillGrey() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xffe5e5e5),
+        foregroundColor: const Color(0xff767676),
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
   static ButtonStyle styleLargeFilled() {
     return FilledButton.styleFrom(
         backgroundColor: MyStyles.tripTertiary,
