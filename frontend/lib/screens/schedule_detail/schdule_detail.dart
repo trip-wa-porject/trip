@@ -308,13 +308,13 @@ Widget getCard(BuildContext context, ScheduleDetail widget) {
             MyWebButton(
               label: widget.alreadyJoin ? '訂單資訊' : '立即報名',
               style: MyWebButton.styleLargeFilledOrange(),
-              onPressed: widget.alreadyJoin
+              futureFunction: widget.alreadyJoin
                   ? () async {
-                      Get.find<ScheduleManagerController>()
+                      await Get.find<ScheduleManagerController>()
                           .goToPayPage(widget.model.id);
                     }
                   : () async {
-                      Get.find<ScheduleManagerController>()
+                      await Get.find<ScheduleManagerController>()
                           .joinNewEvent(widget.model.id, widget.model);
                     },
             ),

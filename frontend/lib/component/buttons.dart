@@ -310,6 +310,30 @@ class MyWebButton extends StatelessWidget {
         fixedSize: const Size(70, 40));
   }
 
+  static ButtonStyle styleSmallFilledForLogin() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfff8fdef),
+        foregroundColor: Color(0xff417619),
+        textStyle:
+            MyStyles.kTextStyleButtonS.copyWith(fontWeight: FontWeight.w500),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
+  static ButtonStyle styleSmallFilledForSignUp() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: Colors.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: Color(0xffa9b19c)),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
   static ButtonStyle styleSmallOutlined() {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xfff8fdef),
