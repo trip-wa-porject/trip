@@ -3,9 +3,9 @@ name: Deploy functions
 on:
   push:
     branches:
-      - 'fix-cd'
-    # paths:
-    #   - functions/**
+      - 'dev'
+    paths:
+      - functions/**
 
 jobs:
   deploy_func:
@@ -22,5 +22,13 @@ jobs:
       - name: install dependencies
         working-directory: './functions'
         run: |
-          echo -e "APP_PASSWORD=${{ secrets.TEST_APPPASSWORD }}\nSERVICE_ACCOUNT_KEY=${{ secrets.TEST_SECRET }}" > .env && \
-          cat .env
+          echo -e "APP_PASSWORD=${{ secrets.APP_PASSWORD }}\nSERVICE_ACCOUNT_KEY=${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
+          npm install && \
+          npx tsc
+
+      - name: Deploy to Firebase Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
