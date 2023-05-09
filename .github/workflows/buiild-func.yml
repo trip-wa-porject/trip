@@ -22,5 +22,5 @@ jobs:
       - name: install dependencies
         working-directory: './functions'
         run: |
-          echo -e APP_PASSWORD="${{ secrets.TEST_APPPASSWORD }}\n"SERVICE_ACCOUNT_KEY=${{ secrets.TEST_SECRET }} > .env && \
+          echo -e APP_PASSWORD="${{ secrets.TEST_APPPASSWORD }}\n"SERVICE_ACCOUNT_KEY="${{ secrets.TEST_SECRET }}" > .env && \
           cat .env
