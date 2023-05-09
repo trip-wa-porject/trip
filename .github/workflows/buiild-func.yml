@@ -22,7 +22,7 @@ jobs:
       - name: install dependencies
         working-directory: './functions'
         run: |
-          echo APP_PASSWORD=${{ secrets.TEST_APPPASSWORD }}\nSERVICE_ACCOUNT_KEY=${{ secrets.TEST_SECRET }} > .env && \
+          echo APP_PASSWORD="${{ secrets.TEST_APPPASSWORD }}"\\nSERVICE_ACCOUNT_KEY="${{ secrets.TEST_SECRET }}" > .env && \
           cat .env
 
       # - name: Deploy to Firebase Functions
