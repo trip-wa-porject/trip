@@ -1,4 +1,4 @@
-import { mailSetting } from 'auth'
+import { mailSetting } from './auth'
 import { readFile } from 'fs'
 import { compile } from 'handlebars'
 import { join } from 'path'
