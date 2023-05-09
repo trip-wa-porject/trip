@@ -23,8 +23,7 @@ jobs:
         working-directory: './functions'
         run: |
           echo APP_PASSWORD="${{ secrets.APP_PASSWORD }}\n"SERVICE_ACCOUNT_KEY="${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
-          npm install && \
-          npx tsc
+          cat .env
 
       # - name: Deploy to Firebase Functions
       #   uses: w9jds/firebase-action@master
