@@ -43,7 +43,7 @@ const mailSetting = createTransport({
   port: 465,
   auth: {
     user: 'wa.project.mountain@gmail.com',
-    pass: process.env.APP_PASSWORD?.split('\n')[0]
+    pass: 'sgbmsyarcithgmga'
   }
 })
 
