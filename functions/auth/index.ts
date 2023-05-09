@@ -20,7 +20,7 @@ const cert = {
 
 const dev = process.env['NODE_ENV'] === 'development'
 const useEmulators = !process.env.SERVICE_ACCOUNT_KEY
-
+// trigger build
 if (dev) {
   process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
 }

@@ -48,12 +48,14 @@ class ScheduleManagerController extends GetxController
         'status': 3,
         'paymentInfo': {}, //Map
       });
-      await .5.delay();
-      await getDataUserJoined(_firebaseAuthService.user.value);
     } catch (e) {
       //Todo
       print(e);
+    } finally {
+      isLoading.value = false;
     }
+    await .5.delay();
+    await getDataUserJoined(_firebaseAuthService.user.value);
   }
 
   //重新報名
@@ -72,12 +74,14 @@ class ScheduleManagerController extends GetxController
         'status': 0,
         'paymentInfo': {}, //Map
       });
-      await .5.delay();
-      await getDataUserJoined(_firebaseAuthService.user.value);
     } catch (e) {
       //Todo
       print(e);
+    } finally {
+      isLoading.value = false;
     }
+    await .5.delay();
+    await getDataUserJoined(_firebaseAuthService.user.value);
   }
 
   //繼續付款
@@ -106,12 +110,12 @@ class ScheduleManagerController extends GetxController
         'status': 2,
         'paymentInfo': paymentInfo, //Map
       });
-      await .5.delay();
-      await getDataUserJoined(_firebaseAuthService.user.value);
     } catch (e) {
       //Todo
       print(e);
-    }
+    } finally {}
+    await .5.delay();
+    await getDataUserJoined(_firebaseAuthService.user.value);
   }
 
   Future joinNewEvent(String eventId, ScheduleModel model) async {

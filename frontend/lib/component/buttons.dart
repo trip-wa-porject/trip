@@ -46,6 +46,22 @@ class MyOutlinedButton extends StatelessWidget {
     );
   }
 
+  //淺綠色/綠邊框/綠字
+  static ButtonStyle style3() {
+    return OutlinedButton.styleFrom(
+      backgroundColor: MyStyles.green4,
+      foregroundColor: MyStyles.tripTertiary,
+      textStyle: MyStyles.kTextStyleBody1,
+      shape: const RoundedRectangleBorder(
+          side: BorderSide(color: MyStyles.tripTertiary),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: 24,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -211,18 +227,17 @@ class MyFilledButton extends StatelessWidget {
     );
   }
 
-  //橘色 黑字 大的
+  //橘色 白字 大的
   static ButtonStyle style3() {
     return FilledButton.styleFrom(
       backgroundColor: MyStyles.primary,
-      foregroundColor: MyStyles.greyScale000000,
-      textStyle: MyStyles.kTextStyleH3,
+      foregroundColor: MyStyles.white,
+      textStyle: MyStyles.kTextStyleH4,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
-      // side: const BorderSide(width: 1.0, color: MyStyles.primary),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 24,
+        vertical: 8,
+        horizontal: 16,
       ),
     );
   }
@@ -279,6 +294,42 @@ class MyWebButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
+  static ButtonStyle styleSmallFilledForShare() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(70, 40));
+  }
+
+  static ButtonStyle styleSmallFilledForLogin() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfff8fdef),
+        foregroundColor: Color(0xff417619),
+        textStyle:
+            MyStyles.kTextStyleButtonS.copyWith(fontWeight: FontWeight.w500),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(77, 40));
+  }
+
+  static ButtonStyle styleSmallFilledForSignUp() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.tripTertiary,
+        foregroundColor: Colors.white,
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: Color(0xffa9b19c)),
         padding: const EdgeInsets.symmetric(vertical: 10),
         fixedSize: const Size(77, 40));
   }
@@ -354,6 +405,17 @@ class MyWebButton extends StatelessWidget {
         fixedSize: const Size(113, 40));
   }
 
+  static ButtonStyle styleLargeFillGrey() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xffe5e5e5),
+        foregroundColor: const Color(0xff767676),
+        textStyle: MyStyles.kTextStyleButtonS,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
   static ButtonStyle styleLargeFilled() {
     return FilledButton.styleFrom(
         backgroundColor: MyStyles.tripTertiary,
@@ -366,6 +428,17 @@ class MyWebButton extends StatelessWidget {
         fixedSize: const Size(208, 48));
   }
 
+  static ButtonStyle styleLargeFilledOrange() {
+    return FilledButton.styleFrom(
+        backgroundColor: MyStyles.primary,
+        foregroundColor: MyStyles.white,
+        textStyle: MyStyles.kTextStyleH4,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
   static ButtonStyle styleLargeOutlined() {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xfff8fdef),
@@ -374,6 +447,18 @@ class MyWebButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        fixedSize: const Size(208, 48));
+  }
+
+  static ButtonStyle styleLargeOutlinedOrange() {
+    return FilledButton.styleFrom(
+        backgroundColor: const Color(0xfffff9ee),
+        foregroundColor: MyStyles.primary,
+        textStyle: MyStyles.kTextStyleButtonM,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 1.0, color: MyStyles.primary),
         padding: const EdgeInsets.symmetric(vertical: 10),
         fixedSize: const Size(208, 48));
   }

@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   children: [
                                     StepContainer(
                                       stepIndex: 0,
-                                      title: '申請成為會員',
+                                      title: '閱讀會員條款',
                                       isCurrentStep:
                                           controller.steps.value >= 0,
                                     ),
@@ -153,10 +153,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 child: SizedBox(
                                                   width: 208,
                                                   height: 65,
-                                                  child: MyOutlinedButton(
-                                                    label: '返回上一步',
-                                                    style: MyOutlinedButton
-                                                        .style1(),
+                                                  child: MyWebButton(
+                                                    label: '返回',
+                                                    style: MyWebButton
+                                                        .styleLargeOutlined(),
                                                     onPressed: () {
                                                       controller.preStep();
                                                     },
@@ -175,19 +175,22 @@ class _SignUpPageState extends State<SignUpPage> {
                                                   width: 208,
                                                   height: 65,
                                                   child: Obx(
-                                                    () => MyFilledButton(
-                                                      label: '下一步',
-                                                      style: MyFilledButton
-                                                          .style1(),
-                                                      onPressed: controller
-                                                              .nextStepsBtnStatus
-                                                              .value
-                                                          ? () {
+                                                    () => controller
+                                                            .nextStepsBtnStatus
+                                                            .value
+                                                        ? MyWebButton(
+                                                            label: '下一步',
+                                                            style: MyWebButton
+                                                                .styleLargeFilled(),
+                                                            onPressed: () {
                                                               controller
                                                                   .nextStep();
-                                                            }
-                                                          : null,
-                                                    ),
+                                                            })
+                                                        : MyWebButton(
+                                                            label: '下一步',
+                                                            style: MyWebButton
+                                                                .styleLargeFillGrey(),
+                                                            onPressed: () {}),
                                                   ),
                                                 ),
                                               ),
@@ -245,8 +248,8 @@ class StepContainer extends StatelessWidget {
       child: Align(
         alignment: Alignment.center,
         child: Text(
-          '步驟${stepIndex + 1}\n$title',
-          style: MyStyles.kTextStyleH3Bold.copyWith(
+          '步驟${stepIndex + 1} $title',
+          style: MyStyles.kTextStyleH4.copyWith(
             color: Colors.white,
           ),
           textAlign: TextAlign.start,

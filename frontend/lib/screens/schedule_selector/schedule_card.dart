@@ -7,6 +7,7 @@ import 'package:tripflutter/screens/schedule_selector/schedule_selector_controll
 
 import '../../models/schedule_model.dart';
 import '../../consts.dart';
+import '../../utils/amount_format_utils.dart';
 import '../../utils/date_format_utils.dart';
 
 Map<int, String> intToDate = {
@@ -95,7 +96,9 @@ class ScheduleCard extends StatelessWidget {
                 top: 16.0,
                 bottom: 18,
               ),
-              child: _rightSideBook(model.price),
+              child: isShowOnly
+                  ? _rightSideMemberPrice()
+                  : _rightSideBook(model.price),
             ),
           ],
         ),
@@ -210,7 +213,36 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 
-  //TODO show only
+  Widget _rightSideMemberPrice() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          '一般會員 ${model.price}',
+          style: MyStyles.kTextStyleH4,
+        ),
+        Text(
+          '加入VIP 立即省 ${model.price - model.memberPrice}',
+          style: MyStyles.kTextStyleSubtitle1Bold.copyWith(
+            color: MyStyles.redC80000,
+          ),
+        ),
+        const SizedBox(
+          height: 24,
+        ),
+        MyWebButton(
+          label: '了解更多',
+          style: MyWebButton.styleMediumOutlinedOrange(),
+          onPressed: () {
+            Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=${model.id}',
+                arguments: model.toJson());
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _rightSideBook(int price) {
     int _status = 0;
 
@@ -251,7 +283,7 @@ class ScheduleCard extends StatelessWidget {
             style: intToStatusStyle[_status],
           ),
         Text(
-          price == 0 ? "免費" : "\$ $price 起",
+          price == 0 ? "免費" : "NT\$ ${amountFormat(price)}起",
           style: MyStyles.kTextStyleH4.copyWith(
             color: MyStyles.greyScale000000,
           ),
@@ -266,11 +298,13 @@ class ScheduleCard extends StatelessWidget {
                 Get.find<ScheduleSelectorController>().goToDetail(model);
               },
             ),
-            if (model.information.applyStart!.isBefore(DateTime.now()))
+            if (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now()))
               const SizedBox(
                 width: 8,
               ),
-            if (model.information.applyStart!.isBefore(DateTime.now()))
+            if (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now()))
               MyWebButton(
                 label: '立即報名',
                 style: MyWebButton.styleMediumFilledOrange(),
