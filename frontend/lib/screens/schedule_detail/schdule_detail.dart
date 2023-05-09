@@ -23,7 +23,7 @@ class ScheduleDetailPage extends GetView<ScheduleDetailController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ScheduleDetailController());
-
+    controller.getData();
     return Scaffold(
       appBar: MyAppBar(),
       body: Obx(

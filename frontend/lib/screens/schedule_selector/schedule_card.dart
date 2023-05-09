@@ -96,7 +96,9 @@ class ScheduleCard extends StatelessWidget {
                 top: 16.0,
                 bottom: 18,
               ),
-              child: _rightSideBook(model.price),
+              child: isShowOnly
+                  ? _rightSideMemberPrice()
+                  : _rightSideBook(model.price),
             ),
           ],
         ),
@@ -211,7 +213,36 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 
-  //TODO show only
+  Widget _rightSideMemberPrice() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          '一般會員 ${model.price}',
+          style: MyStyles.kTextStyleH4,
+        ),
+        Text(
+          '加入VIP 立即省 ${model.price - model.memberPrice}',
+          style: MyStyles.kTextStyleSubtitle1Bold.copyWith(
+            color: MyStyles.redC80000,
+          ),
+        ),
+        const SizedBox(
+          height: 24,
+        ),
+        MyWebButton(
+          label: '了解更多',
+          style: MyWebButton.styleMediumOutlinedOrange(),
+          onPressed: () {
+            Get.toNamed('${AppLinks.SCHEDUL}${AppLinks.DETAIL}?id=${model.id}',
+                arguments: model.toJson());
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _rightSideBook(int price) {
     int _status = 0;
 

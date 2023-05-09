@@ -32,20 +32,22 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (MediaQuery.of(context).size.width > 700) const Logo(),
               Row(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Get.offAndToNamed(
-                          '${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
-                    },
-                    child: Text(
-                      '行程管理',
-                      style: appBarTextStyle,
-                    ),
-                  ),
+                  authService.user.value == null
+                      ? const SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            Get.toNamed(
+                                '${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+                          },
+                          child: Text(
+                            '行程管理',
+                            style: appBarTextStyle,
+                          ),
+                        ),
                   appBarSpacer,
                   InkWell(
                     onTap: () {
-                      Get.offAndToNamed('${AppLinks.SCHEDUL}');
+                      Get.toNamed('${AppLinks.SCHEDUL}');
                     },
                     child: Text(
                       '活動行程',

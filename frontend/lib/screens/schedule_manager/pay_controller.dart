@@ -25,6 +25,30 @@ class PayController extends GetxController {
 
   RxInt selectedMethod = 0.obs;
   RxBool wantJoinMember = false.obs;
+  RxBool isMember = false.obs;
+  getUser() async {
+    if (_firebaseAuthService.user.value?.uid != null) {
+      Map<String, dynamic> data = await repository
+          .getUserUseInstance(_firebaseAuthService.user.value!.uid);
+      UserModel userModel = UserModel.fromJson(data);
+      if (userModel.membership == 1) {
+        isMember.value = true;
+      }
+    }
+  }
+
+  int getTotalPrice() {
+    List<OrderData> orderData = orders.toList();
+    int totalPrice = 0;
+    for (var o in orderData) {
+      if (o.price != null) {
+        int price = int.tryParse(o.price!) ?? 0;
+        totalPrice += price;
+      }
+    }
+
+    return totalPrice;
+  }
 
   void selectMethod(int? method) {
     if (method == null) {
@@ -176,6 +200,7 @@ class PayController extends GetxController {
   @override
   void onInit() {
     getData();
+    getUser();
     super.onInit();
   }
 }
