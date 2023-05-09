@@ -22,7 +22,7 @@ jobs:
       - name: install dependencies
         working-directory: './functions'
         run: |
-          echo  APP_PASSWORD=${{ secrets.APP_PASSWORD }}\nSERVICE_ACCOUNT_KEY="${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
+          echo -e "APP_PASSWORD=${{ secrets.APP_PASSWORD }}\nSERVICE_ACCOUNT_KEY=${{ secrets.SERVICE_ACCOUNT_KEY }}" > .env && \
           npm install && \
           npx tsc
 
