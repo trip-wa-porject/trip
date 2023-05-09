@@ -23,6 +23,10 @@ readHTMLFile(
       console.log('error reading file', err)
       return
     }
+    console.log('************')
+    console.log(process.env.APP_PASSWORD)
+    console.log('************')
+
     const template = compile(html)
     const replacements = {}
     const htmlToSend = template(replacements)
