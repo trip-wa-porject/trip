@@ -11,6 +11,7 @@ class ScheduleOptionDateSelector extends StatelessWidget {
     this.lastDate,
     required this.isClockwise,
     required this.borderColor,
+    this.backgroundColor,
     this.onDateChangeCallback,
     this.width = 100,
   }) : super(key: key);
@@ -23,13 +24,14 @@ class ScheduleOptionDateSelector extends StatelessWidget {
   final DateTime? lastDate;
   final bool isClockwise;
   final Color borderColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     EdgeInsets hintPadding = const EdgeInsets.only(left: 8.0);
     ButtonStyleData buttonStyleData = ButtonStyleData(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? Colors.white,
         border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -52,6 +54,10 @@ class ScheduleOptionDateSelector extends StatelessWidget {
       icon: Padding(
         padding: EdgeInsets.all(8.0),
         child: Icon(Icons.keyboard_arrow_down),
+      ),
+      openMenuIcon: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Icon(Icons.keyboard_arrow_up),
       ),
       iconDisabledColor: MyStyles.greyScale757575,
       iconEnabledColor: MyStyles.greyScale757575,
@@ -80,7 +86,8 @@ class ScheduleOptionDateSelector extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: hintPadding,
-                  child: Text('${selectedDate?.year}年${selectedDate?.month}月${selectedDate?.day}日'),
+                  child: Text(
+                      '${selectedDate?.year}年${selectedDate?.month}月${selectedDate?.day}日'),
                 ))
             : Align(
                 alignment: Alignment.centerLeft,

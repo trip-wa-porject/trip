@@ -14,12 +14,16 @@ class SignUpContentThree extends GetView<SignUpController> {
     Get.put(SignUpController());
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Text(
-          //   '就差一步！\n請前往信箱驗證以完成會員註冊',
-          //   style: MyStyles.kTextStyleH3,
-          //   textAlign: TextAlign.center,
-          // ),
+          const Text(
+            '驗證你的信箱',
+            style: MyStyles.kTextStyleH3Bold,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           const Text(
             '就差一步！',
             style: MyStyles.kTextStyleH3,
@@ -49,10 +53,13 @@ class SignUpContentThree extends GetView<SignUpController> {
               ],
             ),
           ),
+          const SizedBox(
+            height: 32,
+          ),
           Image.asset(
             'assets/images/check.png',
-            width: 745,
-            height: 655,
+            width: 255.7,
+            height: 225,
           ),
           const SizedBox(
             height: 32,

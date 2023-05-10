@@ -409,7 +409,7 @@ class MyWebButton extends StatelessWidget {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xffe5e5e5),
         foregroundColor: const Color(0xff767676),
-        textStyle: MyStyles.kTextStyleButtonS,
+        textStyle: MyStyles.kTextStyleH4M,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -420,7 +420,7 @@ class MyWebButton extends StatelessWidget {
     return FilledButton.styleFrom(
         backgroundColor: MyStyles.tripTertiary,
         foregroundColor: MyStyles.white,
-        textStyle: MyStyles.kTextStyleButtonS,
+        textStyle: MyStyles.kTextStyleH4M,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
@@ -432,7 +432,7 @@ class MyWebButton extends StatelessWidget {
     return FilledButton.styleFrom(
         backgroundColor: MyStyles.primary,
         foregroundColor: MyStyles.white,
-        textStyle: MyStyles.kTextStyleH4,
+        textStyle: MyStyles.kTextStyleH4M,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -443,7 +443,7 @@ class MyWebButton extends StatelessWidget {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xfff8fdef),
         foregroundColor: MyStyles.tripTertiary,
-        textStyle: MyStyles.kTextStyleButtonS,
+        textStyle: MyStyles.kTextStyleH4M,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         side: const BorderSide(width: 1.0, color: MyStyles.tripTertiary),
@@ -455,7 +455,7 @@ class MyWebButton extends StatelessWidget {
     return FilledButton.styleFrom(
         backgroundColor: const Color(0xfffff9ee),
         foregroundColor: MyStyles.primary,
-        textStyle: MyStyles.kTextStyleButtonM,
+        textStyle: MyStyles.kTextStyleH4M,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         side: const BorderSide(width: 1.0, color: MyStyles.primary),

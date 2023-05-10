@@ -13,6 +13,8 @@ import 'signup_content_three.dart';
 import 'signup_content_two.dart';
 import 'signup_controller.dart';
 
+RxBool isHovered = false.obs;
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -39,120 +41,121 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: MyAppBar(),
       body: Material(
         child: Center(
-          child: ListView(
-            controller: controller.scrollController,
-            children: [
-              BgImage(
-                child: Center(
-                  child: SizedBox(
-                    width: 751,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '註冊成為會員',
-                          style: MyStyles.kTextStyleH2Bold.copyWith(
-                            color: Colors.white,
+          child: Obx(
+            () => ListView(
+              controller: controller.scrollController,
+              physics:
+                  isHovered.value ? const NeverScrollableScrollPhysics() : null,
+              children: [
+                BgImage(
+                  child: Center(
+                    child: SizedBox(
+                      width: 751,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '註冊成為會員',
+                            style: MyStyles.kTextStyleH2Bold.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 48.0,
-                        ),
-                        Text(
-                          '歡迎加入新北山岳協會！ 我們致力於提供最好的登山體驗和資源，讓您在登山旅程中感受到無限的樂趣和挑戰。我們期待著您的加入，一同探索美麗的大自然，締造難忘的回憶。',
-                          style: MyStyles.kTextStyleH3.copyWith(
-                            color: Colors.white,
+                          SizedBox(
+                            height: 48.0,
                           ),
-                        ),
-                      ],
+                          Text(
+                            '歡迎加入新北山岳協會！ 我們致力於提供最好的登山體驗和資源，讓您在登山旅程中感受到無限的樂趣和挑戰。我們期待著您的加入，一同探索美麗的大自然，締造難忘的回憶。',
+                            style: MyStyles.kTextStyleH3.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Center(
-                child: LayoutBuilder(builder: (context, constrains) {
-                  return Container(
-                    constraints: BoxConstraints(
-                        maxHeight: double.infinity, maxWidth: 1160),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 94,
-                        ),
-                        Obx(
-                          () => Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 307,
-                                child: Column(
-                                  children: [
-                                    StepContainer(
-                                      stepIndex: 0,
-                                      title: '閱讀會員條款',
-                                      isCurrentStep:
-                                          controller.steps.value >= 0,
-                                    ),
-                                    Obx(() => MyProgressBar(
-                                          progress: controller
-                                                  .step0CheckedStates
-                                                  .where((p0) =>
-                                                      p0.checked == true)
-                                                  .length /
-                                              4,
-                                        )),
-                                    StepContainer(
-                                      stepIndex: 1,
-                                      title: '填寫會員資料',
-                                      isCurrentStep:
-                                          controller.steps.value >= 1,
-                                    ),
-                                    Obx(() => MyProgressBar(
-                                          progress: controller
-                                                  .step1CheckedStates
-                                                  .where((p0) =>
-                                                      p0.checked == true)
-                                                  .length /
-                                              3,
-                                        )),
-                                    StepContainer(
-                                      stepIndex: 2,
-                                      title: '驗證 E-mail',
-                                      isCurrentStep:
-                                          controller.steps.value >= 2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 86,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12.0),
+                Center(
+                  child: LayoutBuilder(builder: (context, constrains) {
+                    return Container(
+                      constraints: BoxConstraints(
+                          maxHeight: double.infinity, maxWidth: 1160),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 94,
+                          ),
+                          Obx(
+                            () => Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 307,
                                   child: Column(
                                     children: [
-                                      [
-                                        const SignUpContentOne(),
-                                        SignUpContentTwo(),
-                                        const SignUpContentThree(),
-                                      ][controller.steps.value],
-                                      const SizedBox(
-                                        height: 25,
+                                      StepContainer(
+                                        stepIndex: 0,
+                                        title: '閱讀會員條款',
+                                        isCurrentStep:
+                                            controller.steps.value >= 0,
                                       ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Obx(
-                                              () => Visibility(
-                                                visible:
-                                                    controller.steps.value == 1,
-                                                child: SizedBox(
-                                                  width: 208,
-                                                  height: 65,
+                                      Obx(() => MyProgressBar(
+                                            progress: controller
+                                                    .step0CheckedStates
+                                                    .where((p0) =>
+                                                        p0.checked == true)
+                                                    .length /
+                                                4,
+                                          )),
+                                      StepContainer(
+                                        stepIndex: 1,
+                                        title: '填寫會員資料',
+                                        isCurrentStep:
+                                            controller.steps.value >= 1,
+                                      ),
+                                      Obx(() => MyProgressBar(
+                                            progress: controller
+                                                    .step1CheckedStates
+                                                    .where((p0) =>
+                                                        p0.checked == true)
+                                                    .length /
+                                                3,
+                                          )),
+                                      StepContainer(
+                                        stepIndex: 2,
+                                        title: '驗證 E-mail',
+                                        isCurrentStep:
+                                            controller.steps.value >= 2,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 86,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0),
+                                    child: Column(
+                                      children: [
+                                        [
+                                          const SignUpContentOne(),
+                                          SignUpContentTwo(),
+                                          const SignUpContentThree(),
+                                        ][controller.steps.value],
+                                        const SizedBox(
+                                          height: 25,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Obx(
+                                                () => Visibility(
+                                                  visible:
+                                                      controller.steps.value ==
+                                                          1,
                                                   child: MyWebButton(
                                                     label: '返回',
                                                     style: MyWebButton
@@ -163,17 +166,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              width: 32,
-                                            ),
-                                            Obx(
-                                              () => Visibility(
-                                                visible:
-                                                    controller.steps.value != 2,
-                                                child: SizedBox(
-                                                  width: 208,
-                                                  height: 65,
+                                              const SizedBox(
+                                                width: 32,
+                                              ),
+                                              Obx(
+                                                () => Visibility(
+                                                  visible:
+                                                      controller.steps.value !=
+                                                          2,
                                                   child: Obx(
                                                     () => controller
                                                             .nextStepsBtnStatus
@@ -194,27 +194,27 @@ class _SignUpPageState extends State<SignUpPage> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 120.0),
-                child: Footer(),
-              ),
-            ],
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 120.0),
+                  child: Footer(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -367,25 +367,33 @@ class _DropdownTermState extends State<DropdownTerm> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: SizedBox(
                   height: 172,
-                  child: ListView(
-                    controller: scrollController,
-                    children: [
-                      EasyRichText(
-                        signupConsts
-                                .mapIndexToData[checkState.index]!['content']
-                            as String,
-                        defaultStyle: MyStyles.kTextStyleBody1,
-                        patternList: (signupConsts.mapIndexToData[
-                                checkState.index]!['subtitles'] as List)
-                            .map(
-                              (e) => EasyRichTextPattern(
-                                targetString: e,
-                                style: MyStyles.kTextStyleH3,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                  child: MouseRegion(
+                    onEnter: (v) {
+                      isHovered.value = true;
+                    },
+                    onExit: (v) {
+                      isHovered.value = false;
+                    },
+                    child: ListView(
+                      controller: scrollController,
+                      children: [
+                        EasyRichText(
+                          signupConsts
+                                  .mapIndexToData[checkState.index]!['content']
+                              as String,
+                          defaultStyle: MyStyles.kTextStyleBody1,
+                          patternList: (signupConsts.mapIndexToData[
+                                  checkState.index]!['subtitles'] as List)
+                              .map(
+                                (e) => EasyRichTextPattern(
+                                  targetString: e,
+                                  style: MyStyles.kTextStyleH3,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
