@@ -360,12 +360,12 @@ Widget getCard(BuildContext context, ScheduleDetail widget,
               futureFunction: propertyStatus == PropertyStatus.Apply
                   ? () async {
                       await Get.find<ScheduleManagerController>()
-                          .goToPayPage(widget.model.id);
+                          .joinNewEvent(widget.model.id, widget.model);
                     }
                   : () async {
                       if (propertyStatus == PropertyStatus.Order) {
                         await Get.find<ScheduleManagerController>()
-                            .joinNewEvent(widget.model.id, widget.model);
+                            .goToPayPage(widget.model.id);
                       }
                     },
             ),
