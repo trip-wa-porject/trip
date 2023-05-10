@@ -31,8 +31,6 @@ Map<int, String> intToStatus = {
   0: '熱烈報名中',
   1: '已額滿',
   2: '尚有#名額',
-  3: '已取消',
-  4: '即將額滿',
 };
 
 Map<int, TextStyle> intToStatusStyle = {
@@ -145,7 +143,7 @@ class ScheduleCard extends StatelessWidget {
   Widget _rightSideInfo(
       DateTime startDate, DateTime endDate, List<String> area, String title) {
     final handleStartDate =
-        "${startDate.month.toString()}/${startDate.day.toString()}";
+        "${startDate.year.toString()}/${startDate.month.toString()}/${startDate.day.toString()}";
 
     final handleEndDate =
         "${endDate.month.toString()}/${endDate.day.toString()}";
@@ -156,30 +154,13 @@ class ScheduleCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              "$handleStartDate(${intToDate[startDate.weekday]}) - $handleEndDate(${intToDate[endDate.weekday]})", //${area.first.substring(0, 3)}
-              maxLines: 1,
-              style: MyStyles.kTextStyleH4.copyWith(
-                color: MyStyles.greyScale212121,
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Icon(
-              Icons.maps_ugc_outlined,
-              color: MyStyles.tripTertiary,
-            ),
-            Text(
-              "${area.first.substring(0, 3)}", //
-              maxLines: 1,
-              style: MyStyles.kTextStyleH4.copyWith(
-                color: MyStyles.greyScale212121,
-              ),
-            ),
-          ],
+        Text(
+          "$handleStartDate(${intToDate[startDate.weekday]}) - $handleEndDate(${intToDate[endDate.weekday]})",
+          //${area.first.substring(0, 3)}
+          maxLines: 1,
+          style: MyStyles.kTextStyleH4.copyWith(
+            color: MyStyles.greyScale212121,
+          ),
         ),
         Text(
           title,
@@ -188,13 +169,28 @@ class ScheduleCard extends StatelessWidget {
             color: MyStyles.greyScale000000,
           ),
         ),
-        Text(
-          '領隊- ${model.information.leader.substring(0, 3)} /嚮導- ${model.information.guides.join(',')}',
-          maxLines: 1,
-          style: MyStyles.kTextStyleBody1.copyWith(
-            color: MyStyles.greyScale000000,
+        Row(children: [
+          Image.asset(
+            'assets/images/distance.png',
           ),
-        ),
+          const SizedBox(
+            width: 8.0,
+          ),
+          Text(
+            area.map((e) => e.substring(0, 3)).toSet().toList().join('、'),
+            maxLines: 1,
+            style: MyStyles.kTextStyleBody1.copyWith(
+              color: MyStyles.greyScale000000,
+            ),
+          ),
+        ]),
+        // Text(
+        //   '領隊- ${model.information.leader.substring(0, 3)} /嚮導- ${model.information.guides.join(',')}',
+        //   maxLines: 1,
+        //   style: MyStyles.kTextStyleBody1.copyWith(
+        //     color: MyStyles.greyScale000000,
+        //   ),
+        // ),
         const SizedBox(),
         Row(
           children: [
@@ -247,7 +243,7 @@ class ScheduleCard extends StatelessWidget {
     int _status = 0;
 
     int count = model.limitation - model.applicants.length;
-    if (count > 9) {
+    if (model.limitation == 0 || count > 9) {
       _status = 0;
     } else if (count > 0) {
       _status = 2;
@@ -298,13 +294,13 @@ class ScheduleCard extends StatelessWidget {
                 Get.find<ScheduleSelectorController>().goToDetail(model);
               },
             ),
-            if (count > 0 &&
-                model.information.applyEnd!.isAfter(DateTime.now()))
+            if (model.limitation == 0 || (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now())))
               const SizedBox(
                 width: 8,
               ),
-            if (count > 0 &&
-                model.information.applyEnd!.isAfter(DateTime.now()))
+            if (model.limitation == 0 || (count > 0 &&
+                model.information.applyEnd!.isAfter(DateTime.now())))
               MyWebButton(
                 label: '立即報名',
                 style: MyWebButton.styleMediumFilledOrange(),
