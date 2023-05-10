@@ -143,7 +143,7 @@ class ScheduleCard extends StatelessWidget {
   Widget _rightSideInfo(
       DateTime startDate, DateTime endDate, List<String> area, String title) {
     final handleStartDate =
-        "${startDate.month.toString()}/${startDate.day.toString()}";
+        "${startDate.year.toString()}/${startDate.month.toString()}/${startDate.day.toString()}";
 
     final handleEndDate =
         "${endDate.month.toString()}/${endDate.day.toString()}";
