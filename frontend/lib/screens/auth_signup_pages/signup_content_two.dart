@@ -99,6 +99,7 @@ class SignUpContentTwo extends GetView<SignUpController> {
                         lastDate: controller.birthdayDateTime.value,
                         isClockwise: false,
                         borderColor: MyStyles.greyScale9E9E9E,
+                        backgroundColor: Colors.transparent,
                         onDateChangeCallback: (DateTime dateTime) {
                           controller.selectBirthdayDate(dateTime);
                         },
@@ -172,6 +173,7 @@ class SignUpContentTwo extends GetView<SignUpController> {
                                 selectedItems:
                                     controller.citySelectOptions.toList(),
                                 borderColor: MyStyles.greyScale9E9E9E,
+                                backgroundColor: Colors.transparent,
                                 mode: CheckBoxOptionMode.single,
                                 onChangeCallback: (value) {
                                   controller.selectCityOption(value);
@@ -191,6 +193,7 @@ class SignUpContentTwo extends GetView<SignUpController> {
                                 selectedItems:
                                     controller.districtSelectOptions.toList(),
                                 borderColor: MyStyles.greyScale9E9E9E,
+                                backgroundColor: Colors.transparent,
                                 mode: CheckBoxOptionMode.single,
                                 onChangeCallback: (value) {
                                   controller.selectDistrictOption(value);
@@ -255,6 +258,7 @@ class SignUpContentTwo extends GetView<SignUpController> {
                         allItems: RelationOption.values,
                         selectedItems: controller.relationOptions.toList(),
                         borderColor: MyStyles.greyScale9E9E9E,
+                        backgroundColor: Colors.transparent,
                         mode: CheckBoxOptionMode.single,
                         onChangeCallback: (value) {
                           controller.selectRelationOption(value);
@@ -371,46 +375,50 @@ class _MyInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     isVisible = obscureText;
-    return StatefulBuilder(
-        builder: (context, setState) {
-          return SizedBox(
-            height: 60,
-            child: TextFormField(
-              initialValue: initialValue,
-              controller: textEditingController,
-              onChanged: onChanged,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  ),
-                  suffixIcon: isVisible ? IconButton(
+    return StatefulBuilder(builder: (context, setState) {
+      return SizedBox(
+        height: 60,
+        child: TextFormField(
+          initialValue: initialValue,
+          controller: textEditingController,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 8,
+              ),
+              suffixIcon: isVisible
+                  ? IconButton(
                       onPressed: () => setState(() {
-                        obscureText = !obscureText;
-                      }),
-                      icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined)) : null,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                    const BorderSide(color: MyStyles.greyScale9E9E9E, width: 1.0),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    const BorderSide(color: MyStyles.greyScale757575, width: 1.0),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  helperText: helperText ?? '',
-                  hintText: hintText),
-              onSaved: onSave,
-              obscureText: obscureText,
-              obscuringCharacter: '*',
-              cursorColor: MyStyles.greyScale9E9E9E,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validator,
-            ),
-          );
-        });
+                            obscureText = !obscureText;
+                          }),
+                      icon: Icon(obscureText
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined))
+                  : null,
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                    color: MyStyles.greyScale9E9E9E, width: 1.0),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                    color: MyStyles.greyScale757575, width: 1.0),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              helperText: helperText ?? '',
+              hintText: hintText,
+              hintStyle: MyStyles.kTextStyleBody1),
+          onSaved: onSave,
+          obscureText: obscureText,
+          obscuringCharacter: '*',
+          cursorColor: MyStyles.greyScale9E9E9E,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: validator,
+        ),
+      );
+    });
   }
 }
 
@@ -448,7 +456,7 @@ class InputCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 40.0),
                 child: Text(
                   title,
-                  style: MyStyles.kTextStyleH3Bold,
+                  style: MyStyles.kTextStyleH4M,
                 ),
               ),
             ),
@@ -484,7 +492,9 @@ Widget _customTextField(String label) {
         alignment: Alignment.center,
         child: Text(
           label,
-          style: MyStyles.kTextStyleBody1.copyWith(color: Colors.black),
+          style: MyStyles.kTextStyleBody1.copyWith(
+            color: MyStyles.greyScale757575,
+          ),
         ),
       ),
     ),

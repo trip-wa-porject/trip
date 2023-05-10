@@ -12,6 +12,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     required this.onChangeCallback,
     required this.selectedItems,
     required this.borderColor,
+    this.backgroundColor,
     this.mode = CheckBoxOptionMode.single,
     this.width = 100,
   }) : super(key: key);
@@ -20,6 +21,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
   final List<T> allItems;
   final List<T> selectedItems;
   final Color borderColor;
+  final Color? backgroundColor;
   final void Function(List<T>) onChangeCallback;
   final CheckBoxOptionMode mode;
   final double width;
@@ -29,7 +31,7 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
     EdgeInsets hintPadding = const EdgeInsets.only(left: 8.0);
     ButtonStyleData buttonStyleData = ButtonStyleData(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? Colors.white,
         border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -53,6 +55,10 @@ class ScheduleOptionCheckSelector<T> extends StatelessWidget {
       icon: Padding(
         padding: EdgeInsets.all(8.0),
         child: Icon(Icons.keyboard_arrow_down),
+      ),
+      openMenuIcon: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Icon(Icons.keyboard_arrow_up),
       ),
       iconDisabledColor: MyStyles.greyScale757575,
       iconEnabledColor: MyStyles.greyScale757575,
