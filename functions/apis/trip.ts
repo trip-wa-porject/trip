@@ -93,7 +93,7 @@ const searchTripsFromFireStore = async (
   }
 
   const filterExpired = result.filter(
-    (e) => e.information.applyStart > now.getTime()
+    (e) => e.information.applyEnd > now.getTime()
   )
 
   return {

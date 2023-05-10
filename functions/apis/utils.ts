@@ -7,7 +7,7 @@ const priceInterval: {
   1: [3000, 5000],
   2: [5000, 7000],
   3: [7000, 10000],
-  4: [10000],
+  4: [10000]
 }
 
 const checkPriceInterval = (price: number, price_intervals: number[]) => {
