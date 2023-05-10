@@ -17,6 +17,19 @@ import '../../utils/amount_format_utils.dart';
 import '../../utils/date_format_utils.dart';
 import '../schedule_manager/schedule_manager_controller.dart';
 
+enum PropertyStatus {
+  Order('訂單資訊'),
+  Full('已額滿'),
+  Apply('立即報名');
+
+  const PropertyStatus(this.showedString);
+
+  final String showedString;
+
+  @override
+  String toString() => showedString;
+}
+
 class ScheduleDetailPage extends GetView<ScheduleDetailController> {
   const ScheduleDetailPage({Key? key}) : super(key: key);
 
@@ -65,19 +78,20 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   late ScrollController _scrollController;
   late double padding;
 
-  late ScrollController _listController;
+  late PropertyStatus propertyStatus;
+
+  // late ScrollController _listController;
 
   @override
   void initState() {
+    propertyStatus = getButtonPropertyStatus(widget.alreadyJoin,
+        widget.model.price, widget.model.limitation, widget.model.applicants);
     _scrollController = ScrollController();
     _tabController = TabController(vsync: this, length: scheduleTabs.length);
     _tabController.addListener(_handleTabSelection);
 
-    _listController = ScrollController();
-    _listController.addListener(_handleTab2Selection);
-    // _listController.addListener(() {
-    //   print(_listController.offset);
-    // });
+    // _listController = ScrollController();
+    // _listController.addListener(_handleTab2Selection);
     super.initState();
   }
 
@@ -85,17 +99,39 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
     setState(() {});
   }
 
-  void _handleTab2Selection() {
-    setState(() {
-      print(_listController.offset.toString());
-    });
+  PropertyStatus getButtonPropertyStatus(
+      bool alreadyJoin, int price, int limitation, List<String> applicants) {
+    if (alreadyJoin) {
+      //已報名
+      return PropertyStatus.Order;
+    } else {
+      //尚未報名
+      if (price == 0) {
+        //免費（可以報名嗎？）
+        return PropertyStatus.Apply;
+      } else {
+        if (limitation == 0) {
+          //人數限制：無（可無限報名）
+          return PropertyStatus.Apply;
+        } else {
+          //人數限制：剩Ｘ人
+          if (limitation - applicants.length == 0) {
+            //已額滿
+            return PropertyStatus.Full;
+          } else {
+            //立即報名
+            return PropertyStatus.Apply;
+          }
+        }
+      }
+    }
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
-    _listController.dispose();
+    // _listController.dispose();
     super.dispose();
   }
 
@@ -106,7 +142,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
     return Stack(
       children: [
         ListView(
-          controller: _listController,
+          // controller: _listController,
           children: [
             Center(
               child: Container(
@@ -202,7 +238,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
                               ],
                             ),
                           ),
-                          getCard(context, widget),
+                          getCard(context, widget, propertyStatus),
                         ],
                       ),
                     ),
@@ -223,7 +259,17 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   }
 }
 
-Widget getCard(BuildContext context, ScheduleDetail widget) {
+String getPropertyState(int limitation, List<String> applicants) {
+  if (limitation == 0) {
+    return '名額限制 無';
+  } else {
+    return '名額限制 '
+        '${limitation > 0 ? '$limitation位 / ' : ''}';
+  }
+}
+
+Widget getCard(BuildContext context, ScheduleDetail widget,
+    PropertyStatus propertyStatus) {
   return Container(
     width: kCardWidth * 0.29,
     margin: const EdgeInsets.only(left: 30),
@@ -286,8 +332,8 @@ Widget getCard(BuildContext context, ScheduleDetail widget) {
         ),
         RichText(
           text: TextSpan(
-            text: '名額限制 '
-                '${widget.model.limitation > 0 ? '${widget.model.limitation}位 / ' : '無'}',
+            text: getPropertyState(
+                widget.model.limitation, widget.model.applicants),
             style: MyStyles.kTextStyleSubtitle1
                 .copyWith(color: MyStyles.greyScale757575),
             children: [
@@ -306,16 +352,21 @@ Widget getCard(BuildContext context, ScheduleDetail widget) {
         Row(
           children: [
             MyWebButton(
-              label: widget.alreadyJoin ? '訂單資訊' : '立即報名',
-              style: MyWebButton.styleLargeFilledOrange(),
-              futureFunction: widget.alreadyJoin
+              label: propertyStatus.showedString,
+              style: propertyStatus == PropertyStatus.Apply ||
+                      propertyStatus == PropertyStatus.Order
+                  ? MyWebButton.styleLargeFilledOrange()
+                  : MyWebButton.styleLargeFillGrey(),
+              futureFunction: propertyStatus == PropertyStatus.Apply
                   ? () async {
                       await Get.find<ScheduleManagerController>()
                           .goToPayPage(widget.model.id);
                     }
                   : () async {
-                      await Get.find<ScheduleManagerController>()
-                          .joinNewEvent(widget.model.id, widget.model);
+                      if (propertyStatus == PropertyStatus.Order) {
+                        await Get.find<ScheduleManagerController>()
+                            .joinNewEvent(widget.model.id, widget.model);
+                      }
                     },
             ),
             const SizedBox(width: 12),
@@ -336,7 +387,7 @@ Widget getCard(BuildContext context, ScheduleDetail widget) {
   );
 }
 
-void showShareDialog(BuildContext context, String shareContent){
+void showShareDialog(BuildContext context, String shareContent) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -350,8 +401,7 @@ void showShareDialog(BuildContext context, String shareContent){
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                  MyStyles.tripTertiary, // Background color
+                  backgroundColor: MyStyles.tripTertiary, // Background color
                 ),
                 child: const Text(
                   "確定",

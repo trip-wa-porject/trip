@@ -43,7 +43,7 @@ class MySearchBar extends StatelessWidget {
                           child: TextField(
                             controller: controller,
                             decoration: InputDecoration(
-                              hintText: '請輸入活動編號、活動名稱、領隊嚮導名字',
+                              hintText: '請輸入活動編號、活動名稱',
                               hintStyle: MyStyles.kTextStyleSubtitle1.copyWith(
                                 color: MyStyles.greyScale757575,
                               ),

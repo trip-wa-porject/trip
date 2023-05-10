@@ -54,10 +54,15 @@ class _ScheduleMainInformationState extends State<ScheduleMainInformation> {
                   const SizedBox(
                     width: 12.0,
                   ),
-                  Image.asset('assets/images/distance.png',),
-                  const SizedBox(width: 8.0,),
+                  Image.asset(
+                    'assets/images/distance.png',
+                  ),
+                  const SizedBox(
+                    width: 8.0,
+                  ),
                   Text(
-                    getCities(widget.model.area),
+                    getCities(
+                        widget.model.area.map((e) => e.toString()).toList()),
                     style: MyStyles.kTextStyleH4
                         .copyWith(color: MyStyles.greyScale212121),
                   ),
@@ -229,8 +234,8 @@ List<Widget> _indicators(imagesLength, currentIndex) {
   });
 }
 
-String getCities(List<Area> cities) {
-  return cities.join('、');
+String getCities(List<String> cities) {
+  return cities.map((e) => e.substring(0, 3)).toSet().toList().join('、');
 }
 
 //RWD 字體縮放測試
