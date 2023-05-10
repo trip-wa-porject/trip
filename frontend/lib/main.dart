@@ -30,7 +30,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 late final FirebaseApp app;
 late final FirebaseAuth auth;
-
+// trigger build
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   app = await Firebase.initializeApp(
