@@ -3,9 +3,9 @@ name: Deploy Flutter Web
 on:
   push:
     branches:
-      - 'dev'
-    paths:
-      - frontend/**
+      - 'fix-flutter'
+    # paths:
+    #   - frontend/**
 
 jobs:
   build:
@@ -19,12 +19,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.0.0'
+          flutter-version: '3.7.7'
 
       - name: Install Dependencies
         working-directory: './frontend'
         run: |
-          flutter upgrade && \
           flutter pub get
 
       - name: Build the application
