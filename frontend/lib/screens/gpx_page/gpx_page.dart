@@ -45,6 +45,7 @@ class GpxState extends State<GpxPage> {
           children: <Widget>[
             MapWidget(gpxController: controller),
             Container(
+              color: isWindowVisibility ? Colors.black.withOpacity(0.0) : null,
               width: double.infinity,
               height: double.infinity,
               child: Stack(
