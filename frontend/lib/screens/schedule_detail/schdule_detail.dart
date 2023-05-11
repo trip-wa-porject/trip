@@ -247,11 +247,6 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
             Footer(),
           ],
         ),
-        // Positioned(
-        //   right: 80.0,
-        //   top: 150.0,
-        //   child: Visibility(visible: _listController.offset.toString() == '300' ? true : false, child: getCard(widget),),
-        // ),
       ],
     );
   }
@@ -373,8 +368,9 @@ Widget getCard(BuildContext context, ScheduleDetail widget,
                 iconData: Icons.share,
                 style: MyWebButton.styleSmallFilledForShare(),
                 onPressed: () {
+                  String shareUrl = 'https://wa-project-mountain.web.app/schedule/detail?id=${widget.model.id}';
                   String shareContent =
-                      '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n${"https://wa-project-mountain.web.app/schedule/detail?id=${widget.model.id}"}';
+                      '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n$shareUrl';
                   Clipboard.setData(ClipboardData(text: shareContent));
                   showShareDialog(context, shareContent);
                 }),
