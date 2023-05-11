@@ -124,7 +124,7 @@ class GpxState extends State<GpxPage> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
-        height: 160,
+        height: 168,
         width: MediaQuery.of(context).size.width * 0.4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
