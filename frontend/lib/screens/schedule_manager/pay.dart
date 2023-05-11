@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripflutter/component/buttons.dart';
 import 'package:tripflutter/screens/schedule_manager/pay_controller.dart';
 import 'package:tripflutter/screens/schedule_selector/schedule_card.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../component/footer.dart';
 import '../../component/my_app_bar.dart';
@@ -269,36 +270,128 @@ class Pay extends GetView<PayController> {
                                     ),
                                   ),
                                   //右側
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 38,
-                                      vertical: 18.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "匯款資訊",
-                                          style: MyStyles.kTextStyleH3Bold
-                                              .copyWith(
-                                            color: MyStyles.tripTertiary,
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 38,
+                                          vertical: 18.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "匯款資訊",
+                                              style: MyStyles.kTextStyleH3Bold
+                                                  .copyWith(
+                                                color: MyStyles.tripTertiary,
+                                              ),
+                                            ),
+                                            const Text(
+                                              "銀行：第一銀行 敦南分行",
+                                              style: MyStyles.kTextStyleH4,
+                                            ),
+                                            Text(
+                                              "匯款帳號：09090909090",
+                                              style: MyStyles.kTextStyleH4,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 14,
+                                      ),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              launchUrlString(
+                                                  'https://www.apple.com/tw/app-store/');
+                                            },
+                                            child: Image.asset(
+                                              'assets/images/app_store.png',
+                                              height: 46,
+                                            ),
                                           ),
+                                          const SizedBox(
+                                            width: 4,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              launchUrlString(
+                                                  'https://play.google.com/store/apps');
+                                            },
+                                            child: Image.asset(
+                                              'assets/images/play_store.png',
+                                              height: 46,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 14,
+                                      ),
+                                      SizedBox(
+                                        width: 302,
+                                        child: MyWebButton(
+                                          label: '下載App',
+                                          style: MyWebButton.styleLargeFilled(),
+                                          onPressed: () {
+                                            Get.dialog(
+                                              Center(
+                                                child: Card(
+                                                  color: MyStyles.green3,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Image.asset(
+                                                          'assets/images/link_qrcode.png',
+                                                          width: 200,
+                                                          height: 200,
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 16.0,
+                                                        ),
+                                                        Text(
+                                                          '掃描 QRcode,馬上體驗',
+                                                          style: MyStyles
+                                                              .kTextStyleH4
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .white),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                        const Text(
-                                          "銀行：第一銀行 敦南分行",
-                                          style: MyStyles.kTextStyleH4,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 14.0),
+                                        child: Text(
+                                          '報名成功後記得下載手機app 才可以使用GPX',
+                                          style: MyStyles.kTextStyleBody1
+                                              .copyWith(
+                                                  color: MyStyles.tripTertiary),
                                         ),
-                                        Text(
-                                          "匯款帳號：09090909090",
-                                          style: MyStyles.kTextStyleH4,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),

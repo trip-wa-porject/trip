@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -376,7 +374,7 @@ Widget getCard(BuildContext context, ScheduleDetail widget,
                 style: MyWebButton.styleSmallFilledForShare(),
                 onPressed: () {
                   String shareContent =
-                      '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n${window.location.href}';
+                      '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n${"https://wa-project-mountain.web.app/schedule/detail?id=${widget.model.id}"}';
                   Clipboard.setData(ClipboardData(text: shareContent));
                   showShareDialog(context, shareContent);
                 }),
