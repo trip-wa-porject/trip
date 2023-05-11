@@ -10,6 +10,7 @@ import '../../component/my_app_bar.dart';
 import '../../component/textfield.dart';
 import '../../component/widgets.dart';
 import '../../consts.dart';
+import '../../utils/amount_format_utils.dart';
 import 'pay_table.dart';
 
 class Pay extends GetView<PayController> {
@@ -226,7 +227,7 @@ class Pay extends GetView<PayController> {
                                               style: payMethodStyle,
                                             ),
                                             Text(
-                                              "${controller.getTotalPrice()}",
+                                              'NT\$ ${amountFormat(controller.getTotalPrice())}',
                                               style: payMethodStyle,
                                             ),
                                           ],
