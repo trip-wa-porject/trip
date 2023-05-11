@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tripflutter/consts.dart';
 
+import '../../utils/amount_format_utils.dart';
+
 class OrderData {
   String? id, detail, date, price, payState, payMethod, lastNumbers, emailState;
   OrderData({
@@ -100,7 +102,7 @@ class PayTable extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  " 總金額\$${totalPrice}",
+                  " 總金額 NT\$ ${amountFormat(totalPrice)}",
                   style: title,
                 ),
                 Text(

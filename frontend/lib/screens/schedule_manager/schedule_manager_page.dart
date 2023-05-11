@@ -1037,7 +1037,7 @@ class PayTableInCard extends StatelessWidget {
                   decoration: boxDecorationTitle,
                   child: Center(
                       child: Text(
-                    e ?? "",
+                    e,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: MyStyles.kTextStyleSubtitle1Bold,

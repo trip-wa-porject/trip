@@ -26,6 +26,7 @@ class PayController extends GetxController {
   RxInt selectedMethod = 0.obs;
   RxBool wantJoinMember = false.obs;
   RxBool isMember = false.obs;
+
   getUser() async {
     if (_firebaseAuthService.user.value?.uid != null) {
       Map<String, dynamic> data = await repository
@@ -48,6 +49,18 @@ class PayController extends GetxController {
     }
 
     return totalPrice;
+  }
+
+  bool checkRemitAccount(String remitAccount) {
+    if (remitAccount.isEmpty) {
+      return false;
+    } else {
+      if (RegExp(r'(?=.*?[0-9])\w+').hasMatch(remitAccount) &&
+          remitAccount.length == 5) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void selectMethod(int? method) {
@@ -73,7 +86,7 @@ class PayController extends GetxController {
   confirm() async {
     final String _account = account.text;
     final String _price = price.text;
-    if (_account != '') {
+    if (checkRemitAccount(_account)) {
       List<OrderData> _orders = orders.toList();
       String payMethod = "";
       switch (selectedMethod.value) {
