@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tripflutter/component/footer.dart';
 import 'package:tripflutter/component/my_app_bar.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_basic.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_detail_controller.dart';
@@ -9,6 +8,7 @@ import 'package:tripflutter/screens/schedule_detail/schedule_main_information.da
 import 'package:tripflutter/screens/schedule_detail/schedule_route.dart';
 import 'package:tripflutter/screens/schedule_detail/schedule_transportation.dart';
 import '../../component/buttons.dart';
+import '../../component/footer.dart';
 import '../../consts.dart';
 import '../../models/schedule_model.dart';
 import '../../utils/amount_format_utils.dart';
@@ -43,6 +43,7 @@ class ScheduleDetailPage extends GetView<ScheduleDetailController> {
                 child: CircularProgressIndicator(),
               )
             : ScheduleDetail(
+                controller: controller,
                 model: controller.model.value!,
                 alreadyJoin: controller.userAlreadyJoin(),
               ),
@@ -53,9 +54,13 @@ class ScheduleDetailPage extends GetView<ScheduleDetailController> {
 
 class ScheduleDetail extends StatefulWidget {
   const ScheduleDetail(
-      {Key? key, required this.model, this.alreadyJoin = false})
+      {Key? key,
+      required this.controller,
+      required this.model,
+      this.alreadyJoin = false})
       : super(key: key);
 
+  final ScheduleDetailController controller;
   final ScheduleModel model;
   final bool alreadyJoin;
 
@@ -78,7 +83,8 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
 
   late PropertyStatus propertyStatus;
 
-  // late ScrollController _listController;
+  late ScrollController _listController;
+  bool offset = true;
 
   @override
   void initState() {
@@ -88,8 +94,9 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
     _tabController = TabController(vsync: this, length: scheduleTabs.length);
     _tabController.addListener(_handleTabSelection);
 
-    // _listController = ScrollController();
-    // _listController.addListener(_handleTab2Selection);
+    _listController = ScrollController();
+    _listController.addListener(
+        () => {widget.controller.setOffset(_listController.offset)});
     super.initState();
   }
 
@@ -129,7 +136,7 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
-    // _listController.dispose();
+    _listController.dispose();
     super.dispose();
   }
 
@@ -139,113 +146,141 @@ class _ScheduleDetailPageState extends State<ScheduleDetail>
 
     return Stack(
       children: [
-        ListView(
-          // controller: _listController,
-          children: [
-            Center(
-              child: Container(
-                height: 1700,
-                width: kCardWidth,
-                padding: const EdgeInsets.symmetric(vertical: 60),
-                child: Column(
-                  children: [
-                    ScheduleMainInformation(
-                      model: widget.model,
-                      alreadyJoined: widget.alreadyJoin,
-                    ),
-                    Container(
-                      width: kCardWidth,
-                      // height:1700,
-                      padding: const EdgeInsets.only(top: 60),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            width: kCardWidth * 0.68,
-                            child: Column(
-                              children: [
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    DecoratedTabBar(
-                                      tabBar: TabBar(
-                                        labelColor: Colors.white,
-                                        unselectedLabelColor:
-                                            MyStyles.greyScaleCFCFCE,
-                                        controller: _tabController,
-                                        indicatorColor: Colors.transparent,
-                                        indicatorWeight: 0.01,
-                                        padding: EdgeInsets.zero,
-                                        indicatorPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                0, 0, 0, 0),
-                                        labelPadding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 0),
-                                        tabs: [
-                                          createTab(
-                                            _tabController,
-                                            0,
-                                            Icons.account_box,
-                                            scheduleTabs[0].text!,
-                                            'tab_left',
-                                          ),
-                                          createTab(
+        SingleChildScrollView(
+          controller: _listController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  height: 1700,
+                  width: kCardWidth,
+                  padding: const EdgeInsets.symmetric(vertical: 60),
+                  child: Column(
+                    children: [
+                      ScheduleMainInformation(
+                        model: widget.model,
+                        alreadyJoined: widget.alreadyJoin,
+                      ),
+                      Container(
+                        width: kCardWidth,
+                        padding: const EdgeInsets.only(top: 60),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              width: kCardWidth * 0.68,
+                              child: Column(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      DecoratedTabBar(
+                                        tabBar: TabBar(
+                                          labelColor: Colors.white,
+                                          unselectedLabelColor:
+                                              MyStyles.greyScaleCFCFCE,
+                                          controller: _tabController,
+                                          indicatorColor: Colors.transparent,
+                                          indicatorWeight: 0.01,
+                                          padding: EdgeInsets.zero,
+                                          indicatorPadding:
+                                              const EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 0),
+                                          labelPadding:
+                                              const EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 0),
+                                          tabs: [
+                                            createTab(
                                               _tabController,
-                                              1,
-                                              Icons.directions_car,
-                                              scheduleTabs[1].text!,
-                                              'tab_middle'),
-                                          createTab(
-                                              _tabController,
-                                              2,
-                                              Icons.map,
-                                              scheduleTabs[2].text!,
-                                              'tab_right'),
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned.fill(
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: _indicators(
-                                              context,
-                                              scheduleTabs.length,
-                                              _tabController.index),
+                                              0,
+                                              Icons.account_box,
+                                              scheduleTabs[0].text!,
+                                              'tab_left',
+                                            ),
+                                            createTab(
+                                                _tabController,
+                                                1,
+                                                Icons.directions_car,
+                                                scheduleTabs[1].text!,
+                                                'tab_middle'),
+                                            createTab(
+                                                _tabController,
+                                                2,
+                                                Icons.map,
+                                                scheduleTabs[2].text!,
+                                                'tab_right'),
+                                          ],
                                         ),
                                       ),
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: _indicators(
+                                                context,
+                                                scheduleTabs.length,
+                                                _tabController.index),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (_tabController.index == 0)
+                                    ScheduleBasic(
+                                      model: widget.model,
                                     ),
-                                  ],
-                                ),
-                                if (_tabController.index == 0)
-                                  ScheduleBasic(
-                                    model: widget.model,
-                                  ),
-                                if (_tabController.index == 1)
-                                  ScheduleTransportation(
-                                    model: widget.model,
-                                  ),
-                                if (_tabController.index == 2)
-                                  ScheduleRoute(
-                                    model: widget.model,
-                                  ),
-                              ],
+                                  if (_tabController.index == 1)
+                                    ScheduleTransportation(
+                                      model: widget.model,
+                                    ),
+                                  if (_tabController.index == 2)
+                                    ScheduleRoute(
+                                      model: widget.model,
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                          getCard(context, widget, propertyStatus),
-                        ],
+                            Obx(
+                              () => Visibility(
+                                visible: widget.controller.offset >= 850 - 215
+                                    ? false
+                                    : true,
+                                child: getCard(context, widget, propertyStatus),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Footer(),
-          ],
+              const Footer(),
+            ],
+          ),
+        ),
+        Obx(
+          () => Visibility(
+              visible: widget.controller.offset >= 850 - 215 ? true : false,
+              child: Positioned(
+                right: 0,
+                left: 0,
+                top: 20,
+                child: Center(
+                  child: SizedBox(
+                    width: 1148,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: getCard(context, widget, propertyStatus),
+                    ),
+                  ),
+                ),
+              )),
         ),
       ],
     );
@@ -368,7 +403,8 @@ Widget getCard(BuildContext context, ScheduleDetail widget,
                 iconData: Icons.share,
                 style: MyWebButton.styleSmallFilledForShare(),
                 onPressed: () {
-                  String shareUrl = 'https://wa-project-mountain.web.app/schedule/detail?id=${widget.model.id}';
+                  String shareUrl =
+                      'https://wa-project-mountain.web.app/schedule/detail?id=${widget.model.id}';
                   String shareContent =
                       '想要嘗試有意思的登山行程嗎？我分享了有趣的行程給你喔！\n$shareUrl';
                   Clipboard.setData(ClipboardData(text: shareContent));

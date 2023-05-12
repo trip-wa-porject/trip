@@ -13,6 +13,8 @@ class ScheduleDetailController extends GetxController {
       Get.put(ScheduleManagerController());
   final BackendRepository repository = BackendRepository();
 
+  RxDouble offset = (0.0).obs;
+
   getData() async {
     try {
       model.value = ScheduleModel.fromJson(Get.arguments);
@@ -24,6 +26,11 @@ class ScheduleDetailController extends GetxController {
         model.value = ScheduleModel.fromJson(data);
       }
     }
+  }
+
+  void setOffset(double num) {
+    offset.value = num;
+    offset.refresh();
   }
 
   bool userAlreadyJoin() {
