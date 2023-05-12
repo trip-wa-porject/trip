@@ -178,14 +178,28 @@ class _SignUpPageState extends State<SignUpPage> {
                                                     () => controller
                                                             .nextStepsBtnStatus
                                                             .value
-                                                        ? MyWebButton(
-                                                            label: '下一步',
-                                                            style: MyWebButton
-                                                                .styleLargeFilled(),
-                                                            onPressed: () {
-                                                              controller
-                                                                  .nextStep();
-                                                            })
+                                                        ? controller.steps
+                                                                    .value ==
+                                                                0
+                                                            ? MyWebButton(
+                                                                label: '下一步',
+                                                                style: MyWebButton
+                                                                    .styleLargeFilled(),
+                                                                onPressed: () {
+                                                                  controller
+                                                                      .nextStep();
+                                                                })
+                                                            : MyWebButton(
+                                                                label:
+                                                                    '下一步', //註冊
+                                                                style: MyWebButton
+                                                                    .styleLargeFilled(),
+                                                                futureFunction:
+                                                                    () async {
+                                                                  await controller
+                                                                      .nextStep();
+                                                                },
+                                                              )
                                                         : MyWebButton(
                                                             label: '下一步',
                                                             style: MyWebButton

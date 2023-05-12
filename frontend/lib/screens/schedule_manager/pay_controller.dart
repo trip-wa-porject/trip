@@ -150,7 +150,8 @@ class PayController extends GetxController {
       Get.offAndToNamed('${AppLinks.SCHEDUL}');
     }
     if (result == '追蹤訂單') {
-      Get.offAndToNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}');
+      Get.offAllNamed('${AppLinks.SCHEDUL}${AppLinks.MANAGEMENT}',
+          parameters: {'tab': '1'});
     }
   }
 
@@ -167,6 +168,7 @@ class PayController extends GetxController {
 
   getData() async {
     try {
+      orders.clear();
       model.value = ScheduleModel.fromJson(Get.arguments);
     } catch (e) {
       Map<String, dynamic> parameters = Get.parameters;
@@ -212,7 +214,7 @@ class PayController extends GetxController {
 
   @override
   void onInit() {
-    getData();
+    // getData();
     getUser();
     super.onInit();
   }

@@ -20,6 +20,7 @@ class Pay extends GetView<PayController> {
   @override
   Widget build(BuildContext context) {
     Get.put(PayController());
+    controller.getData();
     return Scaffold(
       backgroundColor: Color(0xff686868),
       appBar: MyAppBar(),
