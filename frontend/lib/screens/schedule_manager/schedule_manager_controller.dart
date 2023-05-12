@@ -165,6 +165,12 @@ class ScheduleManagerController extends GetxController
         List<Registration> models =
             data.map((e) => Registration.fromJson(e)).toList();
         await Future.wait(models.map((e) => getTripData(e)));
+        models.sort((a, b) {
+          if (a.updateDate != null && b.updateDate != null) {
+            return b.updateDate!.compareTo(a.updateDate!);
+          }
+          return -1;
+        });
         userJoinedModel.assignAll(models.toList());
       }
     } catch (e) {
@@ -268,11 +274,16 @@ class ScheduleManagerController extends GetxController
     }
   }
 
-  setTabController(int length) {
+  setTabController(
+    int length, {
+    int initialIndex = 0,
+  }) {
     if (tabLength == null || tabLength != length) {
       tabLength = length;
-      tabController = TabController(length: length, vsync: this);
+      tabController = TabController(
+          length: length, vsync: this, initialIndex: initialIndex);
       tabController.addListener(_handleTabSelection);
+      selectedIndex.value = initialIndex;
     }
   }
 

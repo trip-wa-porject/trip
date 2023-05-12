@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tripflutter/component/buttons.dart';
@@ -18,450 +19,578 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
 
   @override
   Widget? phone() {
-    controller.setTabController(2);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('活動行程管理'),
-        titleTextStyle: MyStyles.kTextStyleH2Normal.copyWith(
-          color: Colors.white,
+    // controller.setTabController(2);
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('活動行程管理'),
+          titleTextStyle: MyStyles.kTextStyleH2Normal.copyWith(
+            color: Colors.white,
+          ),
+          bottom: TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white,
+            indicatorColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelStyle: MyStyles.kTextStyleH4,
+            onTap: (index) {
+              controller.selectedIndex.value = index;
+            },
+            tabs: const [
+              Tab(
+                text: '已報名',
+              ),
+              Tab(
+                text: '繼續報名',
+              ),
+            ],
+          ),
         ),
-        bottom: TabBar(
-          controller: controller.tabController,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white,
-          indicatorColor: Colors.white,
-          indicatorSize: TabBarIndicatorSize.tab,
-          labelStyle: MyStyles.kTextStyleH4,
-          tabs: const [
-            Tab(
-              text: '已報名',
+        body: TabBarView(
+          children: [
+            Obx(
+              () {
+                if (controller.isLoading.value) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      itemBuilder: (ctx, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: ScheduleStatusCardSkeleton(),
+                        );
+                      });
+                }
+
+                List<Registration> registrations =
+                    controller.userJoinedModel.toList();
+                List<GPXModel> downloadedGpx =
+                    controller.downloadedGpx.toList();
+                TabStatus status = TabStatus.register;
+                switch (controller.selectedIndex.value) {
+                  case 0:
+                    registrations =
+                        registrations.where((p0) => p0.status == 1).toList();
+                    status = TabStatus.register;
+                    break;
+                  case 1:
+                    registrations =
+                        registrations.where((p0) => p0.status == 0).toList();
+                    status = TabStatus.pay;
+                    break;
+                  case 2:
+                    registrations =
+                        registrations.where((p0) => p0.status == 3).toList();
+                    status = TabStatus.cancel;
+                    break;
+                  case 3:
+                    registrations =
+                        registrations.where((p0) => p0.status == 2).toList();
+                    status = TabStatus.waitCheck;
+                    break;
+                  default:
+                }
+
+                //已付款
+                return ListView.builder(
+                  shrinkWrap: true,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
+                  itemCount: registrations.length,
+                  itemBuilder: (ctx, index) {
+                    return Center(
+                      child: FutureBuilder<ScheduleModel?>(
+                        future: controller
+                            .getOneTripData(registrations[index].tripId),
+                        builder: (ctx, snapshot) {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: ScheduleStatusCard(
+                                model: snapshot.data!,
+                                registration: registrations[index],
+                                tabStatus: status,
+                                gpxModel: downloadedGpx.firstWhereOrNull(
+                                    (element) =>
+                                        element.tripId ==
+                                        registrations[index].tripId),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-            Tab(
-              text: '繼續報名',
+            Obx(
+              () {
+                if (controller.isLoading.value) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      itemBuilder: (ctx, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: ScheduleStatusCardSkeleton(),
+                        );
+                      });
+                }
+
+                List<Registration> registrations =
+                    controller.userJoinedModel.toList();
+                List<GPXModel> downloadedGpx =
+                    controller.downloadedGpx.toList();
+                TabStatus status = TabStatus.register;
+                switch (controller.selectedIndex.value) {
+                  case 0:
+                    registrations =
+                        registrations.where((p0) => p0.status == 1).toList();
+                    status = TabStatus.register;
+                    break;
+                  case 1:
+                    registrations =
+                        registrations.where((p0) => p0.status == 0).toList();
+                    status = TabStatus.pay;
+                    break;
+                  case 2:
+                    registrations =
+                        registrations.where((p0) => p0.status == 3).toList();
+                    status = TabStatus.cancel;
+                    break;
+                  case 3:
+                    registrations =
+                        registrations.where((p0) => p0.status == 2).toList();
+                    status = TabStatus.waitCheck;
+                    break;
+                  default:
+                }
+
+                //已付款
+                return ListView.builder(
+                  shrinkWrap: true,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
+                  itemCount: registrations.length,
+                  itemBuilder: (ctx, index) {
+                    return Center(
+                      child: FutureBuilder<ScheduleModel?>(
+                        future: controller
+                            .getOneTripData(registrations[index].tripId),
+                        builder: (ctx, snapshot) {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: ScheduleStatusCard(
+                                model: snapshot.data!,
+                                registration: registrations[index],
+                                tabStatus: status,
+                                gpxModel: downloadedGpx.firstWhereOrNull(
+                                    (element) =>
+                                        element.tripId ==
+                                        registrations[index].tripId),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),
-      ),
-      body: Obx(
-        () {
-          if (controller.isLoading.value) {
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (ctx, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: ScheduleStatusCardSkeleton(),
-                  );
-                });
-          }
-
-          List<Registration> registrations =
-              controller.userJoinedModel.toList();
-          List<GPXModel> downloadedGpx = controller.downloadedGpx.toList();
-          TabStatus status = TabStatus.register;
-          switch (controller.selectedIndex.value) {
-            case 0:
-              registrations =
-                  registrations.where((p0) => p0.status == 1).toList();
-              status = TabStatus.register;
-              break;
-            case 1:
-              registrations =
-                  registrations.where((p0) => p0.status == 0).toList();
-              status = TabStatus.pay;
-              break;
-            case 2:
-              registrations =
-                  registrations.where((p0) => p0.status == 3).toList();
-              status = TabStatus.cancel;
-              break;
-            case 3:
-              registrations =
-                  registrations.where((p0) => p0.status == 2).toList();
-              status = TabStatus.waitCheck;
-              break;
-            default:
-          }
-
-          //已付款
-          return ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
-            itemCount: registrations.length,
-            itemBuilder: (ctx, index) {
-              return Center(
-                child: FutureBuilder<ScheduleModel?>(
-                  future:
-                      controller.getOneTripData(registrations[index].tripId),
-                  builder: (ctx, snapshot) {
-                    if (snapshot.hasData && snapshot.data != null) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: ScheduleStatusCard(
-                          model: snapshot.data!,
-                          registration: registrations[index],
-                          tabStatus: status,
-                          gpxModel: downloadedGpx.firstWhereOrNull((element) =>
-                              element.tripId == registrations[index].tripId),
-                        ),
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              );
-            },
-          );
-        },
       ),
     );
   }
 
   @override
   Widget? desktop() {
-    controller.setTabController(4);
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-      appBar: const MyAppBar(),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          const SizedBox(
-            height: 80,
-          ),
-          const Center(child: MyBackButton()),
-          const SizedBox(
-            height: 52,
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: kCardWidth),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '登山行程管理',
-                  style: MyStyles.kTextStyleH2Bold
-                      .copyWith(color: MyStyles.tripTertiary),
+    final parameters = Get.parameters;
+    int initialIndex = 0;
+    if (parameters.containsKey('tab')) {
+      initialIndex = int.tryParse(parameters['tab'] ?? "0") ?? 0;
+    }
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.selectedIndex.value = initialIndex;
+    });
+    return DefaultTabController(
+      length: 4,
+      initialIndex: initialIndex,
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 244, 244, 244),
+        appBar: const MyAppBar(),
+        body: ListView(
+          shrinkWrap: true,
+          children: [
+            const SizedBox(
+              height: 80,
+            ),
+            const Center(child: MyBackButton()),
+            const SizedBox(
+              height: 52,
+            ),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: kCardWidth),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '登山行程管理',
+                    style: MyStyles.kTextStyleH2Bold
+                        .copyWith(color: MyStyles.tripTertiary),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          Center(
-            child: SizedBox(
-              width: 1160,
-              child: Builder(builder: (context) {
-                double borderWidth = 0.5;
-                Color borderColor = MyStyles.tripPrimary;
-                return Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xfffff9ee),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    border: Border.all(color: borderColor, width: borderWidth),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: TabBar(
-                    controller: controller.tabController,
-                    labelPadding: const EdgeInsets.all(0),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: MyStyles.primary,
-                    indicatorWeight: 0,
-                    labelStyle: MyStyles.kTextStyleH4M.copyWith(),
-                    unselectedLabelStyle: MyStyles.kTextStyleH4M.copyWith(),
-                    indicator: const BoxDecoration(
-                      color: MyStyles.primary,
-                      backgroundBlendMode: BlendMode.dstOver,
-                    ),
-                    tabs: [
-                      Tab(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: borderColor,
-                              width: borderWidth,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                            ),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (controller.selectedIndex.value == 0)
-                                  const Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                const Text('已報名'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: borderColor,
-                              width: borderWidth,
-                            ),
-                          ),
-                          child: Center(
-                            child: Obx(
-                              () => Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (controller.selectedIndex.value == 1)
-                                    const Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 4.0),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  Text(
-                                    '等待審核中',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: borderColor,
-                              width: borderWidth,
-                            ),
-                          ),
-                          child: Center(
-                            child: Obx(
-                              () => Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (controller.selectedIndex.value == 2)
-                                    const Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 4.0),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  Text('繼續報名'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: borderColor,
-                              width: borderWidth,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                            ),
-                          ),
-                          child: Center(
-                            child: Obx(
-                              () => Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (controller.selectedIndex.value == 3)
-                                    const Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 4.0),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  Text('已取消'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+            const SizedBox(
+              height: 40,
             ),
-          ),
-          const SizedBox(
-            height: 44,
-          ),
-          Obx(
-            () {
-              if (controller.isLoading.value) {
+            Center(
+              child: SizedBox(
+                width: 1160,
+                child: Builder(builder: (context) {
+                  double borderWidth = 0.5;
+                  Color borderColor = MyStyles.tripPrimary;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xfffff9ee),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                      border:
+                          Border.all(color: borderColor, width: borderWidth),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: TabBar(
+                      // controller: controller.tabController,
+                      onTap: (index) {
+                        controller.selectedIndex.value = index;
+                      },
+                      labelPadding: const EdgeInsets.all(0),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: MyStyles.primary,
+                      indicatorWeight: 0,
+                      labelStyle: MyStyles.kTextStyleH4M.copyWith(),
+                      unselectedLabelStyle: MyStyles.kTextStyleH4M.copyWith(),
+                      indicator: const BoxDecoration(
+                        color: MyStyles.primary,
+                        backgroundBlendMode: BlendMode.dstOver,
+                      ),
+                      tabs: [
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: borderColor,
+                                width: borderWidth,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (controller.selectedIndex.value == 0)
+                                      const Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    const Text('已報名'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: borderColor,
+                                width: borderWidth,
+                              ),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (controller.selectedIndex.value == 1)
+                                      const Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    Text(
+                                      '等待審核中',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: borderColor,
+                                width: borderWidth,
+                              ),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (controller.selectedIndex.value == 2)
+                                      const Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    Text('繼續報名'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: borderColor,
+                                width: borderWidth,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (controller.selectedIndex.value == 3)
+                                      const Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    Text('已取消'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
+            const SizedBox(
+              height: 44,
+            ),
+            Obx(
+              () {
+                if (controller.isLoading.value) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 2,
+                      itemBuilder: (ctx, index) {
+                        return Center(
+                          child: Builder(
+                            builder: (ctx) {
+                              return ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 1160,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: ScheduleStatusCardSkeleton(),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      });
+                }
+
+                List<Registration> registrations =
+                    controller.userJoinedModel.toList();
+                TabStatus status = TabStatus.register;
+                switch (controller.selectedIndex.value) {
+                  case 0:
+                    registrations =
+                        registrations.where((p0) => p0.status == 1).toList();
+                    status = TabStatus.register;
+                    break;
+                  case 1:
+                    registrations =
+                        registrations.where((p0) => p0.status == 2).toList();
+                    status = TabStatus.waitCheck;
+                    break;
+                  case 2:
+                    registrations =
+                        registrations.where((p0) => p0.status == 0).toList();
+                    status = TabStatus.pay;
+                    break;
+                  case 3:
+                    registrations =
+                        registrations.where((p0) => p0.status == 3).toList();
+                    status = TabStatus.cancel;
+                    break;
+                  default:
+                }
+                if (registrations.isEmpty) {
+                  return const Center(
+                    child: Text('目前無相關紀錄'),
+                  );
+                }
+
                 return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 2,
-                    itemBuilder: (ctx, index) {
-                      return Center(
-                        child: Builder(
-                          builder: (ctx) {
+                  shrinkWrap: true,
+                  itemCount: registrations.length,
+                  itemBuilder: (ctx, index) {
+                    return Center(
+                      child: Builder(
+                        builder: (ctx) {
+                          if (registrations[index].scheduleModel != null) {
                             return ConstrainedBox(
                               constraints: const BoxConstraints(
                                 maxWidth: 1160,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
-                                child: ScheduleStatusCardSkeleton(),
+                                child: ScheduleStatusCard(
+                                  model: registrations[index].scheduleModel!,
+                                  registration: registrations[index],
+                                  tabStatus: status,
+                                ),
                               ),
                             );
-                          },
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(
+              height: 60,
+            ),
+            Obx(() {
+              if (controller.isLoadingRecommend.value) {
+                return Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: kCardWidth),
+                    child: Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              margin: const EdgeInsets.all(4.0),
+                              height: 30,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      );
-                    });
-              }
-
-              List<Registration> registrations =
-                  controller.userJoinedModel.toList();
-              TabStatus status = TabStatus.register;
-              switch (controller.selectedIndex.value) {
-                case 0:
-                  registrations =
-                      registrations.where((p0) => p0.status == 1).toList();
-                  status = TabStatus.register;
-                  break;
-                case 1:
-                  registrations =
-                      registrations.where((p0) => p0.status == 2).toList();
-                  status = TabStatus.waitCheck;
-                  break;
-                case 2:
-                  registrations =
-                      registrations.where((p0) => p0.status == 0).toList();
-                  status = TabStatus.pay;
-                  break;
-                case 3:
-                  registrations =
-                      registrations.where((p0) => p0.status == 3).toList();
-                  status = TabStatus.cancel;
-                  break;
-                default:
-              }
-              if (registrations.isEmpty) {
-                return const Center(
-                  child: Text('目前無相關紀錄'),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                  ),
                 );
               }
 
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: registrations.length,
-                itemBuilder: (ctx, index) {
-                  return Center(
-                    child: Builder(
-                      builder: (ctx) {
-                        if (registrations[index].scheduleModel != null) {
-                          return ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: 1160,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: ScheduleStatusCard(
-                                model: registrations[index].scheduleModel!,
-                                registration: registrations[index],
-                                tabStatus: status,
+              return controller.scheduleList.isNotEmpty
+                  ? Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: kCardWidth),
+                        child: Row(
+                          children: const [
+                            Expanded(child: Divider()),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                '推薦相關行程',
+                                style: MyStyles.kTextStyleH3Bold,
                               ),
                             ),
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-          const SizedBox(
-            height: 60,
-          ),
-          Obx(() {
-            if (controller.isLoadingRecommend.value) {
-              return Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: kCardWidth),
-                  child: Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            margin: const EdgeInsets.all(4.0),
-                            height: 30,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.white,
-                            ),
-                          ),
+                            Expanded(child: Divider()),
+                          ],
                         ),
                       ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            return controller.scheduleList.isNotEmpty
-                ? Center(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: kCardWidth),
-                      child: Row(
-                        children: const [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              '推薦相關行程',
-                              style: MyStyles.kTextStyleH3Bold,
+                    )
+                  : const SizedBox();
+            }),
+            const SizedBox(
+              height: 60,
+            ),
+            //推薦行程
+            Obx(() {
+              if (controller.isLoadingRecommend.value) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [0, 1, 2]
+                      .map((element) => Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: kCardWidth),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: SizedBox(
+                                  height: kCardHeight,
+                                  child: const ScheduleCardSkeleton(),
+                                ),
+                              ),
                             ),
-                          ),
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox();
-          }),
-          const SizedBox(
-            height: 60,
-          ),
-          //推薦行程
-          Obx(() {
-            if (controller.isLoadingRecommend.value) {
+                          ))
+                      .toList(),
+                );
+              }
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [0, 1, 2]
+                children: controller.scheduleList
                     .map((element) => Center(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: kCardWidth),
@@ -470,41 +599,23 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: SizedBox(
                                 height: kCardHeight,
-                                child: const ScheduleCardSkeleton(),
+                                child: ScheduleCard(
+                                  model: element,
+                                  index: 0,
+                                ),
                               ),
                             ),
                           ),
                         ))
                     .toList(),
               );
-            }
-
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: controller.scheduleList
-                  .map((element) => Center(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: kCardWidth),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: SizedBox(
-                              height: kCardHeight,
-                              child: ScheduleCard(
-                                model: element,
-                                index: 0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ))
-                  .toList(),
-            );
-          }),
-          const SizedBox(
-            height: 110,
-          ),
-          const Footer(),
-        ],
+            }),
+            const SizedBox(
+              height: 110,
+            ),
+            const Footer(),
+          ],
+        ),
       ),
     );
   }
