@@ -166,8 +166,11 @@ class PayController extends GetxController {
     Get.back();
   }
 
+  bool isLoadingData = false;
   getData() async {
+    if (isLoadingData) return;
     try {
+      isLoadingData = true;
       orders.clear();
       model.value = ScheduleModel.fromJson(Get.arguments);
     } catch (e) {
@@ -200,6 +203,8 @@ class PayController extends GetxController {
           }
         }
       }
+      isLoadingData = true;
+
       // if (model.value != null) {
       //   ScheduleModel _model = model.value!;
       //   OrderData orderData = OrderData(

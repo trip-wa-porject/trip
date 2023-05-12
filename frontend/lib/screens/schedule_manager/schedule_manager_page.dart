@@ -70,7 +70,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                 List<GPXModel> downloadedGpx =
                     controller.downloadedGpx.toList();
                 TabStatus status = TabStatus.register;
-                switch (controller.selectedIndex.value) {
+                switch (0) {
                   case 0:
                     registrations =
                         registrations.where((p0) => p0.status == 1).toList();
@@ -147,7 +147,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                 List<GPXModel> downloadedGpx =
                     controller.downloadedGpx.toList();
                 TabStatus status = TabStatus.register;
-                switch (controller.selectedIndex.value) {
+                switch (1) {
                   case 0:
                     registrations =
                         registrations.where((p0) => p0.status == 1).toList();
@@ -282,7 +282,7 @@ class ScheduleManagerPage extends GetResponsiveView<ScheduleManagerController> {
                       unselectedLabelStyle: MyStyles.kTextStyleH4M.copyWith(),
                       indicator: const BoxDecoration(
                         color: MyStyles.primary,
-                        backgroundBlendMode: BlendMode.dstOver,
+                        // backgroundBlendMode: BlendMode.dstOver,
                       ),
                       tabs: [
                         Tab(
