@@ -391,7 +391,7 @@ class Pay extends GetView<PayController> {
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 14.0),
                                         child: Text(
-                                          '報名成功後記得下載手機app 才可以使用GPX',
+                                          '使用 GPX 離線導覽地圖，確保旅途平安',
                                           style: MyStyles.kTextStyleBody1
                                               .copyWith(
                                                   color: MyStyles.tripTertiary),
