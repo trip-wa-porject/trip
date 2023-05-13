@@ -215,11 +215,11 @@ class ScheduleCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          '一般會員 ${model.price}',
+          '一般會員 NT\$ ${amountFormat(model.price)}',
           style: MyStyles.kTextStyleH4,
         ),
         Text(
-          '加入VIP 立即省 ${model.price - model.memberPrice}',
+          '加入VIP 立即省 NT\$ ${amountFormat((model.price - model.memberPrice).abs())}',
           style: MyStyles.kTextStyleSubtitle1Bold.copyWith(
             color: MyStyles.redC80000,
           ),
