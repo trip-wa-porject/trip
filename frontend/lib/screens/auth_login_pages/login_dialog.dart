@@ -47,7 +47,7 @@ class LoginDialog extends GetView<LoginController> {
                           Obx(
                             () => LoginTextField(
                               controller: emailController,
-                              hint: 'jijijijjijijijiji@gmail.com',
+                              hint: '請輸入 E-mail',
                               error: controller.emailError.value,
                               validator: (String? value) {
                                 return validateEmail(value);
@@ -62,7 +62,7 @@ class LoginDialog extends GetView<LoginController> {
                           Obx(
                             () => LoginTextField(
                               controller: pwdController,
-                              hint: 'xxxxxxxxxxxxx',
+                              hint: '請輸入密碼',
                               error: controller.passwordError.value,
                               validator: (String? value) {
                                 return validatePassword(value);
