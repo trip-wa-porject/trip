@@ -156,6 +156,7 @@ class Pay extends GetView<PayController> {
                             ),
                             Obx(
                               () => Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Flexible(
                                     child: Column(
@@ -233,6 +234,9 @@ class Pay extends GetView<PayController> {
                                               style: payMethodStyle,
                                             ),
                                           ],
+                                        ),
+                                        const SizedBox(
+                                          height: 34,
                                         ),
                                         Center(
                                           child: Row(
