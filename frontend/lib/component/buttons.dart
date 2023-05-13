@@ -300,8 +300,8 @@ class MyWebButton extends StatelessWidget {
 
   static ButtonStyle styleSmallFilledForShare() {
     return FilledButton.styleFrom(
-        backgroundColor: MyStyles.tripTertiary,
-        foregroundColor: MyStyles.white,
+        backgroundColor: MyStyles.green4,
+        foregroundColor: MyStyles.tripTertiary,
         textStyle: MyStyles.kTextStyleButtonS,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
