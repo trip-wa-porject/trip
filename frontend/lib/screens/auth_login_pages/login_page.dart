@@ -97,19 +97,19 @@ class LoginPage extends GetView<LoginController> {
                             },
                           ),
                         ),
-                        const SizedBox(
-                          height: 28,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: MyFilledButton(
-                            label: '加入會員',
-                            style: MyFilledButton.styleOrangeBorder(),
-                            onPressed: () {
-                              controller.signup();
-                            },
-                          ),
-                        ),
+                        // const SizedBox(
+                        //   height: 28,
+                        // ),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   child: MyFilledButton(
+                        //     label: '加入會員',
+                        //     style: MyFilledButton.styleOrangeBorder(),
+                        //     onPressed: () {
+                        //       controller.signup();
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(
                           height: 20,
                         ),
