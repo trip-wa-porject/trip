@@ -201,7 +201,8 @@ class SignUpController extends GetxController {
   }
 
   saveIdNoSexual(String idNumber) {
-    idNoSexual.value = idNumber[1] == '1' ? '生理男' : '生理女';
+    idNoSexual.value =
+        idNumber.length > 1 && idNumber[1] == '1' ? '生理男' : '生理女';
     idNoSexual.refresh();
   }
 
@@ -241,6 +242,8 @@ class SignUpController extends GetxController {
   selectRelationOption(List<RelationOption> options) {
     relationOptions.assignAll(options);
     relationOptions.refresh();
+    formData.contactorRelationship =
+        options.isNotEmpty ? options.first.showedString : "";
   }
 
   selectBirthdayDate(DateTime dateTime) {

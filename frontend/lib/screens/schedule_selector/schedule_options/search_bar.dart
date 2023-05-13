@@ -49,6 +49,9 @@ class MySearchBar extends StatelessWidget {
                               ),
                               border: InputBorder.none,
                             ),
+                            onSubmitted: (value) {
+                              Get.put(ScheduleSelectorController()).search();
+                            },
                           ),
                         )
                       ],

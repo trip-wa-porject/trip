@@ -5,6 +5,7 @@ import '../../utils/amount_format_utils.dart';
 
 class OrderData {
   String? id, detail, date, price, payState, payMethod, lastNumbers, emailState;
+
   OrderData({
     this.id,
     this.detail,
@@ -69,6 +70,7 @@ class PayTable extends StatelessWidget {
   const PayTable({Key? key, required this.orderData}) : super(key: key);
 
   final List<OrderData> orderData;
+
   @override
   Widget build(BuildContext context) {
     BoxDecoration boxDecorationTitle = BoxDecoration(
@@ -111,11 +113,11 @@ class PayTable extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  '已確認付款金額：0元  ',
+                  '已確認付款金額：NT\$ 0元  ',
                   style: title,
                 ),
                 Text(
-                  '剩餘金額：$totalPrice元',
+                  '剩餘金額：NT\$ ${amountFormat(totalPrice)}元',
                   style: title,
                 ),
               ],
@@ -138,14 +140,16 @@ class PayTable extends StatelessWidget {
           ...(orderData
               .map((e) => Row(
                   children: e.data
-                      .map((e) => Expanded(
+                      .map((i) => Expanded(
                             child: Container(
                               decoration: boxDecoration,
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: Center(
                                   child: Text(
-                                e ?? "",
+                                e.data.indexOf(i) == 3
+                                    ? 'NT\$ ${amountFormat(int.parse(i!))}'
+                                    : (i ?? ""),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: content,
